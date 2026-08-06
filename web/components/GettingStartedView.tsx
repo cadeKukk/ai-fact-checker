@@ -152,7 +152,10 @@ export default function GettingStartedView({ onClose, initialLesson }: GettingSt
       </button>
     ) : (
       <button
-        onClick={onClose}
+        // Finish via goForward (not onClose) so completion is saved to
+        // localStorage before navigating home — otherwise the Learn landing
+        // page never shows the course as completed.
+        onClick={goForward}
         className="flex items-center gap-1.5 px-6 py-3.5 rounded-[10px] text-[#f5f5f5] font-bold text-[15px] active:scale-[0.97]"
         style={{ backgroundColor: color, transition: `all 250ms ${SPRING}` }}
       >

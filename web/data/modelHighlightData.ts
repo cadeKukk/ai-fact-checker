@@ -17,6 +17,7 @@ const PRODUCT_NAME_ALIASES: { modelId: string; patterns: string[] }[] = [
   { modelId: 'gpt56sol', patterns: ['ChatGPT', 'GPT-5.6'] },
   { modelId: 'gpt4o', patterns: ['GPT-4 Turbo', 'GPT-4V', 'GPT-4o mini', 'GPT-4', 'GPT-3.5', 'GPT-3'] },
   { modelId: 'claudeopus5', patterns: ['Claude'] },
+  { modelId: 'claudefable5', patterns: ['Fable 5', 'Mythos 5', 'Claude Fable'] },
   { modelId: 'gemini25pro', patterns: ['Gemini'] },
   { modelId: 'grok45', patterns: ['Grok', 'Grok 4'] },
   { modelId: 'deepseekv4', patterns: ['DeepSeek'] },

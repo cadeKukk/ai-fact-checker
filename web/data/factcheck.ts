@@ -347,7 +347,7 @@ export const factCheckQAs: FactCheckQA[] = [
     question: "Which AI model is the best right now?",
     answer: "There is no single 'best' — it depends on the task, and the answer changes monthly. As of August 2026: Claude Fable 5 holds the peak on many frontier evaluations, while Claude Opus 5 gets within 0.5% of it at half the cost per task and is the strongest everyday default. GPT-5.6 Sol is OpenAI's flagship, with the same weights served at 700+ tokens/second on Cerebras hardware. For open weights, Kimi K3 and DeepSeek V4 compete directly at the frontier. For budget work, GPT-5.6 Luna ($0.20/$1.20) and DeepSeek V4 Flash ($0.14/$0.28) deliver near-frontier quality per dollar. Be skeptical of any 'X is the best model' claim based on one leaderboard — benchmark contamination and cherry-picking are well documented.",
     confidence: 'medium',
-    relatedModels: ["Claude Opus 5", "GPT-5.6 Sol", "Kimi K3", "DeepSeek V4", "Grok 4.5"],
+    relatedModels: ["Claude Fable 5", "Claude Opus 5", "GPT-5.6 Sol", "Kimi K3", "DeepSeek V4"],
     sources: [],
     tags: ['best', 'best model', 'which', 'top', 'strongest', 'smartest', 'most capable', 'recommendation', 'right now', '2026', 'current', 'latest', 'newest'],
   },
