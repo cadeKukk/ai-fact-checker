@@ -16,6 +16,7 @@ import {
   XCircle as CircleX,
   Wind,
   Link2,
+  Moon,
   Building2,
   GitCompare,
   Eye,
@@ -53,7 +54,7 @@ export type CompareNavTarget =
   | { kind: 'factcheck'; query: string }
 
 const LOGO_ICON_MAP: Record<string, React.ComponentType<{ className?: string; size?: number }>> = {
-  Brain, ShieldCheck, Sparkles, Infinity, CircleX, Wind, Link2,
+  Brain, ShieldCheck, Sparkles, Infinity, CircleX, Wind, Link2, Moon,
 }
 
 const MODALITY_ICON_MAP: Record<Modality, React.ComponentType<{ className?: string; size?: number }>> = {

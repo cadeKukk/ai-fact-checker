@@ -175,14 +175,28 @@ export const benchmarks: Benchmark[] = [
   {
     id: 'arc-agi',
     name: 'ARC-AGI',
+    aliases: ['ARC-AGI-2', 'ARC-AGI 2', 'ARC-AGI-3', 'ARC-AGI 3'],
     category: 'reasoning',
     shortDescription: 'Visual abstraction & reasoning corpus (Chollet).',
     details:
-      'A grid-based visual reasoning challenge designed by Fran\u00e7ois Chollet to test abstraction and skill acquisition rather than memorization. Each task gives a few input/output examples; the model must infer the rule and apply it to a new input. The basis of the ARC Prize.',
+      'A grid-based visual reasoning challenge designed by Fran\u00e7ois Chollet to test abstraction and skill acquisition rather than memorization. Each task gives a few input/output examples; the model must infer the rule and apply it to a new input. The basis of the ARC Prize. Successors ARC-AGI-2 (harder static tasks) and ARC-AGI-3 (interactive game environments) keep the frontier unsaturated — in July 2026, GPT-5.6 Sol became the first model to beat a public ARC-AGI-3 game.',
     metric: 'Accuracy %',
     releaseYear: 2019,
-    source: 'Chollet',
+    source: 'Chollet / ARC Prize',
     url: 'https://arcprize.org/',
+  },
+  {
+    id: 'hle',
+    name: "Humanity's Last Exam",
+    aliases: ['HLE'],
+    category: 'knowledge',
+    shortDescription: 'Expert-written questions at the frontier of human knowledge.',
+    details:
+      'Thousands of questions written by subject-matter experts across dozens of fields, designed to be the hardest broad academic benchmark available — questions that even domain PhDs find difficult. Created as a successor to saturated benchmarks like MMLU. Frontier models still score well below expert-human level, making it a common headline number for new releases.',
+    metric: 'Accuracy %',
+    releaseYear: 2025,
+    source: 'CAIS / Scale AI',
+    url: 'https://lastexam.ai/',
   },
 
   // ---------- Coding ----------
@@ -225,6 +239,18 @@ export const benchmarks: Benchmark[] = [
     url: 'https://www.swebench.com/',
   },
   {
+    id: 'swe-bench-verified',
+    name: 'SWE-Bench Verified',
+    category: 'coding',
+    shortDescription: 'Human-validated 500-problem subset of SWE-Bench.',
+    details:
+      'A 500-problem subset of SWE-Bench where every task was human-reviewed to confirm it is solvable and fairly scored, removing broken or underspecified issues from the original set. The most commonly cited SWE-Bench variant for headline coding-agent numbers.',
+    metric: 'Resolved %',
+    releaseYear: 2024,
+    source: 'OpenAI / Princeton NLP',
+    url: 'https://www.swebench.com/',
+  },
+  {
     id: 'swe-bench-pro',
     name: 'SWE-Bench Pro',
     category: 'coding',
@@ -233,6 +259,41 @@ export const benchmarks: Benchmark[] = [
       'A harder, contamination-resistant successor to SWE-Bench using more diverse codebases (including non-Python and proprietary repos). Often cited as the headline benchmark for autonomous coding agents.',
     metric: 'Resolved %',
     releaseYear: 2025,
+  },
+  {
+    id: 'terminal-bench',
+    name: 'Terminal-Bench',
+    aliases: ['Terminal-Bench 2.1', 'Terminal-Bench 2'],
+    category: 'coding',
+    shortDescription: 'Real command-line tasks executed in a live terminal.',
+    details:
+      'Evaluates AI agents on realistic tasks carried out in a live terminal environment — compiling code, wrangling data, administering systems, and debugging — scored by whether the end state is correct. Because tasks execute in a real sandbox, it is harder to game than static Q&A benchmarks. Version 2.x is the standard agentic-coding headline number in 2026; Grok 4.5 posted 83.3% on Terminal-Bench 2.1 at launch.',
+    metric: 'Success rate %',
+    releaseYear: 2025,
+    source: 'Stanford / Laude Institute',
+    url: 'https://www.tbench.ai/',
+  },
+  {
+    id: 'cursorbench',
+    name: 'CursorBench',
+    aliases: ['CursorBench 3.2'],
+    category: 'coding',
+    shortDescription: 'Agentic coding evaluated in real IDE-style sessions.',
+    details:
+      'Measures how well a model completes end-to-end coding tasks in realistic editor/agent sessions, weighing both task success and cost per task. Widely cited in 2026 frontier releases: Claude Opus 5 landed within 0.5% of Fable 5\u2019s peak at half the per-task cost. Also a cautionary tale — SpaceXAI disclosed that a Cursor codebase snapshot contaminated Grok 4.5\u2019s training and inflated its score.',
+    metric: 'Task success % / cost per task',
+    releaseYear: 2025,
+  },
+  {
+    id: 'frontier-bench',
+    name: 'Frontier-Bench',
+    aliases: ['Frontier-Bench v0.1'],
+    category: 'general',
+    shortDescription: 'Cross-domain evaluation suite for 2026 frontier models.',
+    details:
+      'A 2026 evaluation suite designed to separate frontier models on hard, cross-domain professional work after older benchmarks saturated. Scores both accuracy and cost per task. Claude Opus 5 led all models on v0.1 at release, more than doubling Opus 4.8\u2019s score at lower cost per task.',
+    metric: 'Composite score',
+    releaseYear: 2026,
   },
   {
     id: 'livebench',
@@ -288,6 +349,27 @@ export const benchmarks: Benchmark[] = [
     releaseYear: 2024,
     source: 'UC Berkeley',
     url: 'https://gorilla.cs.berkeley.edu/leaderboard.html',
+  },
+
+  {
+    id: 'frontend-code-arena',
+    name: 'Frontend Code Arena',
+    category: 'coding',
+    shortDescription: 'Head-to-head human voting on generated frontend UIs.',
+    details:
+      'A live arena where models generate working frontend interfaces from the same prompt and humans vote on the better result, producing Elo-style rankings. Because judging rendered UIs is hard to game with memorization, it became a closely watched coding leaderboard in 2026 — Kimi K3 debuted at #1, above Claude Fable 5.',
+    metric: 'Elo rating',
+    releaseYear: 2025,
+  },
+  {
+    id: 'mcp-atlas',
+    name: 'MCP Atlas',
+    category: 'agent',
+    shortDescription: 'Tool-use evaluation across real MCP servers.',
+    details:
+      'Evaluates agents on multi-step tasks that require discovering and correctly using tools exposed over the Model Context Protocol (MCP) — the open standard for connecting AI models to external services. Tests tool discovery, argument construction, and multi-server orchestration. Meta claimed the #1 spot with Muse Spark 1.1 in July 2026.',
+    metric: 'Task success %',
+    releaseYear: 2026,
   },
 
   // ---------- Multimodal ----------

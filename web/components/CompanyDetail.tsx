@@ -10,6 +10,7 @@ import {
   XCircle,
   Wind,
   Link2,
+  Moon,
   Globe,
   Cpu,
   LockOpen,
@@ -32,6 +33,7 @@ const LOGO_ICON_MAP: Record<string, React.ComponentType<{ className?: string; si
   CircleX: XCircle,
   Wind,
   Link2,
+  Moon,
 }
 
 const MODALITY_ICON_MAP: Record<Modality, React.ComponentType<{ className?: string; size?: number }>> = {
@@ -60,8 +62,8 @@ function hexToRgba(hex: string, alpha: number): string {
 }
 
 function formatContextWindow(n: number): string {
-  if (n >= 1_000_000) return 'NM'
-  if (n >= 1_000) return 'NK'
+  if (n >= 1_000_000) return `${Math.round(n / 1_000_000)}M`
+  if (n >= 1_000) return `${Math.round(n / 1_000)}K`
   return String(n)
 }
 

@@ -233,8 +233,8 @@ export const lessons: AILesson[] = [
           elements: [
             'GPT-3.5: 16K tokens (~20 pages)',
             'GPT-4: 128K tokens (~150 pages)',
-            'Claude: 200K tokens (~250 pages)',
-            'Gemini: 1M+ tokens (~1200 pages)',
+            'Claude Opus 5: 1M tokens (~1200 pages)',
+            'Grok 4.5: 2M tokens (~2400 pages)',
           ],
           caption: 'Context windows have grown rapidly',
         },

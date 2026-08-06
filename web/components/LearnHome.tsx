@@ -23,6 +23,7 @@ import { lessons } from '@/data/lessons'
 import { companies, getAllModels, getAllSources } from '@/data/companies'
 import { factCheckQAs } from '@/data/factcheck'
 import { loadProgress, type CourseProgress } from '@/lib/courseProgress'
+import { APP_VERSION, LAST_UPDATED, DATA_SNAPSHOT } from '@/lib/appMeta'
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string; size?: number }>> = {
   Brain, Cpu, Network, MessageCircle, AlignLeft, Scale, CheckCircle, ShieldAlert,
@@ -167,7 +168,7 @@ export default function LearnHome() {
         </div>
 
         <p className="text-[11px] text-[#8a8990] text-center pt-2">
-          V 0.2.0 · Updated Aug 6, 2026
+          v{APP_VERSION} · Model &amp; company data current as of {DATA_SNAPSHOT} · Updated {LAST_UPDATED}
         </p>
       </div>
     </div>

@@ -14,13 +14,14 @@ export type ModelHighlightRef = {
  * catalog entry. The popup explicitly shows the mention vs. the resolved
  * model so the substitution is transparent to the user. */
 const PRODUCT_NAME_ALIASES: { modelId: string; patterns: string[] }[] = [
-  { modelId: 'gpt54', patterns: ['ChatGPT'] },
+  { modelId: 'gpt56sol', patterns: ['ChatGPT', 'GPT-5.6'] },
   { modelId: 'gpt4o', patterns: ['GPT-4 Turbo', 'GPT-4V', 'GPT-4o mini', 'GPT-4', 'GPT-3.5', 'GPT-3'] },
-  { modelId: 'claudeopus47', patterns: ['Claude'] },
+  { modelId: 'claudeopus5', patterns: ['Claude'] },
   { modelId: 'gemini25pro', patterns: ['Gemini'] },
-  { modelId: 'grok420', patterns: ['Grok', 'Grok 4'] },
-  { modelId: 'deepseekv3', patterns: ['DeepSeek'] },
-  { modelId: 'mistrallarge2', patterns: ['Mistral', 'Mixtral'] },
+  { modelId: 'grok45', patterns: ['Grok', 'Grok 4'] },
+  { modelId: 'deepseekv4', patterns: ['DeepSeek'] },
+  { modelId: 'kimik3', patterns: ['Kimi'] },
+  { modelId: 'mistralmedium35', patterns: ['Mistral', 'Mixtral'] },
   { modelId: 'llama4maverick', patterns: ['LLaMA', 'Llama 3', 'Llama 2'] },
 ]
 

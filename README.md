@@ -21,10 +21,10 @@ The front door is **Learn** — an 8-lesson animated mini-course (AI Fundamental
 
 Behind it, four reference sections backed by a hand-curated, source-cited dataset:
 
-- **Companies** (`/companies`) — 8 AI companies and 25+ models, each with specs, pricing, capabilities, known limitations, and myth vs. fact breakdowns.
+- **Companies** (`/companies`) — 9 AI companies and 36 models (including Moonshot AI's Kimi K3, GPT-5.6 Sol, Claude Opus 5, Grok 4.5, and DeepSeek V4), each with specs, pricing, capabilities, known limitations, and myth vs. fact breakdowns.
 - **Fact Check** (`/fact-check`) — verified answers to common AI questions, each tagged with a confidence level that reflects the strength of available evidence.
 - **Compare** (`/compare`) — side-by-side model comparison across quality, speed, context, value, and versatility, with transparent scoring.
-- **Sources** (`/sources`) — the 50+ primary sources behind every claim: official documentation, research papers, GitHub repositories, and news coverage.
+- **Sources** (`/sources`) — 75+ primary sources behind every claim: official documentation, peer-reviewed and arXiv research papers, GitHub repositories, and news coverage.
 
 A **⌘K search palette** covers everything — companies, models, fact-checked questions, and the full 68-term AI glossary, which opens in place from anywhere in the app. Terms are also inline-highlighted throughout.
 
@@ -32,8 +32,8 @@ Every page is a real URL, so lessons, model pages, comparisons, and searches are
 
 ```text
 /learn?lesson=3
-/companies/openai/gpt54
-/compare?models=gpt54,claudeopus47
+/companies/moonshot/kimik3
+/compare?models=kimik3,gpt56sol,claudeopus5
 /fact-check?q=Can%20AI%20think%3F
 ```
 
@@ -86,4 +86,6 @@ npx vercel --prod
 
 ## Data
 
-All model specs, pricing, benchmarks, and claims live in `web/data/` as typed TypeScript modules (`companies.ts`, `factcheck.ts`, `terms.ts`, `benchmarks.ts`, `lessons.ts`). Every claim traces back to a source listed in the Sources tab. Information is current as of early 2026 — AI moves fast; always verify against primary sources.
+All model specs, pricing, benchmarks, and claims live in `web/data/` as typed TypeScript modules (`companies.ts`, `factcheck.ts`, `terms.ts`, `benchmarks.ts`, `lessons.ts`). Every claim traces back to a source listed in the Sources tab.
+
+The app version and data-freshness date live in one place — `web/lib/appMeta.ts` — and are shown in the sidebar footer and on the Learn home page. Model and company information is current as of **August 2026** (v0.3.0). AI moves fast; always verify against primary sources.

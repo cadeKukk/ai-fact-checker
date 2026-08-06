@@ -9,6 +9,7 @@ import {
   XCircle as CircleX,
   Wind,
   Link2,
+  Moon,
   Search,
   X,
   ChevronRight,
@@ -26,6 +27,7 @@ const LOGO_ICON_MAP: Record<string, React.ComponentType<{ className?: string; si
   CircleX,
   Wind,
   Link2,
+  Moon,
 }
 
 function hexToRgba(hex: string, alpha: number): string {

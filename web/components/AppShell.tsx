@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import SearchPalette from './SearchPalette'
 import { TermPopup, ModelPopup, BenchmarkPopup, useTermPopup } from './TermHighlight'
+import { APP_VERSION, LAST_UPDATED } from '@/lib/appMeta'
 
 const navItems = [
   { href: '/', label: 'Learn', icon: GraduationCap },
@@ -101,7 +102,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          <div className="mt-auto pt-6">
+          <div className="mt-auto pt-6 space-y-1.5">
             <a
               href="https://cadekukk.vercel.app/"
               target="_blank"
@@ -110,6 +111,9 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
             >
               Built by Cade Kukk ↗
             </a>
+            <p className="text-[11px] text-[#5c5b63]">
+              v{APP_VERSION} · Updated {LAST_UPDATED}
+            </p>
           </div>
         </aside>
       )}
