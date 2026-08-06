@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo, useCallback } from 'react'
+import { useState, useMemo, useCallback, useEffect } from 'react'
 import {
   Search,
   X,
@@ -307,12 +307,24 @@ function factCheckCountForModel(model: AIModel): number {
 
 interface CompareViewProps {
   onNavigate?: (target: CompareNavTarget) => void
+  /** Model ids seeded from the URL's ?models= parameter. */
+  initialModelIds?: string[]
 }
 
-export default function CompareView({ onNavigate }: CompareViewProps = {}) {
-  const [selectedModelIds, setSelectedModelIds] = useState<string[]>([])
+export default function CompareView({ onNavigate, initialModelIds }: CompareViewProps = {}) {
+  const [selectedModelIds, setSelectedModelIds] = useState<string[]>(
+    () => initialModelIds?.slice(0, MAX_MODELS) ?? []
+  )
   const [showPicker, setShowPicker] = useState(false)
   const [pickerSearch, setPickerSearch] = useState('')
+
+  // Keep the URL shareable as models are selected, without triggering navigation.
+  useEffect(() => {
+    const url = selectedModelIds.length
+      ? `${window.location.pathname}?models=${selectedModelIds.join(',')}`
+      : window.location.pathname
+    window.history.replaceState(null, '', url)
+  }, [selectedModelIds])
 
   const allModels = useMemo(() => getAllModels(), [])
 

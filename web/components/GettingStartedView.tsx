@@ -21,6 +21,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import { lessons } from '@/data/lessons'
+import { loadProgress, saveProgress } from '@/lib/courseProgress'
 import type { AICompany, AIModel, AITerm, AILessonSection, AILessonVisual } from '@/data/types'
 import { TermPopup, TermHighlightedText, ModelPopup, BenchmarkPopup, useTermPopup } from './TermHighlight'
 import type { Benchmark } from '@/data/benchmarks'
@@ -61,10 +62,30 @@ function useFadeIn(dep: unknown, duration = 400) {
 
 interface GettingStartedViewProps {
   onClose: () => void
+  /** Lesson index to open on. When omitted, resumes from saved progress. */
+  initialLesson?: number
 }
 
-export default function GettingStartedView({ onClose }: GettingStartedViewProps) {
-  const [currentLesson, setCurrentLesson] = useState(0)
+export default function GettingStartedView({ onClose, initialLesson }: GettingStartedViewProps) {
+  const [currentLesson, setCurrentLesson] = useState(() =>
+    initialLesson !== undefined ? Math.min(Math.max(initialLesson, 0), lessons.length - 1) : 0
+  )
+
+  // Resume from saved progress when no explicit lesson was requested.
+  const didRestoreRef = useRef(false)
+  useEffect(() => {
+    if (didRestoreRef.current) return
+    didRestoreRef.current = true
+    if (initialLesson !== undefined) return
+    const saved = loadProgress()
+    if (saved && saved.current > 0 && !saved.completed) setCurrentLesson(saved.current)
+  }, [initialLesson])
+
+  // Persist progress as the user moves through lessons.
+  useEffect(() => {
+    if (!didRestoreRef.current) return
+    saveProgress({ current: currentLesson })
+  }, [currentLesson])
   const {
     activeTerm,
     activeModel,
@@ -99,8 +120,12 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
   }, [currentLesson])
 
   const goForward = useCallback(() => {
-    if (currentLesson < lessons.length - 1) setCurrentLesson((p) => p + 1)
-    else onClose()
+    if (currentLesson < lessons.length - 1) {
+      setCurrentLesson((p) => p + 1)
+    } else {
+      saveProgress({ current: currentLesson, completed: true })
+      onClose()
+    }
   }, [currentLesson, onClose])
 
   const renderPrev = () =>

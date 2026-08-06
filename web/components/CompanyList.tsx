@@ -14,10 +14,9 @@ import {
   ChevronRight,
   Building2,
 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { companies, getAllModels, getAllSources } from '@/data/companies'
-import type { AICompany } from '@/data/types'
 import { ModelPopup, TermPopup, BenchmarkPopup, TermHighlightedText, useTermPopup } from './TermHighlight'
-import GettingStartedView from './GettingStartedView'
 
 const LOGO_ICON_MAP: Record<string, React.ComponentType<{ className?: string; size?: number }>> = {
   Brain,
@@ -38,16 +37,12 @@ function hexToRgba(hex: string, alpha: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
-interface CompanyListProps {
-  onSelectCompany: (company: AICompany) => void
-}
-
 type SortMode = 'default' | 'companies' | 'models' | 'sources'
 
-export default function CompanyList({ onSelectCompany }: CompanyListProps) {
+export default function CompanyList() {
+  const router = useRouter()
   const [searchText, setSearchText] = useState('')
   const [sortMode, setSortMode] = useState<SortMode>('default')
-  const [showGettingStarted, setShowGettingStarted] = useState(false)
   const {
     activeTerm,
     activeModel,
@@ -117,21 +112,6 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
           </p>
           <h1 className="text-4xl font-semibold tracking-tight text-[#f5f5f5] leading-tight">Companies</h1>
           <p className="text-sm text-[#8a8990] mt-1.5">Who builds today&apos;s AI, and what they&apos;ve shipped</p>
-        </div>
-
-        {/* Start here button */}
-        <div className="space-y-1.5">
-          <button
-            type="button"
-            onClick={() => setShowGettingStarted(true)}
-            className="scale-button group w-full py-5 sm:py-7 lg:py-8 px-5 sm:px-6 rounded-[14px] bg-[#7065f0] hover:bg-[#7d73f2] transition-colors text-white flex items-center justify-center gap-3"
-          >
-            <span className="text-2xl sm:text-3xl font-semibold tracking-tight">Start here</span>
-            <span className="text-xl opacity-60 group-hover:opacity-100 transition-opacity">↓</span>
-          </button>
-          <p className="text-[11px] text-[#8a8990] text-center">
-            V 0.1.6 · Updated Aug 6, 2026
-          </p>
         </div>
 
         {/* Sort pills */}
@@ -214,7 +194,7 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
               <button
                 key={company.id}
                 type="button"
-                onClick={() => onSelectCompany(company)}
+                onClick={() => router.push(`/companies/${company.id}`)}
                 className="w-full text-left p-4 rounded-[10px] bg-[#161618] border transition-all hover:bg-[#1b1b1e]"
                 style={{ borderColor: accentBorder20 }}
               >
@@ -282,10 +262,6 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
           </p>
         )}
       </div>
-
-      {showGettingStarted && (
-        <GettingStartedView onClose={() => setShowGettingStarted(false)} />
-      )}
 
       {activeTerm && <TermPopup term={activeTerm} onClose={clearTerm} onBack={canGoBack ? back : undefined} onTermTap={selectTerm} onModelTap={showModel} onBenchmarkTap={showBenchmark} />}
       {activeModel && <ModelPopup payload={activeModel} onClose={clearModel} onBack={canGoBack ? back : undefined} onTermTap={showTerm} onModelTap={showModel} onBenchmarkTap={showBenchmark} />}

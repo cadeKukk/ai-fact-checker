@@ -6,7 +6,7 @@ Verified information platform teaching what's truly happening under the hood of 
 
 Built by [Cade Kukk](https://cadekukk.vercel.app/) in collaboration with Dr. Blackwood and Professor Dolence at Longwood University.
 
-![AI Fact Checker — Companies view](docs/screenshot-companies.png)
+![AI Fact Checker — Learn home](docs/screenshot-home.png)
 
 ## What's in this repo
 
@@ -17,15 +17,25 @@ Built by [Cade Kukk](https://cadekukk.vercel.app/) in collaboration with Dr. Bla
 
 ## The web app
 
-Five sections, all backed by a hand-curated, source-cited dataset:
+The front door is **Learn** — an 8-lesson animated mini-course (AI Fundamentals) covering neural networks, language models, tokens, parameters, and how to spot AI misinformation. Course progress is saved locally, so returning visitors pick up where they left off.
 
-- **Companies** — 8 AI companies and 25+ models, each with specs, pricing, capabilities, known limitations, and myth vs. fact breakdowns.
-- **Fact Check** — verified answers to common AI questions, each tagged with a confidence level that reflects the strength of available evidence.
-- **Compare** — side-by-side model comparison across quality, speed, context, value, and versatility, with transparent scoring.
-- **Terms** — a 68-term AI glossary organized by category, with inline term highlighting throughout the app.
-- **Sources** — the 50+ primary sources behind every claim: official documentation, research papers, GitHub repositories, and news coverage.
+Behind it, four reference sections backed by a hand-curated, source-cited dataset:
 
-There's also a built-in **AI Fundamentals mini-course** ("Start here") — 8 animated lessons covering neural networks, language models, tokens, parameters, and how to spot AI misinformation.
+- **Companies** (`/companies`) — 8 AI companies and 25+ models, each with specs, pricing, capabilities, known limitations, and myth vs. fact breakdowns.
+- **Fact Check** (`/fact-check`) — verified answers to common AI questions, each tagged with a confidence level that reflects the strength of available evidence.
+- **Compare** (`/compare`) — side-by-side model comparison across quality, speed, context, value, and versatility, with transparent scoring.
+- **Sources** (`/sources`) — the 50+ primary sources behind every claim: official documentation, research papers, GitHub repositories, and news coverage.
+
+A **⌘K search palette** covers everything — companies, models, fact-checked questions, and the full 68-term AI glossary, which opens in place from anywhere in the app. Terms are also inline-highlighted throughout.
+
+Every page is a real URL, so lessons, model pages, comparisons, and searches are all shareable:
+
+```text
+/learn?lesson=3
+/companies/openai/gpt54
+/compare?models=gpt54,claudeopus47
+/fact-check?q=Can%20AI%20think%3F
+```
 
 ![AI Fact Checker — Fact Check view](docs/screenshot-fact-check.png)
 

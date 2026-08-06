@@ -43,14 +43,12 @@ const ALL_SOURCE_TYPES: SourceType[] = [
 ]
 
 interface SourcesViewProps {
-  // When navigated to from another tab (e.g. Compare), the receiving search box
-  // is seeded with this value. The `key` field changes on each request so the
-  // effect re-runs even when the value is the same as a prior navigation.
-  initialQuery?: { key: number; value: string } | null
+  /** Seeded from the URL's ?q= parameter. */
+  initialQuery?: string
 }
 
-export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
-  const [searchText, setSearchText] = useState(initialQuery?.value ?? '')
+export default function SourcesView({ initialQuery = '' }: SourcesViewProps = {}) {
+  const [searchText, setSearchText] = useState(initialQuery)
   const [selectedType, setSelectedType] = useState<SourceType | null>(null)
   const [activeSource, setActiveSource] = useState<Source | null>(null)
   const [feedbackOpen, setFeedbackOpen] = useState(false)
@@ -60,10 +58,16 @@ export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
 
   // Sync the search box whenever a fresh navigation request arrives.
   useEffect(() => {
-    if (!initialQuery) return
-    setSearchText(initialQuery.value)
-    setSelectedType(null)
+    setSearchText(initialQuery)
+    if (initialQuery) setSelectedType(null)
   }, [initialQuery])
+
+  // Keep the URL shareable as the user types, without triggering navigation.
+  useEffect(() => {
+    const q = searchText.trim()
+    const url = q ? `${window.location.pathname}?q=${encodeURIComponent(q)}` : window.location.pathname
+    window.history.replaceState(null, '', url)
+  }, [searchText])
 
   const allSources = useMemo(() => getAllSources(), [])
 

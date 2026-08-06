@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Outfit } from 'next/font/google'
+import AppShell from '@/components/AppShell'
 import './globals.css'
 
 const outfit = Outfit({
@@ -17,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={outfit.variable}>
       <body className="paper-bg">
-        {children}
+        <AppShell>{children}</AppShell>
       </body>
     </html>
   )

@@ -126,16 +126,23 @@ function FactCheckAnswerCard({
 }
 
 interface FactCheckerViewProps {
-  initialQuery?: { key: number; value: string } | null
+  initialQuery?: string
 }
 
-export default function FactCheckerView({ initialQuery }: FactCheckerViewProps = {}) {
-  const [searchText, setSearchText] = useState(initialQuery?.value ?? '')
+export default function FactCheckerView({ initialQuery = '' }: FactCheckerViewProps = {}) {
+  const [searchText, setSearchText] = useState(initialQuery)
 
+  // Sync when navigation delivers a new query (e.g. from search or Compare).
   useEffect(() => {
-    if (!initialQuery) return
-    setSearchText(initialQuery.value)
+    setSearchText(initialQuery)
   }, [initialQuery])
+
+  // Keep the URL shareable as the user types, without triggering navigation.
+  useEffect(() => {
+    const q = searchText.trim()
+    const url = q ? `${window.location.pathname}?q=${encodeURIComponent(q)}` : window.location.pathname
+    window.history.replaceState(null, '', url)
+  }, [searchText])
   const {
     activeTerm,
     activeModel,

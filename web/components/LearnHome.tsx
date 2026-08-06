@@ -1,0 +1,175 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import {
+  Brain,
+  Cpu,
+  Network,
+  MessageCircle,
+  AlignLeft,
+  Scale,
+  CheckCircle,
+  ShieldAlert,
+  Check,
+  ArrowRight,
+  Building2,
+  ShieldCheck,
+  ArrowLeftRight,
+  Link as LinkIcon,
+} from 'lucide-react'
+import { lessons } from '@/data/lessons'
+import { companies, getAllModels, getAllSources } from '@/data/companies'
+import { factCheckQAs } from '@/data/factcheck'
+import { loadProgress, type CourseProgress } from '@/lib/courseProgress'
+
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string; size?: number }>> = {
+  Brain, Cpu, Network, MessageCircle, AlignLeft, Scale, CheckCircle, ShieldAlert,
+}
+
+function hexToRgba(hex: string, alpha: number): string {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
+  if (!result) return `rgba(112, 101, 240, ${alpha})`
+  return `rgba(${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}, ${alpha})`
+}
+
+export default function LearnHome() {
+  const router = useRouter()
+  const [progress, setProgress] = useState<CourseProgress | null>(null)
+  const [hydrated, setHydrated] = useState(false)
+
+  useEffect(() => {
+    setProgress(loadProgress())
+    setHydrated(true)
+  }, [])
+
+  const completedCount = progress?.completed ? lessons.length : progress?.max ?? 0
+  const started = progress !== null && (progress.max > 0 || progress.current > 0)
+  const ctaLabel = progress?.completed
+    ? 'Review the course'
+    : started
+      ? `Continue — Lesson ${Math.min((progress?.current ?? 0) + 1, lessons.length)} of ${lessons.length}`
+      : 'Start the course'
+
+  const quickLinks = [
+    { href: '/companies', label: 'Companies', icon: Building2, note: `${companies.length} companies · ${getAllModels().length} models` },
+    { href: '/fact-check', label: 'Fact Check', icon: ShieldCheck, note: `${factCheckQAs.length} verified answers` },
+    { href: '/compare', label: 'Compare', icon: ArrowLeftRight, note: 'Models side by side' },
+    { href: '/sources', label: 'Sources', icon: LinkIcon, note: `${getAllSources().length} primary sources` },
+  ]
+
+  return (
+    <div className="min-h-screen bg-[#0a0a0a] text-[#f5f5f5] p-6">
+      <div className="max-w-2xl lg:max-w-4xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="border-b border-white/[0.08] pb-5">
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9fa3fc] mb-2">
+            Start here
+          </p>
+          <h1 className="text-4xl font-semibold tracking-tight text-[#f5f5f5] leading-tight">
+            AI Fundamentals
+          </h1>
+          <p className="text-sm text-[#8a8990] mt-1.5">
+            An {lessons.length}-lesson mini-course on how AI actually works — no technical background needed
+          </p>
+        </div>
+
+        {/* Course CTA */}
+        <div className="space-y-2">
+          <Link
+            href="/learn"
+            className="scale-button group w-full py-5 sm:py-6 px-5 sm:px-6 rounded-[14px] bg-[#7065f0] hover:bg-[#7d73f2] transition-colors text-white flex items-center justify-center gap-3"
+          >
+            <span className="text-xl sm:text-2xl font-semibold tracking-tight">
+              {hydrated ? ctaLabel : 'Start the course'}
+            </span>
+            <ArrowRight size={22} className="opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all" />
+          </Link>
+          {hydrated && started && !progress?.completed && (
+            <div className="flex items-center gap-3 px-1">
+              <div className="flex-1 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-[#7065f0] transition-all"
+                  style={{ width: `${(completedCount / lessons.length) * 100}%` }}
+                />
+              </div>
+              <span className="text-[11px] text-[#8a8990]">
+                {completedCount} of {lessons.length} lessons
+              </span>
+            </div>
+          )}
+          {hydrated && progress?.completed && (
+            <p className="text-[11px] text-[#8a8990] text-center flex items-center justify-center gap-1.5">
+              <Check size={12} className="text-green-400" /> Course completed — nice work
+            </p>
+          )}
+        </div>
+
+        {/* Lesson list */}
+        <div>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-[#8a8990] mb-3">Lessons</h2>
+          <div className="space-y-2">
+            {lessons.map((lesson, i) => {
+              const Icon = ICON_MAP[lesson.icon] ?? Brain
+              const isDone = hydrated && (progress?.completed || i < (progress?.max ?? 0))
+              return (
+                <button
+                  key={lesson.title}
+                  type="button"
+                  onClick={() => router.push(`/learn?lesson=${i}`)}
+                  className="w-full text-left flex items-center gap-4 p-4 rounded-[10px] bg-[#161618] border border-white/10 hover:bg-[#1b1b1e] transition-colors group"
+                >
+                  <div
+                    className="flex-shrink-0 w-10 h-10 rounded-[10px] flex items-center justify-center"
+                    style={{ backgroundColor: hexToRgba(lesson.color, 0.15), color: lesson.color }}
+                  >
+                    <Icon size={20} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-[#8a8990]">
+                      Lesson {i + 1} · {lesson.category}
+                    </p>
+                    <p className="text-[15px] font-semibold text-[#f5f5f5] truncate">{lesson.title}</p>
+                  </div>
+                  {isDone ? (
+                    <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-400/10 flex items-center justify-center">
+                      <Check size={13} className="text-green-400" />
+                    </span>
+                  ) : (
+                    <ArrowRight size={16} className="flex-shrink-0 text-[#8a8990] opacity-0 group-hover:opacity-100 transition-opacity" />
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Explore the rest of the app */}
+        <div>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-[#8a8990] mb-3">Then explore</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {quickLinks.map(({ href, label, icon: Icon, note }) => (
+              <Link
+                key={href}
+                href={href}
+                className="flex items-center gap-3 p-4 rounded-[10px] bg-[#161618] border border-white/10 hover:bg-[#1b1b1e] transition-colors group"
+              >
+                <Icon size={18} className="text-[#9fa3fc] flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-[#f5f5f5]">{label}</p>
+                  <p className="text-xs text-[#8a8990] truncate">{note}</p>
+                </div>
+                <ArrowRight size={15} className="ml-auto flex-shrink-0 text-[#8a8990] opacity-0 group-hover:opacity-100 transition-opacity" />
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <p className="text-[11px] text-[#8a8990] text-center pt-2">
+          V 0.2.0 · Updated Aug 6, 2026
+        </p>
+      </div>
+    </div>
+  )
+}
