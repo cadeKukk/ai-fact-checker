@@ -18,8 +18,7 @@ import {
   ShieldCheck,
   ArrowLeftRight,
   Link as LinkIcon,
-  Gamepad2,
-  Zap,
+  ClipboardCheck,
   Flame,
 } from 'lucide-react'
 import { lessons } from '@/data/lessons'
@@ -153,10 +152,10 @@ export default function LearnHome() {
           </div>
         </div>
 
-        {/* Practice: term-match game */}
+        {/* Knowledge check quiz */}
         <div>
           <style>{TERM_VISUAL_KEYFRAMES}</style>
-          <h2 className="text-sm font-semibold uppercase tracking-wider text-[#8a8990] mb-3">Practice</h2>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-[#8a8990] mb-3">Test your knowledge</h2>
           <Link
             href="/learn/practice"
             className="scale-button group block rounded-[14px] border border-[#7065f0]/30 overflow-hidden"
@@ -165,22 +164,22 @@ export default function LearnHome() {
             <div className="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-5">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1.5">
-                  <Gamepad2 size={16} className="text-[#9fa3fc]" />
-                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9fa3fc]">New · Game</p>
+                  <ClipboardCheck size={16} className="text-[#9fa3fc]" />
+                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9fa3fc]">Quiz</p>
                 </div>
-                <p className="text-xl font-semibold tracking-tight text-[#f5f5f5]">Term Match</p>
+                <p className="text-xl font-semibold tracking-tight text-[#f5f5f5]">Knowledge Check</p>
                 <p className="text-sm text-[#8a8990] mt-1 leading-relaxed">
-                  Match {PLAYABLE_TERM_IDS.length} AI terms to animated visuals. Quick rounds, streaks, and XP — the fastest way to make the vocabulary stick.
+                  A quick 10-question quiz covering {PLAYABLE_TERM_IDS.length} key AI terms. Animated visuals illustrate each concept, and every answer comes with an explanation.
                 </p>
                 {hydrated && practiceStats && practiceStats.rounds > 0 ? (
                   <div className="flex items-center gap-4 mt-3 text-[12px] font-semibold">
-                    <span className="flex items-center gap-1 text-[#eab308]"><Zap size={12} /> {practiceStats.xp} XP</span>
+                    <span className="text-[#9fa3fc]">{practiceStats.xp} pts earned</span>
                     <span className="flex items-center gap-1 text-orange-400"><Flame size={12} /> Best streak {practiceStats.bestStreak}</span>
-                    <span className="text-[#8a8990]">{practiceStats.rounds} {practiceStats.rounds === 1 ? 'round' : 'rounds'}</span>
+                    <span className="text-[#8a8990]">{practiceStats.rounds} {practiceStats.rounds === 1 ? 'quiz' : 'quizzes'} taken</span>
                   </div>
                 ) : (
                   <span className="inline-flex items-center gap-1.5 mt-3 text-[13px] font-semibold text-[#9fa3fc] group-hover:text-[#b8b4fb] transition-colors">
-                    Play your first round
+                    Start the quiz
                     <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
                   </span>
                 )}
