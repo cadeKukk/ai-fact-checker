@@ -29,6 +29,11 @@ export const TERM_VISUAL_KEYFRAMES = `
 @keyframes tvFlash { 0%,60%,100% { opacity: 1 } 70%,90% { opacity: 0 } }
 @keyframes tvShake { 0%,100% { transform: translateX(0) } 20% { transform: translateX(-2px) } 40% { transform: translateX(2px) } 60% { transform: translateX(-2px) } 80% { transform: translateX(2px) } }
 @keyframes tvTyping { 0% { width: 0 } 60%,100% { width: 34px } }
+@keyframes tvCycle { 0%,24%,100% { opacity: 0 } 6%,18% { opacity: 1 } }
+@keyframes tvHinge { 0%,12%,100% { transform: rotate(0deg) } 45%,75% { transform: rotate(var(--rot,-24deg)) } }
+@keyframes tvZigzag { 0%,10% { transform: translate(0,0) } 30% { transform: translate(20px,-11px) } 50% { transform: translate(38px,11px) } 70% { transform: translate(56px,-11px) } 88%,100% { transform: translate(72px,0) } }
+@keyframes tvSwapA { 0%,42% { opacity: 1 } 52%,92% { opacity: 0 } 100% { opacity: 1 } }
+@keyframes tvSwapB { 0%,42% { opacity: 0 } 52%,92% { opacity: 1 } 100% { opacity: 0 } }
 `
 
 /** Shared inline-style helper: run a keyframe with fill-box transform origin. */
@@ -46,7 +51,28 @@ function anim(
   }
 }
 
-const MUTED = '#3f3f46'
+/**
+ * Like anim(), but pivots around an absolute point in viewBox coordinates.
+ * Required whenever an element must rotate/sway around a point that is not
+ * the center of its own bounding box (clock hands, hinged lids, orbits...).
+ */
+function animAt(
+  name: string,
+  dur: number,
+  delay: number,
+  ox: number,
+  oy: number,
+  vars: Record<string, string> = {},
+): React.CSSProperties {
+  return {
+    animation: `${name} ${dur}s ease-in-out ${delay}s infinite`,
+    transformBox: 'view-box',
+    transformOrigin: `${ox}px ${oy}px`,
+    ...(vars as React.CSSProperties),
+  }
+}
+
+const MUTED = '#4a4a52'
 const DIM = '#26262b'
 const TEXT = '#8a8990'
 const GREEN = '#22c55e'
@@ -106,9 +132,11 @@ const ParameterVisual: VisualFn = ({ c }) => (
       return (
         <g key={i}>
           <circle cx={x} cy={y} r="11" fill={DIM} stroke={MUTED} strokeWidth="1.5" />
-          <g style={anim('tvSway', 2 + (i % 3) * 0.7, i * 0.2, { '--rot': `${30 + (i % 3) * 40}deg` } as never)}>
+          {/* needle pivots on the dial center, like a real knob */}
+          <g style={animAt('tvSway', 2 + (i % 3) * 0.7, i * 0.2, x, y, { '--rot': `${30 + (i % 3) * 40}deg` } as never)}>
             <line x1={x} y1={y} x2={x} y2={y - 8} stroke={c} strokeWidth="2" strokeLinecap="round" />
           </g>
+          <circle cx={x} cy={y} r="1.8" fill={c} />
         </g>
       )
     })}
@@ -141,12 +169,12 @@ const HallucinationVisual: VisualFn = ({ c }) => (
     <path d="M20 22 h80 a6 6 0 0 1 6 6 v28 a6 6 0 0 1 -6 6 h-56 l-10 10 v-10 h-14 a6 6 0 0 1 -6 -6 v-28 a6 6 0 0 1 6 -6 z" fill={DIM} stroke={MUTED} strokeWidth="1.5" transform="translate(3 0)" />
     <rect x="30" y="32" width="52" height="4" rx="2" fill={TEXT} opacity=".7" />
     <rect x="30" y="41" width="38" height="4" rx="2" fill={TEXT} opacity=".45" />
-    {/* confident check that flickers into a warning */}
-    <g style={anim('tvFlash', 3)}>
+    {/* a confident checkmark swaps cleanly into a warning sign */}
+    <g style={anim('tvSwapA', 3.2)}>
       <circle cx="92" cy="40" r="9" fill={GREEN} opacity=".9" />
       <path d="M88 40 l3 3 l5 -6" stroke="#0a0a0a" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
     </g>
-    <g style={anim('tvBlink', 3, 0, {})}>
+    <g style={anim('tvSwapB', 3.2)}>
       <path d="M92 31 l9 16 h-18 z" fill={c} />
       <rect x="91" y="37" width="2" height="5" rx="1" fill="#0a0a0a" />
       <rect x="91" y="44" width="2" height="2" rx="1" fill="#0a0a0a" />
@@ -199,7 +227,8 @@ const MoEVisual: VisualFn = ({ c }) => (
       <g key={i}>
         <path d={`M58 45 C 70 45 70 ${16 + i * 19} 80 ${16 + i * 19}`} fill="none" stroke={MUTED} strokeWidth="1" opacity=".5" />
         <rect x="80" y={9 + i * 19} width="26" height="14" rx="4" fill={DIM} stroke={MUTED} strokeWidth="1.2" />
-        <rect x="80" y={9 + i * 19} width="26" height="14" rx="4" fill={c} opacity=".55" style={anim('tvBlink', 4, i)} />
+        {/* the router activates exactly one expert at a time */}
+        <rect x="80" y={9 + i * 19} width="26" height="14" rx="4" fill={c} opacity=".6" style={anim('tvCycle', 4, i)} />
       </g>
     ))}
   </g>
@@ -222,21 +251,22 @@ const EmbeddingVisual: VisualFn = ({ c }) => (
 
 const MultimodalVisual: VisualFn = ({ c }) => (
   <g>
-    {/* image / audio / text converge into one node */}
-    <rect x="10" y="12" width="22" height="17" rx="3" fill="none" stroke={MUTED} strokeWidth="1.5" />
-    <circle cx="17" cy="19" r="2.5" fill={MUTED} />
-    <path d="M12 27 l6 -6 l5 5 l4 -4 l5 5" stroke={MUTED} strokeWidth="1.3" fill="none" />
-    {[0, 1, 2, 3].map((i) => (
-      <rect key={i} x={12 + i * 5} y={44 - (i % 2 ? 6 : 3)} width="2.6" height={i % 2 ? 12 : 7} rx="1.3" fill={MUTED} style={anim('tvGrow', 1.6, i * 0.18)} />
+    {/* image / audio / text streams converge into one model node */}
+    <rect x="10" y="10" width="24" height="19" rx="3" fill={DIM} stroke={TEXT} strokeWidth="1.4" />
+    <circle cx="17" cy="17" r="2.5" fill={TEXT} />
+    <path d="M12 26 l6 -6 l5 5 l4 -4 l6 6" stroke={TEXT} strokeWidth="1.4" fill="none" />
+    {[0, 1, 2, 3, 4].map((i) => (
+      <rect key={i} x={12 + i * 5} y={45 - (i % 2 ? 7 : 4)} width="3" height={i % 2 ? 14 : 8} rx="1.5" fill={TEXT} style={anim('tvGrow', 1.6, i * 0.18)} />
     ))}
     <g>
-      <rect x="10" y="64" width="22" height="4" rx="2" fill={MUTED} />
-      <rect x="10" y="72" width="15" height="4" rx="2" fill={MUTED} opacity=".6" />
+      <rect x="10" y="63" width="24" height="4.5" rx="2.2" fill={TEXT} />
+      <rect x="10" y="71" width="16" height="4.5" rx="2.2" fill={TEXT} opacity=".6" />
     </g>
-    {[20, 45, 70].map((y, i) => (
-      <path key={i} d={`M36 ${y} C 62 ${y} 62 45 82 45`} fill="none" stroke={c} strokeWidth="1.3" opacity=".55" strokeDasharray="4 4" style={anim('tvDash', 1.6, i * 0.2, { animationTimingFunction: 'linear' })} />
+    {[19, 45, 69].map((y, i) => (
+      <path key={i} d={`M38 ${y} C 62 ${y} 62 45 80 45`} fill="none" stroke={c} strokeWidth="1.4" opacity=".7" strokeDasharray="4 4" style={anim('tvDash', 1.6, i * 0.2, { animationTimingFunction: 'linear' })} />
     ))}
-    <circle cx="94" cy="45" r="12" fill={c} opacity=".9" style={anim('tvScale', 2.6, 0, { '--sc': '1.12' } as never)} />
+    <circle cx="94" cy="45" r="13" fill={c} opacity=".9" style={anim('tvScale', 2.6, 0, { '--sc': '1.12' } as never)} />
+    <path d="M88 45 q3 -6 6 0 t6 0" stroke="#0a0a0a" strokeWidth="1.5" fill="none" />
   </g>
 )
 
@@ -328,9 +358,10 @@ const QuantizationVisual: VisualFn = ({ c }) => (
 const LatencyVisual: VisualFn = ({ c }) => (
   <g>
     <circle cx="38" cy="45" r="21" fill={DIM} stroke={MUTED} strokeWidth="1.5" />
-    <line x1="38" y1="45" x2="38" y2="30" stroke={c} strokeWidth="2" strokeLinecap="round" style={anim('tvSpin', 2.8, 0, { transformOrigin: '38px 45px', animationTimingFunction: 'linear' })} />
+    {/* hand sweeps around the watch center */}
+    <line x1="38" y1="45" x2="38" y2="30" stroke={c} strokeWidth="2" strokeLinecap="round" style={animAt('tvSpin', 2.8, 0, 38, 45, { animationTimingFunction: 'linear' })} />
     <circle cx="38" cy="45" r="2.4" fill={c} />
-    <rect x="38" y="20" width="4" height="5" rx="1.5" fill={MUTED} transform="rotate(0 40 22)" />
+    <rect x="36" y="19" width="4" height="5" rx="1.5" fill={MUTED} />
     <g style={anim('tvPop', 2.8, 1.5)}>
       <path d="M70 34 h34 a5 5 0 0 1 5 5 v12 a5 5 0 0 1 -5 5 h-22 l-7 7 v-7 h-5 a5 5 0 0 1 -5 -5 v-12 a5 5 0 0 1 5 -5 z" fill={c} opacity=".22" stroke={c} strokeWidth="1.3" transform="translate(-4 0)" />
       <rect x="72" y="41" width="26" height="3.4" rx="1.7" fill={c} opacity=".9" />
@@ -382,8 +413,8 @@ const JailbreakVisual: VisualFn = ({ c }) => (
     <rect x="42" y="40" width="36" height="28" rx="6" fill={DIM} stroke={c} strokeWidth="1.6" />
     <circle cx="60" cy="52" r="3.4" fill={c} />
     <rect x="58.5" y="54" width="3" height="7" rx="1.5" fill={c} />
-    {/* shackle pops open */}
-    <g style={anim('tvSway', 3, 0, { '--rot': '14deg', transformOrigin: '48px 40px' } as never)}>
+    {/* shackle hinges open around its left anchor */}
+    <g style={animAt('tvHinge', 3, 0, 48, 40, { '--rot': '-28deg' } as never)}>
       <path d="M48 40 v-8 a12 12 0 0 1 24 0 v8" fill="none" stroke={c} strokeWidth="4" strokeLinecap="round" />
     </g>
     {[0, 1, 2].map((i) => (
@@ -427,14 +458,15 @@ const RAGVisual: VisualFn = ({ c }) => (
 const ToolUseVisual: VisualFn = ({ c }) => (
   <g>
     <circle cx="42" cy="45" r="15" fill={DIM} stroke={c} strokeWidth="1.5" />
-    <g style={anim('tvSpin', 5, 0, { transformOrigin: '42px 45px', animationTimingFunction: 'linear' })}>
+    {/* gear teeth spin around the gear center */}
+    <g style={animAt('tvSpin', 5, 0, 42, 45, { animationTimingFunction: 'linear' })}>
       {[0, 60, 120, 180, 240, 300].map((a) => (
         <rect key={a} x="40" y="27" width="4" height="6" rx="1.2" fill={c} transform={`rotate(${a} 42 45)`} />
       ))}
     </g>
     <circle cx="42" cy="45" r="6" fill="#0f0f11" stroke={c} strokeWidth="1.4" />
-    {/* wrench swings in to engage */}
-    <g style={anim('tvSway', 2.6, 0, { '--rot': '12deg', transformOrigin: '92px 30px' } as never)}>
+    {/* wrench rocks toward the gear, pivoting at its head */}
+    <g style={animAt('tvSway', 2.6, 0, 88, 34, { '--rot': '9deg' } as never)}>
       <path d="M88 26 a8 8 0 1 0 8 8 l-4 -1 -8 14 -6 -3.5 8 -14 z" fill={MUTED} stroke={TEXT} strokeWidth="1" transform="rotate(30 88 34)" />
     </g>
   </g>
@@ -460,7 +492,8 @@ const ChainOfThoughtVisual: VisualFn = ({ c }) => (
 const OpenWeightsVisual: VisualFn = ({ c }) => (
   <g>
     <rect x="38" y="34" width="44" height="32" rx="5" fill={DIM} stroke={c} strokeWidth="1.6" />
-    <g style={anim('tvSway', 3.2, 0, { '--rot': '-24deg', transformOrigin: '38px 34px' } as never)}>
+    {/* lid hinges open at its left edge */}
+    <g style={animAt('tvHinge', 3.2, 0, 38, 35, { '--rot': '-26deg' } as never)}>
       <rect x="38" y="26" width="44" height="9" rx="3" fill={c} opacity=".85" />
     </g>
     {[0, 1, 2].map((i) => (
@@ -474,7 +507,7 @@ const OpenWeightsVisual: VisualFn = ({ c }) => (
 const AgentVisual: VisualFn = ({ c }) => (
   <g>
     {/* plan → act → observe loop */}
-    <circle cx="60" cy="45" r="24" fill="none" stroke={MUTED} strokeWidth="1.4" strokeDasharray="4 4" style={anim('tvSpin', 8, 0, { transformOrigin: '60px 45px', animationTimingFunction: 'linear' })} />
+    <circle cx="60" cy="45" r="24" fill="none" stroke={MUTED} strokeWidth="1.4" strokeDasharray="4 4" style={animAt('tvSpin', 8, 0, 60, 45, { animationTimingFunction: 'linear' })} />
     {[
       [60, 19, 'plan'], [83, 58, 'act'], [37, 58, 'see'],
     ].map(([x, y, label], i) => (
@@ -529,8 +562,8 @@ const ThinkingModeVisual: VisualFn = ({ c }) => (
     <circle cx="46" cy="40" r="15" fill={DIM} stroke={c} strokeWidth="1.5" />
     <path d="M40 40 q3 -6 6 0 t6 0" stroke={c} strokeWidth="1.3" fill="none" />
     <rect x="42" y="57" width="8" height="4" rx="2" fill={c} opacity=".7" />
-    {/* orbiting thought dots, then the answer pops */}
-    <g style={anim('tvSpin', 2.6, 0, { transformOrigin: '46px 40px', animationTimingFunction: 'linear' })}>
+    {/* thought dots orbit the bulb, then the answer pops */}
+    <g style={animAt('tvSpin', 2.6, 0, 46, 40, { animationTimingFunction: 'linear' })}>
       <circle cx="46" cy="18" r="2.6" fill={c} />
       <circle cx="66" cy="52" r="2" fill={c} opacity=".7" />
       <circle cx="26" cy="52" r="1.6" fill={c} opacity=".5" />
@@ -562,8 +595,8 @@ const MCPVisual: VisualFn = ({ c }) => (
   <g>
     <circle cx="24" cy="45" r="13" fill={DIM} stroke={c} strokeWidth="1.5" />
     <path d="M18 45 q3 -6 6 0 t6 0" stroke={c} strokeWidth="1.2" fill="none" />
-    {/* plug slides into the socket */}
-    <g style={anim('tvSlide', 2.8, 0, { '--tx': '10px' } as never)}>
+    {/* plug slides in until the prongs seat in the socket */}
+    <g style={anim('tvSlide', 2.8, 0, { '--tx': '13px' } as never)}>
       <rect x="42" y="39" width="12" height="12" rx="2.5" fill={c} opacity=".9" />
       <line x1="54" y1="42" x2="60" y2="42" stroke={c} strokeWidth="2.4" />
       <line x1="54" y1="48" x2="60" y2="48" stroke={c} strokeWidth="2.4" />
@@ -602,10 +635,9 @@ const GuardrailsVisual: VisualFn = ({ c }) => (
     {[0, 1, 2, 3].map((i) => (
       <line key={i} x1={20 + i * 26} y1="26" x2={20 + i * 26} y2="20" stroke={c} strokeWidth="2" />
     ))}
-    {/* the request bounces off the rails but keeps moving forward */}
-    <circle r="5" fill="#f5f5f5" style={{ ...anim('tvSlide', 3.2, 0, { '--tx': '72px' } as never) }} cx="20" cy="45" />
-    <circle r="7" fill="none" stroke={MUTED} strokeWidth="1" style={{ ...anim('tvSlide', 3.2, 0, { '--tx': '72px' } as never) }} cx="20" cy="45" />
-    <path d="M30 45 q12 -12 24 0 t24 0" stroke={MUTED} strokeWidth="1.2" strokeDasharray="3 3" fill="none" opacity=".6" />
+    {/* the request ricochets between the rails but keeps moving forward */}
+    <path d="M20 45 L 40 34 L 58 56 L 76 34 L 92 45" stroke={MUTED} strokeWidth="1.2" strokeDasharray="3 3" fill="none" opacity=".6" />
+    <circle r="5" fill="#f5f5f5" style={anim('tvZigzag', 3.4)} cx="20" cy="45" />
   </g>
 )
 
@@ -642,19 +674,33 @@ const ScalingLawsVisual: VisualFn = ({ c }) => (
 
 const DeepfakeVisual: VisualFn = ({ c }) => (
   <g>
-    {/* a face whose right half flickers into a wireframe copy */}
-    <circle cx="60" cy="42" r="24" fill={DIM} stroke={MUTED} strokeWidth="1.5" />
-    <path d="M60 18 a24 24 0 0 1 0 48" fill={c} opacity=".15" />
-    <circle cx="51" cy="38" r="3" fill={TEXT} />
-    <g style={anim('tvFlash', 2.6)}>
-      <circle cx="69" cy="38" r="3" fill={TEXT} />
+    {/* two identical portraits: the copy swaps into a synthetic wireframe */}
+    <rect x="12" y="16" width="42" height="58" rx="5" fill={DIM} stroke={TEXT} strokeWidth="1.4" />
+    <circle cx="33" cy="38" r="11" fill="none" stroke={TEXT} strokeWidth="1.6" />
+    <circle cx="29" cy="36" r="1.8" fill={TEXT} />
+    <circle cx="37" cy="36" r="1.8" fill={TEXT} />
+    <path d="M29 42 q4 3 8 0" stroke={TEXT} strokeWidth="1.4" fill="none" strokeLinecap="round" />
+    <path d="M22 66 q11 -10 22 0" stroke={TEXT} strokeWidth="1.6" fill="none" strokeLinecap="round" />
+
+    <path d="M58 45 H 64 M61.5 42 L 64.5 45 L 61.5 48" stroke={c} strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+
+    <rect x="66" y="16" width="42" height="58" rx="5" fill={DIM} stroke={c} strokeWidth="1.4" />
+    {/* real-looking copy... */}
+    <g style={anim('tvSwapA', 3.4)}>
+      <circle cx="87" cy="38" r="11" fill="none" stroke={TEXT} strokeWidth="1.6" />
+      <circle cx="83" cy="36" r="1.8" fill={TEXT} />
+      <circle cx="91" cy="36" r="1.8" fill={TEXT} />
+      <path d="M83 42 q4 3 8 0" stroke={TEXT} strokeWidth="1.4" fill="none" strokeLinecap="round" />
+      <path d="M76 66 q11 -10 22 0" stroke={TEXT} strokeWidth="1.6" fill="none" strokeLinecap="round" />
     </g>
-    <g style={anim('tvBlink', 2.6)}>
-      <circle cx="69" cy="38" r="3" fill="none" stroke={c} strokeWidth="1.2" />
-      <path d="M62 22 l14 6 M62 30 l16 2 M62 46 l15 -1 M62 54 l13 -5" stroke={c} strokeWidth=".9" opacity=".8" />
+    {/* ...revealed as a generated mesh */}
+    <g style={anim('tvSwapB', 3.4)}>
+      <circle cx="87" cy="38" r="11" fill="none" stroke={c} strokeWidth="1.3" strokeDasharray="3 2.5" />
+      <path d="M80 32 L 94 32 M78 38 L 96 38 M80 44 L 94 44 M83 29 L 83 47 M87 27 L 87 49 M91 29 L 91 47" stroke={c} strokeWidth=".9" opacity=".85" />
+      <path d="M76 66 q11 -10 22 0" stroke={c} strokeWidth="1.4" fill="none" strokeLinecap="round" strokeDasharray="3 2.5" />
+      <circle cx="83" cy="36" r="1.8" fill={c} />
+      <circle cx="91" cy="36" r="1.8" fill={c} />
     </g>
-    <path d="M52 52 q8 5 16 0" stroke={TEXT} strokeWidth="1.6" fill="none" strokeLinecap="round" />
-    <path d="M60 18 v48" stroke={c} strokeWidth="1.2" strokeDasharray="3 3" opacity=".8" />
   </g>
 )
 
@@ -699,9 +745,146 @@ const StreamingVisual: VisualFn = ({ c }) => (
   </g>
 )
 
+const NN_LAYERS: number[][] = [
+  [24, 45, 66], // input node y-positions at x=22
+  [17, 36, 55, 74], // hidden at x=60
+  [32, 58], // output at x=98
+]
+
+const NeuralNetworkVisual: VisualFn = ({ c }) => (
+  <g>
+    {/* edges */}
+    {NN_LAYERS[0].map((y1) =>
+      NN_LAYERS[1].map((y2) => (
+        <line key={`a${y1}${y2}`} x1="22" y1={y1} x2="60" y2={y2} stroke={MUTED} strokeWidth=".8" opacity=".6" />
+      )),
+    )}
+    {NN_LAYERS[1].map((y1) =>
+      NN_LAYERS[2].map((y2) => (
+        <line key={`b${y1}${y2}`} x1="60" y1={y1} x2="98" y2={y2} stroke={MUTED} strokeWidth=".8" opacity=".6" />
+      )),
+    )}
+    {/* signal pulses travel layer to layer */}
+    {[45, 36, 55].map((y, i) => (
+      <circle key={`p${i}`} r="2.2" fill={c} cx="22" cy={y} style={anim('tvSlide', 2.6, i * 0.3, { '--tx': '38px', '--ty': `${NN_LAYERS[1][i + 1 > 3 ? 1 : i] - y}px` } as never)} />
+    ))}
+    {/* nodes light up in waves, layer by layer */}
+    {NN_LAYERS.map((ys, li) =>
+      ys.map((y) => (
+        <g key={`n${li}${y}`}>
+          <circle cx={22 + li * 38} cy={y} r="5.5" fill={DIM} stroke={TEXT} strokeWidth="1.2" />
+          <circle cx={22 + li * 38} cy={y} r="5.5" fill={c} opacity=".8" style={anim('tvCycle', 2.6, li * 0.85)} />
+        </g>
+      )),
+    )}
+  </g>
+)
+
+const NodeVisual: VisualFn = ({ c }) => (
+  <g>
+    {/* three weighted inputs feed one node, which fires an output */}
+    {[24, 45, 66].map((y, i) => (
+      <g key={y}>
+        <circle cx="14" cy={y} r="4" fill={DIM} stroke={TEXT} strokeWidth="1.2" />
+        <line x1="18" y1={y} x2="52" y2="45" stroke={MUTED} strokeWidth={[1, 2.4, 1.6][i]} opacity=".8" />
+        <circle r="2" fill={c} cx="20" cy={y} style={anim('tvSlide', 2.4, i * 0.15, { '--tx': '30px', '--ty': `${45 - y}px` } as never)} />
+      </g>
+    ))}
+    <circle cx="62" cy="45" r="11" fill={DIM} stroke={c} strokeWidth="1.6" />
+    <text x="62" y="48.5" textAnchor="middle" fontSize="10" fill={c} fontWeight="800">Σ</text>
+    <circle cx="62" cy="45" r="11" fill={c} opacity=".35" style={anim('tvCycle', 2.4, 1.1)} />
+    <line x1="73" y1="45" x2="100" y2="45" stroke={MUTED} strokeWidth="1.6" />
+    <circle r="2.4" fill={c} cx="76" cy="45" style={anim('tvSlide', 2.4, 1.3, { '--tx': '26px' } as never)} />
+    <path d="M100 41 l5 4 l-5 4" fill="none" stroke={TEXT} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+  </g>
+)
+
+const WeightsVisual: VisualFn = ({ c }) => (
+  <g>
+    {/* connections carry numbers; heavier weight = stronger signal */}
+    {[
+      { y: 22, w: 4, label: '0.9', hot: true },
+      { y: 45, w: 2, label: '0.4', hot: false },
+      { y: 68, w: 0.9, label: '0.1', hot: false },
+    ].map(({ y, w, label, hot }, i) => (
+      <g key={y}>
+        <circle cx="16" cy={y} r="5" fill={DIM} stroke={TEXT} strokeWidth="1.2" />
+        <line x1="21" y1={y} x2="84" y2={y} stroke={hot ? c : MUTED} strokeWidth={w} strokeLinecap="round" opacity={hot ? 0.95 : 0.8} />
+        <circle r={hot ? 2.6 : 1.8} fill={hot ? c : TEXT} cx="24" cy={y} style={anim('tvSlide', hot ? 1.6 : 2.6, i * 0.2, { '--tx': '56px' } as never)} />
+        <rect x="42" y={y - 12} width="21" height="10" rx="3" fill="#0f0f11" stroke={hot ? c : MUTED} strokeWidth="1" />
+        <text x="52.5" y={y - 4.5} textAnchor="middle" fontSize="7" fill={hot ? c : TEXT} fontWeight="700">{label}</text>
+      </g>
+    ))}
+    <circle cx="94" cy="45" r="9" fill={DIM} stroke={c} strokeWidth="1.5" style={anim('tvScale', 2.2, 0, { '--sc': '1.15' } as never)} />
+    <path d="M85 26 Q 90 34 92 37 M85 64 Q 90 56 92 53" stroke={MUTED} strokeWidth="1.2" fill="none" />
+  </g>
+)
+
+const BackpropVisual: VisualFn = ({ c }) => (
+  <g>
+    {/* prediction misses, and the error signal flows backward */}
+    {[26, 60, 94].map((x, li) => (
+      <g key={x}>
+        {(li === 1 ? [24, 45, 66] : [34, 56]).map((y) => (
+          <circle key={y} cx={x} cy={y} r="5.5" fill={DIM} stroke={TEXT} strokeWidth="1.2" />
+        ))}
+      </g>
+    ))}
+    {[34, 56].map((y1) =>
+      [24, 45, 66].map((y2) => (
+        <line key={`a${y1}${y2}`} x1="31" y1={y1} x2="55" y2={y2} stroke={MUTED} strokeWidth=".8" opacity=".6" />
+      )),
+    )}
+    {[24, 45, 66].map((y1) =>
+      [34, 56].map((y2) => (
+        <line key={`b${y1}${y2}`} x1="65" y1={y1} x2="89" y2={y2} stroke={MUTED} strokeWidth=".8" opacity=".6" />
+      )),
+    )}
+    {/* wrong output */}
+    <g style={anim('tvCycle', 3.2, 0)}>
+      <circle cx="94" cy="34" r="6.5" fill={RED} opacity=".9" />
+      <path d="M91.5 31.5 l5 5 M96.5 31.5 l-5 5" stroke="#0a0a0a" strokeWidth="1.6" strokeLinecap="round" />
+    </g>
+    {/* error pulse travels backward through the network */}
+    <circle r="2.6" fill={RED} cx="94" cy="34" style={anim('tvSlide', 3.2, 0.4, { '--tx': '-68px', '--ty': '11px' } as never)} />
+    <path d="M86 22 H 40 M44 18.5 L 39 22 L 44 25.5" stroke={RED} strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity=".8" style={anim('tvPulse', 3.2, 0.6)} />
+    {/* weights glow as they update */}
+    {[34, 56].map((y1, i) => (
+      <line key={y1} x1="31" y1={y1} x2="55" y2="45" stroke={c} strokeWidth="1.6" style={anim('tvCycle', 3.2, 1.6 + i * 0.2)} />
+    ))}
+    {[24, 45, 66].map((y1, i) => (
+      <line key={y1} x1="65" y1={y1} x2="89" y2="34" stroke={c} strokeWidth="1.6" style={anim('tvCycle', 3.2, 1.2 + i * 0.15)} />
+    ))}
+  </g>
+)
+
+const LMVisual: VisualFn = ({ c }) => (
+  <g>
+    {/* same job, different scale: a tiny LM vs a massive LLM */}
+    <rect x="14" y="46" width="22" height="20" rx="4" fill={DIM} stroke={TEXT} strokeWidth="1.3" />
+    <text x="25" y="59" textAnchor="middle" fontSize="7.5" fill={TEXT} fontWeight="800">LM</text>
+    <rect x="18" y="72" width="14" height="4" rx="2" fill={TEXT} opacity=".6" style={anim('tvPulse', 2.4, 0)} />
+
+    <path d="M42 56 H 54 M50 52.5 L 54.5 56 L 50 59.5" stroke={c} strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+
+    <rect x="60" y="14" width="48" height="52" rx="6" fill={DIM} stroke={c} strokeWidth="1.6" style={anim('tvScale', 3, 0, { '--sc': '1.04' } as never)} />
+    <text x="84" y="44" textAnchor="middle" fontSize="12" fill={c} fontWeight="800">LLM</text>
+    <rect x="64" y="72" width="44" height="4" rx="2" fill={c} opacity=".8" style={anim('tvPulse', 2.4, 0.3)} />
+    {/* billions of weights inside */}
+    {[0, 1, 2, 3, 4, 5, 6, 7].map((i) => (
+      <circle key={i} cx={66 + (i % 4) * 12} cy={52 + Math.floor(i / 4) * 8} r="1.6" fill={c} opacity=".5" style={anim('tvPulse', 2, i * 0.18)} />
+    ))}
+  </g>
+)
+
 /* ------------------------------------------------------------ registry */
 
 const VISUALS: Record<string, VisualFn> = {
+  'term-neural-network': NeuralNetworkVisual,
+  'term-node': NodeVisual,
+  'term-weights': WeightsVisual,
+  'term-backprop': BackpropVisual,
+  'term-lm': LMVisual,
   'term-1': TokenVisual,
   'term-2': TokenizerVisual,
   'term-3': ContextWindowVisual,
