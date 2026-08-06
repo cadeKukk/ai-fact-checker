@@ -19,6 +19,10 @@ Built by [Cade Kukk](https://cadekukk.vercel.app/) in collaboration with Dr. Bla
 
 The front door is **Learn** — an 8-lesson animated mini-course (AI Fundamentals) covering neural networks, language models, tokens, parameters, and how to spot AI misinformation. Course progress is saved locally, so returning visitors pick up where they left off.
 
+After the course, **Term Match** (`/learn/practice`) makes the vocabulary stick: a Duolingo-style game where you match AI terms to hand-built animated visuals. Each round mixes three exercise types — name the animated concept, pick the visual for a term, and a final pair-matching board — with streaks, XP, and per-round accuracy. 41 terms are playable, each with its own looping SVG scene, and lifetime stats (XP, best streak, rounds) persist locally.
+
+![Term Match practice game](docs/screenshot-practice.png)
+
 Behind it, four reference sections backed by a hand-curated, source-cited dataset:
 
 - **Companies** (`/companies`) — 9 AI companies and 36 models (including Moonshot AI's Kimi K3, GPT-5.6 Sol, Claude Opus 5, Grok 4.5, and DeepSeek V4), each with specs, pricing, capabilities, known limitations, and myth vs. fact breakdowns.
@@ -26,7 +30,7 @@ Behind it, four reference sections backed by a hand-curated, source-cited datase
 - **Compare** (`/compare`) — side-by-side model comparison across quality, speed, context, value, and versatility, with transparent scoring.
 - **Sources** (`/sources`) — 75+ primary sources behind every claim: official documentation, peer-reviewed and arXiv research papers, GitHub repositories, and news coverage.
 
-A **⌘K search palette** covers everything — companies, models, fact-checked questions, and the full 68-term AI glossary, which opens in place from anywhere in the app. Terms are also inline-highlighted throughout.
+A **⌘K search palette** covers everything — companies, models, fact-checked questions, and the full 78-term AI glossary, which opens in place from anywhere in the app. Terms are also inline-highlighted throughout.
 
 Every page is a real URL, so lessons, model pages, comparisons, and searches are all shareable:
 
@@ -88,4 +92,4 @@ npx vercel --prod
 
 All model specs, pricing, benchmarks, and claims live in `web/data/` as typed TypeScript modules (`companies.ts`, `factcheck.ts`, `terms.ts`, `benchmarks.ts`, `lessons.ts`). Every claim traces back to a source listed in the Sources tab.
 
-The app version and data-freshness date live in one place — `web/lib/appMeta.ts` — and are shown in the sidebar footer and on the Learn home page. Model and company information is current as of **August 2026** (v0.3.0). AI moves fast; always verify against primary sources.
+The app version and data-freshness date live in one place — `web/lib/appMeta.ts` — and are shown in the sidebar footer and on the Learn home page. Model and company information is current as of **August 2026** (v0.4.0). AI moves fast; always verify against primary sources.

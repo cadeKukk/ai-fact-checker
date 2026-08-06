@@ -18,12 +18,17 @@ import {
   ShieldCheck,
   ArrowLeftRight,
   Link as LinkIcon,
+  Gamepad2,
+  Zap,
+  Flame,
 } from 'lucide-react'
 import { lessons } from '@/data/lessons'
 import { companies, getAllModels, getAllSources } from '@/data/companies'
 import { factCheckQAs } from '@/data/factcheck'
 import { loadProgress, type CourseProgress } from '@/lib/courseProgress'
+import { loadPracticeStats, type PracticeStats } from '@/lib/practiceStats'
 import { APP_VERSION, LAST_UPDATED, DATA_SNAPSHOT } from '@/lib/appMeta'
+import TermVisual, { PLAYABLE_TERM_IDS, TERM_VISUAL_KEYFRAMES } from '@/components/practice/TermVisuals'
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string; size?: number }>> = {
   Brain, Cpu, Network, MessageCircle, AlignLeft, Scale, CheckCircle, ShieldAlert,
@@ -38,10 +43,12 @@ function hexToRgba(hex: string, alpha: number): string {
 export default function LearnHome() {
   const router = useRouter()
   const [progress, setProgress] = useState<CourseProgress | null>(null)
+  const [practiceStats, setPracticeStats] = useState<PracticeStats | null>(null)
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
     setProgress(loadProgress())
+    setPracticeStats(loadPracticeStats())
     setHydrated(true)
   }, [])
 
@@ -144,6 +151,49 @@ export default function LearnHome() {
               )
             })}
           </div>
+        </div>
+
+        {/* Practice: term-match game */}
+        <div>
+          <style>{TERM_VISUAL_KEYFRAMES}</style>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-[#8a8990] mb-3">Practice</h2>
+          <Link
+            href="/learn/practice"
+            className="scale-button group block rounded-[14px] border border-[#7065f0]/30 overflow-hidden"
+            style={{ background: 'linear-gradient(150deg, rgba(112,101,240,.14) 0%, #161618 55%)' }}
+          >
+            <div className="p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center gap-5">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Gamepad2 size={16} className="text-[#9fa3fc]" />
+                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9fa3fc]">New · Game</p>
+                </div>
+                <p className="text-xl font-semibold tracking-tight text-[#f5f5f5]">Term Match</p>
+                <p className="text-sm text-[#8a8990] mt-1 leading-relaxed">
+                  Match {PLAYABLE_TERM_IDS.length} AI terms to animated visuals. Quick rounds, streaks, and XP — the fastest way to make the vocabulary stick.
+                </p>
+                {hydrated && practiceStats && practiceStats.rounds > 0 ? (
+                  <div className="flex items-center gap-4 mt-3 text-[12px] font-semibold">
+                    <span className="flex items-center gap-1 text-[#eab308]"><Zap size={12} /> {practiceStats.xp} XP</span>
+                    <span className="flex items-center gap-1 text-orange-400"><Flame size={12} /> Best streak {practiceStats.bestStreak}</span>
+                    <span className="text-[#8a8990]">{practiceStats.rounds} {practiceStats.rounds === 1 ? 'round' : 'rounds'}</span>
+                  </div>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 mt-3 text-[13px] font-semibold text-[#9fa3fc] group-hover:text-[#b8b4fb] transition-colors">
+                    Play your first round
+                    <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                  </span>
+                )}
+              </div>
+              <div className="hidden sm:grid grid-cols-2 gap-2 w-[190px] flex-shrink-0">
+                {['term-9', 'term-10', 'term-21', 'term-31'].map((id) => (
+                  <div key={id} className="rounded-[10px] bg-[#101013] border border-white/[0.07] p-1">
+                    <TermVisual termId={id} className="w-full h-auto" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </Link>
         </div>
 
         {/* Explore the rest of the app */}
