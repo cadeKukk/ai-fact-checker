@@ -1004,7 +1004,7 @@ export const companies: AICompany[] = [
     headquarters: 'San Francisco Bay Area',
     website: 'https://x.ai',
     logoIcon: 'CircleX',
-    accentColor: '#141414',
+    accentColor: '#f5f5f5',
     sources: [
       { id: 'xai-official', title: 'xAI Official Website', url: 'https://x.ai', type: 'officialDocs', dateAccessed: '2026-04-01' },
       { id: 'xai-docs', title: 'xAI API Documentation', url: 'https://docs.x.ai', type: 'apiReference', dateAccessed: '2026-04-01' },

@@ -1,21 +1,22 @@
 @import "tailwindcss";
 
 /*
-  Design language borrowed from cadekukk.vercel.app:
-  warm paper background, near-black ink, hairline rules,
-  electric blue accent, serif display type, mono micro-labels.
+  Dark, clean, minimal design system inspired by micro1.ai:
+  near-black surfaces, subtle white-alpha layers and hairlines,
+  violet brand accent, Outfit geometric sans throughout.
 */
 :root {
-  --paper: #f7f6f2;
-  --card: #ffffff;
-  --ink: #141414;
-  --ink-soft: #524f48;
-  --ink-faint: #75726b;
-  --line: rgba(20, 20, 20, 0.16);
-  --line-strong: rgba(20, 20, 20, 0.55);
-  --accent: #2038e6;
-  --font-display: var(--font-instrument-serif), 'Instrument Serif', Georgia, serif;
-  --font-mono: var(--font-space-mono), 'Space Mono', 'SF Mono', Menlo, monospace;
+  --bg: #0a0a0a;
+  --surface: #161618;
+  --surface-2: #1e1e21;
+  --text: #f5f5f5;
+  --text-soft: #b3b2b8;
+  --text-faint: #8a8990;
+  --line: rgba(255, 255, 255, 0.1);
+  --accent: #7065f0;
+  --accent-light: #9fa3fc;
+  --font-sans: var(--font-outfit), 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Menlo', monospace;
 }
 
 * {
@@ -25,35 +26,25 @@
 html, body {
   margin: 0;
   padding: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
 }
 
 .paper-bg {
-  background: var(--paper);
+  background: var(--bg);
   min-height: 100vh;
 }
 
-/* Display headings — Instrument Serif, single weight */
 h1 {
-  font-family: var(--font-display);
-  font-weight: 400 !important;
-  letter-spacing: -0.01em;
-}
-
-/* Uppercase micro-labels read as Space Mono, matching the
-   "[ SEC. 01 ]" editorial labels on the personal site. */
-.uppercase {
-  font-family: var(--font-mono);
-  letter-spacing: 0.08em;
+  letter-spacing: -0.02em;
 }
 
 .font-display {
-  font-family: var(--font-display);
-  font-weight: 400 !important;
+  font-family: var(--font-sans);
+  letter-spacing: -0.02em;
 }
 
 .font-mono {
@@ -62,30 +53,30 @@ h1 {
 
 ::selection {
   background: var(--accent);
-  color: var(--paper);
+  color: #ffffff;
 }
 
 .card {
-  background: var(--card);
+  background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 2px;
+  border-radius: 12px;
   padding: 16px;
 }
 
 .card-light {
-  background: #f2f0e9;
+  background: var(--surface-2);
 }
 
 input[type="text"], input[type="search"] {
   background: transparent;
   border: none;
   outline: none;
-  color: var(--ink);
+  color: var(--text);
   width: 100%;
 }
 
 input::placeholder {
-  color: var(--ink-faint);
+  color: var(--text-faint);
 }
 
 ::-webkit-scrollbar {
@@ -95,11 +86,11 @@ input::placeholder {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #c9c6bc;
-  border-radius: 0;
+  background: #333338;
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #a8a59b;
+  background: #4a4a50;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
@@ -119,7 +110,7 @@ input::placeholder {
 
 .rating-bar {
   height: 4px;
-  border-radius: 0;
+  border-radius: 2px;
 }
 
 @keyframes tokenAppear {

@@ -107,7 +107,7 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
     currentLesson > 0 ? (
       <button
         onClick={goBack}
-        className="flex items-center gap-1.5 px-5 py-3.5 rounded-[2px] bg-[#ffffff] border border-[#141414]/10 text-[#524f48] font-semibold text-[15px] hover:bg-[#f4f2eb] active:scale-[0.97]"
+        className="flex items-center gap-1.5 px-5 py-3.5 rounded-[10px] bg-[#161618] border border-white/10 text-[#b3b2b8] font-semibold text-[15px] hover:bg-[#1b1b1e] active:scale-[0.97]"
         style={{ transition: `all 250ms ${SPRING}` }}
       >
         <ChevronLeft size={14} />
@@ -119,7 +119,7 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
     currentLesson < lessons.length - 1 ? (
       <button
         onClick={goForward}
-        className="flex items-center gap-1.5 px-6 py-3.5 rounded-[2px] text-[#141414] font-semibold text-[15px] active:scale-[0.97]"
+        className="flex items-center gap-1.5 px-6 py-3.5 rounded-[10px] text-[#f5f5f5] font-semibold text-[15px] active:scale-[0.97]"
         style={{ backgroundColor: color, transition: `all 250ms ${SPRING}` }}
       >
         Continue
@@ -128,7 +128,7 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
     ) : (
       <button
         onClick={onClose}
-        className="flex items-center gap-1.5 px-6 py-3.5 rounded-[2px] text-[#141414] font-bold text-[15px] active:scale-[0.97]"
+        className="flex items-center gap-1.5 px-6 py-3.5 rounded-[10px] text-[#f5f5f5] font-bold text-[15px] active:scale-[0.97]"
         style={{ backgroundColor: color, transition: `all 250ms ${SPRING}` }}
       >
         Start Exploring!
@@ -139,19 +139,19 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
   return (
     <div
       className="fixed inset-0 z-[100] flex flex-col lg:flex-row"
-      style={{ background: '#f4f2ec' }}
+      style={{ background: '#101012' }}
     >
       {/* Desktop sidebar lesson navigator — hidden on mobile */}
-      <aside className="hidden lg:flex flex-col w-[280px] flex-shrink-0 border-r border-[#141414]/10 bg-[#f7f6f2]">
+      <aside className="hidden lg:flex flex-col w-[280px] flex-shrink-0 border-r border-white/10 bg-[#0a0a0a]">
         <div className="px-5 pt-6 pb-4 flex items-center gap-3">
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#ffffff] flex items-center justify-center text-[#524f48] hover:text-[#141414]"
+            className="w-8 h-8 rounded-full bg-[#161618] flex items-center justify-center text-[#b3b2b8] hover:text-[#f5f5f5]"
             style={{ transition: `color 300ms ${SPRING}` }}
           >
             <X size={14} />
           </button>
-          <span className="text-[11px] font-bold tracking-[1.5px] text-[#2038e6]">
+          <span className="text-[11px] font-bold tracking-[1.5px] text-[#7065f0]">
             AI FUNDAMENTALS
           </span>
         </div>
@@ -165,14 +165,14 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
               <button
                 key={i}
                 onClick={() => setCurrentLesson(i)}
-                className="w-full flex items-start gap-3 p-2.5 rounded-[2px] text-left active:scale-[0.99]"
+                className="w-full flex items-start gap-3 p-2.5 rounded-[10px] text-left active:scale-[0.99]"
                 style={{
                   backgroundColor: isCurrent ? hexToRgba(l.color, 0.12) : 'transparent',
                   transition: `all 250ms ${SPRING}`,
                 }}
               >
                 <div
-                  className="w-8 h-8 rounded-[2px] flex items-center justify-center flex-shrink-0 mt-0.5"
+                  className="w-8 h-8 rounded-[10px] flex items-center justify-center flex-shrink-0 mt-0.5"
                   style={{
                     backgroundColor:
                       isCurrent || isCompleted ? l.color : hexToRgba(l.color, 0.18),
@@ -185,17 +185,17 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
                 <div className="flex-1 min-w-0">
                   <p
                     className="text-[10px] font-bold tracking-[1px] mb-0.5"
-                    style={{ color: isCurrent ? l.color : '#8a877f' }}
+                    style={{ color: isCurrent ? l.color : '#7a797f' }}
                   >
                     LESSON {i + 1}
                   </p>
                   <p
                     className={`text-[13px] font-semibold leading-snug ${
                       isCurrent
-                        ? 'text-[#141414]'
+                        ? 'text-[#f5f5f5]'
                         : isCompleted
-                          ? 'text-[#524f48]'
-                          : 'text-[#75726b]'
+                          ? 'text-[#b3b2b8]'
+                          : 'text-[#8a8990]'
                     }`}
                   >
                     {l.title}
@@ -206,9 +206,9 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
           })}
         </nav>
 
-        <div className="px-5 py-4 border-t border-[#141414]/10">
-          <p className="text-[10px] font-bold tracking-[1px] text-[#8a877f] mb-2">PROGRESS</p>
-          <div className="h-1.5 rounded-full bg-[#141414]/[0.04] overflow-hidden">
+        <div className="px-5 py-4 border-t border-white/10">
+          <p className="text-[10px] font-bold tracking-[1px] text-[#7a797f] mb-2">PROGRESS</p>
+          <div className="h-1.5 rounded-full bg-white/[0.05] overflow-hidden">
             <div
               className="h-full"
               style={{
@@ -218,7 +218,7 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
               }}
             />
           </div>
-          <p className="text-[11px] text-[#75726b] mt-2">
+          <p className="text-[11px] text-[#8a8990] mt-2">
             Lesson {currentLesson + 1} of {lessons.length}
           </p>
         </div>
@@ -231,15 +231,15 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
           <div className="flex items-center gap-3 mb-3">
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full bg-[#ffffff] flex items-center justify-center text-[#524f48] hover:text-[#141414]"
+              className="w-8 h-8 rounded-full bg-[#161618] flex items-center justify-center text-[#b3b2b8] hover:text-[#f5f5f5]"
               style={{ transition: `color 300ms ${SPRING}` }}
             >
               <X size={14} />
             </button>
-            <span className="text-[11px] font-bold tracking-[1.5px] text-[#2038e6]">
+            <span className="text-[11px] font-bold tracking-[1.5px] text-[#7065f0]">
               AI FUNDAMENTALS
             </span>
-            <span className="ml-auto text-xs font-bold text-[#75726b]">
+            <span className="ml-auto text-xs font-bold text-[#8a8990]">
               {currentLesson + 1}/{lessons.length}
             </span>
           </div>
@@ -249,7 +249,7 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
               const isCurrent = i === currentLesson
               const isCompleted = i < currentLesson
               const TileIcon = ICON_MAP[l.icon] ?? Brain
-              const tileColor = isCurrent ? l.color : isCompleted ? l.color : '#eeece3'
+              const tileColor = isCurrent ? l.color : isCompleted ? l.color : '#1e1e21'
 
               return (
                 <button
@@ -259,7 +259,7 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
                   style={{ transition: `all 350ms ${SPRING}` }}
                 >
                   <div
-                    className="w-full rounded-[2px] flex items-center justify-center"
+                    className="w-full rounded-[10px] flex items-center justify-center"
                     style={{
                       height: isCurrent ? 32 : 24,
                       backgroundColor: tileColor,
@@ -267,9 +267,9 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
                     }}
                   >
                     {isCompleted && !isCurrent ? (
-                      <Check size={10} className="text-[#141414]" />
+                      <Check size={10} className="text-[#f5f5f5]" />
                     ) : (
-                      <span style={{ color: isCurrent || isCompleted ? '#fff' : '#8a877f' }}>
+                      <span style={{ color: isCurrent || isCompleted ? '#fff' : '#7a797f' }}>
                         <TileIcon size={isCurrent ? 12 : 10} />
                       </span>
                     )}
@@ -295,22 +295,22 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
             <div className="pt-4 lg:pt-8 pb-6">
               <div className="flex items-start justify-between mb-4">
                 <div
-                  className="w-[60px] h-[60px] rounded-[2px] flex items-center justify-center"
+                  className="w-[60px] h-[60px] rounded-[10px] flex items-center justify-center"
                   style={{ backgroundColor: hexToRgba(color, 0.2) }}
                 >
                   <span style={{ color }}><LessonIcon size={28} /></span>
                 </div>
                 <span
-                  className="text-[10px] font-bold tracking-[1.5px] px-2.5 py-1 rounded-[2px]"
+                  className="text-[10px] font-bold tracking-[1.5px] px-2.5 py-1 rounded-[10px]"
                   style={{ color, backgroundColor: hexToRgba(color, 0.12) }}
                 >
                   {lesson.category.toUpperCase()}
                 </span>
               </div>
-              <h1 className="text-[28px] lg:text-[32px] font-bold text-[#141414] mb-3">{lesson.title}</h1>
+              <h1 className="text-[28px] lg:text-[32px] font-bold text-[#f5f5f5] mb-3">{lesson.title}</h1>
               <TermHighlightedText
                 text={lesson.subtitle}
-                className="text-base lg:text-[17px] text-[#524f48] leading-relaxed"
+                className="text-base lg:text-[17px] text-[#b3b2b8] leading-relaxed"
                 onTermTap={showTerm}
                 onModelTap={showModel}
                 onBenchmarkTap={showBenchmark}
@@ -325,7 +325,7 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
 
             {lesson.keyTakeaway && (
               <div
-                className="mt-6 flex items-start gap-4 p-5 rounded-[2px] border"
+                className="mt-6 flex items-start gap-4 p-5 rounded-[10px] border"
                 style={{
                   backgroundColor: hexToRgba(color, 0.08),
                   borderColor: hexToRgba(color, 0.2),
@@ -335,13 +335,13 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
                   className="flex-shrink-0 w-[50px] h-[50px] rounded-full flex items-center justify-center"
                   style={{ backgroundColor: hexToRgba(color, 0.15) }}
                 >
-                  <Lightbulb size={22} className="text-yellow-600" />
+                  <Lightbulb size={22} className="text-yellow-400" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold text-[#75726b] tracking-[0.5px] mb-1">Key Takeaway</p>
+                  <p className="text-xs font-bold text-[#8a8990] tracking-[0.5px] mb-1">Key Takeaway</p>
                   <TermHighlightedText
                     text={lesson.keyTakeaway}
-                    className="text-[15px] font-medium text-[#141414] leading-relaxed"
+                    className="text-[15px] font-medium text-[#f5f5f5] leading-relaxed"
                     onTermTap={showTerm}
                     onModelTap={showModel}
                     onBenchmarkTap={showBenchmark}
@@ -355,7 +355,7 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
         {/* Mobile bottom nav (fixed across viewport) */}
         <div
           className="lg:hidden fixed bottom-0 left-0 right-0 px-5 py-4"
-          style={{ background: 'linear-gradient(to top, #f4f2ec 60%, transparent)' }}
+          style={{ background: 'linear-gradient(to top, #101012 60%, transparent)' }}
         >
           <div className="flex items-center gap-4 max-w-lg mx-auto">
             {renderPrev()}
@@ -365,7 +365,7 @@ export default function GettingStartedView({ onClose }: GettingStartedViewProps)
         </div>
 
         {/* Desktop bottom nav (anchored to content column) */}
-        <div className="hidden lg:flex flex-shrink-0 px-10 py-5 border-t border-[#141414]/10 bg-[#f7f6f2]">
+        <div className="hidden lg:flex flex-shrink-0 px-10 py-5 border-t border-white/10 bg-[#0a0a0a]">
           <div className="flex items-center gap-4 w-full max-w-3xl mx-auto">
             {renderPrev()}
             <div className="flex-1" />
@@ -422,7 +422,7 @@ function SectionCard({ section, lessonColor, index, onTermTap, onModelTap, onBen
   return (
     <div
       ref={ref}
-      className="rounded-[2px] bg-[#ffffff] border border-[#141414]/10 p-5"
+      className="rounded-[10px] bg-[#161618] border border-white/10 p-5"
       style={{
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0) scale(1)' : 'translateY(10px) scale(0.98)',
@@ -432,18 +432,18 @@ function SectionCard({ section, lessonColor, index, onTermTap, onModelTap, onBen
       {section.heading && (
         <div className="flex items-center gap-3 mb-4">
           <span
-            className="w-7 h-7 rounded-[2px] text-sm font-bold text-[#141414] flex items-center justify-center"
+            className="w-7 h-7 rounded-[10px] text-sm font-bold text-[#f5f5f5] flex items-center justify-center"
             style={{ backgroundColor: lessonColor }}
           >
             {index + 1}
           </span>
-          <h3 className="text-lg font-bold text-[#141414]">{section.heading}</h3>
+          <h3 className="text-lg font-bold text-[#f5f5f5]">{section.heading}</h3>
         </div>
       )}
 
       <TermHighlightedText
         text={section.content}
-        className="text-[15px] text-[#524f48] leading-[1.7] whitespace-pre-line"
+        className="text-[15px] text-[#b3b2b8] leading-[1.7] whitespace-pre-line"
         onTermTap={onTermTap}
         onModelTap={onModelTap}
       />
@@ -458,7 +458,7 @@ function SectionCard({ section, lessonColor, index, onTermTap, onModelTap, onBen
               />
               <TermHighlightedText
                 text={bullet}
-                className="text-sm text-[#524f48]"
+                className="text-sm text-[#b3b2b8]"
                 onTermTap={onTermTap}
                 onModelTap={onModelTap}
               />
@@ -475,9 +475,9 @@ function SectionCard({ section, lessonColor, index, onTermTap, onModelTap, onBen
 function VisualContent({ visual, lessonColor, pauseAnimations }: { visual: AILessonVisual; lessonColor: string; pauseAnimations?: boolean }) {
   return (
     <div
-      className="mt-4 p-4 rounded-[2px] border"
+      className="mt-4 p-4 rounded-[10px] border"
       style={{
-        backgroundColor: '#efede5',
+        backgroundColor: '#151517',
         borderColor: hexToRgba(lessonColor, 0.15),
       }}
     >
@@ -486,11 +486,11 @@ function VisualContent({ visual, lessonColor, pauseAnimations }: { visual: AILes
           {visual.elements.map((el, i) => (
             <div
               key={i}
-              className="flex items-center gap-2.5 p-3 rounded-[2px]"
+              className="flex items-center gap-2.5 p-3 rounded-[10px]"
               style={{ backgroundColor: hexToRgba(lessonColor, 0.08) }}
             >
               <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: hexToRgba(lessonColor, 0.4) }} />
-              <span className="text-[13px] font-medium text-[#141414]">{el}</span>
+              <span className="text-[13px] font-medium text-[#f5f5f5]">{el}</span>
             </div>
           ))}
         </div>
@@ -501,12 +501,12 @@ function VisualContent({ visual, lessonColor, pauseAnimations }: { visual: AILes
           {visual.elements.map((el, i) => (
             <div
               key={i}
-              className="flex-1 p-3 rounded-[2px] text-center"
+              className="flex-1 p-3 rounded-[10px] text-center"
               style={{
                 backgroundColor: i % 2 === 0 ? hexToRgba(lessonColor, 0.12) : 'rgba(168, 85, 247, 0.12)',
               }}
             >
-              <span className="text-xs font-medium text-[#141414]">{el}</span>
+              <span className="text-xs font-medium text-[#f5f5f5]">{el}</span>
             </div>
           ))}
         </div>
@@ -517,10 +517,10 @@ function VisualContent({ visual, lessonColor, pauseAnimations }: { visual: AILes
           {visual.elements.map((el, i) => (
             <div key={i} className="w-full flex flex-col items-center gap-1">
               <div
-                className="w-full text-center py-2.5 px-4 rounded-[2px]"
+                className="w-full text-center py-2.5 px-4 rounded-[10px]"
                 style={{ backgroundColor: hexToRgba(lessonColor, 0.12) }}
               >
-                <span className="text-[13px] font-medium text-[#141414]">{el}</span>
+                <span className="text-[13px] font-medium text-[#f5f5f5]">{el}</span>
               </div>
               {i < visual.elements.length - 1 && (
                 <span style={{ color: hexToRgba(lessonColor, 0.6) }}>
@@ -545,10 +545,10 @@ function VisualContent({ visual, lessonColor, pauseAnimations }: { visual: AILes
           </div>
           <div className="flex justify-between">
             {visual.elements[0] && (
-              <span className="text-[11px] font-medium text-[#75726b]">{visual.elements[0]}</span>
+              <span className="text-[11px] font-medium text-[#8a8990]">{visual.elements[0]}</span>
             )}
             {visual.elements[visual.elements.length - 1] && (
-              <span className="text-[11px] font-medium text-[#75726b]">{visual.elements[visual.elements.length - 1]}</span>
+              <span className="text-[11px] font-medium text-[#8a8990]">{visual.elements[visual.elements.length - 1]}</span>
             )}
           </div>
         </div>
@@ -563,7 +563,7 @@ function VisualContent({ visual, lessonColor, pauseAnimations }: { visual: AILes
       {visual.type === 'embedding' && <EmbeddingFieldAnimation color={lessonColor} paused={pauseAnimations} />}
 
       {visual.caption && (
-        <p className="text-xs font-medium text-[#75726b] italic mt-3">{visual.caption}</p>
+        <p className="text-xs font-medium text-[#8a8990] italic mt-3">{visual.caption}</p>
       )}
     </div>
   )
@@ -623,14 +623,14 @@ function TokenizerAnimation({ color }: { color: string }) {
       <div className="flex items-center justify-between">
         <span
           className="text-[13px] font-medium"
-          style={{ color: phase === 0 ? '#75726b' : color, transition: `color 300ms ${SPRING}` }}
+          style={{ color: phase === 0 ? '#8a8990' : color, transition: `color 300ms ${SPRING}` }}
         >
           {phase === 0 ? 'Tap to tokenize' : phase === 1 ? 'Splitting...' : 'Done'}
         </span>
         {(phase === 0 || phase >= 2) && (
           <button
             onClick={startAnimation}
-            className="text-xs font-semibold text-[#141414] px-3.5 py-1.5 rounded-[2px] active:scale-[0.96]"
+            className="text-xs font-semibold text-[#f5f5f5] px-3.5 py-1.5 rounded-[10px] active:scale-[0.96]"
             style={{ backgroundColor: color, transition: `transform 250ms ${SPRING}` }}
           >
             {phase >= 2 ? 'Replay' : 'Tokenize'}
@@ -639,11 +639,11 @@ function TokenizerAnimation({ color }: { color: string }) {
       </div>
 
       <div
-        className="p-3.5 rounded-[2px] bg-[#ffffff] border border-[#141414]/10"
+        className="p-3.5 rounded-[10px] bg-[#161618] border border-white/10"
         style={{ transition: `all 350ms ${SPRING}` }}
       >
         {phase === 0 ? (
-          <span className="font-mono text-base font-medium text-[#141414]">{sentence}</span>
+          <span className="font-mono text-base font-medium text-[#f5f5f5]">{sentence}</span>
         ) : (
           <div className="flex flex-wrap gap-1.5">
             {tokens.slice(0, visibleTokens).map((t, idx) => (
@@ -655,13 +655,13 @@ function TokenizerAnimation({ color }: { color: string }) {
                 }}
               >
                 <span
-                  className="font-mono text-sm font-semibold text-[#141414] px-2 py-1.5 rounded-[2px]"
+                  className="font-mono text-sm font-semibold text-[#f5f5f5] px-2 py-1.5 rounded-[10px]"
                   style={{ backgroundColor: hexToRgba(color, opacities[idx % opacities.length]) }}
                 >
                   {t.text}
                 </span>
                 <span
-                  className="font-mono text-[9px] text-[#75726b]"
+                  className="font-mono text-[9px] text-[#8a8990]"
                   style={{
                     opacity: showIds ? 1 : 0,
                     transform: showIds ? 'translateY(0)' : 'translateY(-4px)',
@@ -685,13 +685,13 @@ function TokenizerAnimation({ color }: { color: string }) {
         }}
       >
         {[
-          { label: 'Characters', value: `${sentence.length}`, valueColor: '#524f48' },
+          { label: 'Characters', value: `${sentence.length}`, valueColor: '#b3b2b8' },
           { label: 'Tokens', value: `${tokens.length}`, valueColor: color },
           { label: 'Ratio', value: `~${Math.floor(sentence.length / tokens.length)}:1`, valueColor: color },
         ].map((s) => (
           <div key={s.label} className="flex-1 flex flex-col items-center gap-0.5">
             <span className="text-sm font-bold" style={{ color: s.valueColor }}>{s.value}</span>
-            <span className="text-[10px] font-medium text-[#75726b]">{s.label}</span>
+            <span className="text-[10px] font-medium text-[#8a8990]">{s.label}</span>
           </div>
         ))}
       </div>
@@ -793,14 +793,14 @@ function NextWordAnimation({ color }: { color: string }) {
       <div className="flex items-center justify-between">
         <span
           className="text-[13px] font-medium"
-          style={{ color: !showCandidates && currentWord === 0 ? '#75726b' : color, transition: `color 300ms ${SPRING}` }}
+          style={{ color: !showCandidates && currentWord === 0 ? '#8a8990' : color, transition: `color 300ms ${SPRING}` }}
         >
           {headerText}
         </span>
         {!isAnimating && (
           <button
             onClick={handleTap}
-            className="text-xs font-semibold text-[#141414] px-3.5 py-1.5 rounded-[2px] active:scale-[0.96]"
+            className="text-xs font-semibold text-[#f5f5f5] px-3.5 py-1.5 rounded-[10px] active:scale-[0.96]"
             style={{ backgroundColor: color, transition: `transform 250ms ${SPRING}` }}
           >
             {buttonText}
@@ -808,11 +808,11 @@ function NextWordAnimation({ color }: { color: string }) {
         )}
       </div>
 
-      <div className="p-3 rounded-[2px] bg-[#ffffff] border border-[#141414]/10">
+      <div className="p-3 rounded-[10px] bg-[#161618] border border-white/10">
         {isComplete ? (
-          <span className="text-[15px] font-medium text-[#141414]">{completeSentence}</span>
+          <span className="text-[15px] font-medium text-[#f5f5f5]">{completeSentence}</span>
         ) : (
-          <span className="text-[15px] font-medium text-[#141414]">
+          <span className="text-[15px] font-medium text-[#f5f5f5]">
             {p!.context}{' '}
             {winnerChosen ? (
               <span
@@ -863,7 +863,7 @@ function NextWordAnimation({ color }: { color: string }) {
                   >
                     {c.word}
                   </span>
-                  <div className="flex-1 h-[18px] rounded-sm bg-[#eeece3] relative overflow-hidden">
+                  <div className="flex-1 h-[18px] rounded-sm bg-[#1e1e21] relative overflow-hidden">
                     <div
                       className="absolute inset-y-0 left-0 rounded-sm"
                       style={{
@@ -875,7 +875,7 @@ function NextWordAnimation({ color }: { color: string }) {
                   </div>
                   <span
                     className="font-mono text-[11px] font-bold w-8"
-                    style={{ color: isWinner ? color : '#75726b', transition: `color 300ms ${SPRING}` }}
+                    style={{ color: isWinner ? color : '#8a8990', transition: `color 300ms ${SPRING}` }}
                   >
                     {Math.round(c.prob * 100)}%
                   </span>
@@ -886,7 +886,7 @@ function NextWordAnimation({ color }: { color: string }) {
         )}
       </div>
 
-      <p className="text-xs text-[#75726b] text-center">
+      <p className="text-xs text-[#8a8990] text-center">
         {isComplete ? 'Built one prediction at a time' : 'The model picks the most probable next token each time'}
       </p>
     </div>
@@ -944,26 +944,26 @@ function ConfidenceMeterAnimation({ color }: { color: string }) {
         {isComplete ? (
           <button
             onClick={reset}
-            className="text-xs font-semibold text-[#141414] px-3.5 py-1.5 rounded-[2px] active:scale-[0.96]"
+            className="text-xs font-semibold text-[#f5f5f5] px-3.5 py-1.5 rounded-[10px] active:scale-[0.96]"
             style={{ backgroundColor: color, transition: `transform 250ms ${SPRING}` }}
           >
             Replay
           </button>
         ) : (
-          <span className="text-xs font-medium text-[#75726b]">{currentIndex + 1}/{claims.length}</span>
+          <span className="text-xs font-medium text-[#8a8990]">{currentIndex + 1}/{claims.length}</span>
         )}
       </div>
 
       {claim ? (
-        <div className="p-3.5 rounded-[2px] bg-[#ffffff] border border-[#141414]/10 space-y-3" style={cardFade}>
-          <p className="text-[15px] font-medium text-[#141414]">&ldquo;{claim.text}&rdquo;</p>
+        <div className="p-3.5 rounded-[10px] bg-[#161618] border border-white/10 space-y-3" style={cardFade}>
+          <p className="text-[15px] font-medium text-[#f5f5f5]">&ldquo;{claim.text}&rdquo;</p>
 
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium text-[#75726b]">Confidence</span>
+              <span className="text-[11px] font-medium text-[#8a8990]">Confidence</span>
               <span className="text-xs font-bold font-mono" style={{ color }}>{Math.round(claim.confidence * 100)}%</span>
             </div>
-            <div className="h-2.5 rounded-full bg-[#eeece3] overflow-hidden">
+            <div className="h-2.5 rounded-full bg-[#1e1e21] overflow-hidden">
               <div
                 className="h-full rounded-full"
                 style={{
@@ -985,7 +985,7 @@ function ConfidenceMeterAnimation({ color }: { color: string }) {
             {!revealed ? (
               <button
                 onClick={revealAnswer}
-                className="w-full text-center text-[13px] font-semibold py-2.5 rounded-[2px] active:scale-[0.97]"
+                className="w-full text-center text-[13px] font-semibold py-2.5 rounded-[10px] active:scale-[0.97]"
                 style={{
                   color,
                   backgroundColor: hexToRgba(color, 0.12),
@@ -998,18 +998,18 @@ function ConfidenceMeterAnimation({ color }: { color: string }) {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   {claim.isCorrect ? (
-                    <CheckCircle2 size={18} className="text-green-700" />
+                    <CheckCircle2 size={18} className="text-green-400" />
                   ) : (
-                    <XCircle size={18} className="text-red-700" />
+                    <XCircle size={18} className="text-red-400" />
                   )}
-                  <span className={`text-sm font-semibold ${claim.isCorrect ? 'text-green-700' : 'text-red-700'}`}>
+                  <span className={`text-sm font-semibold ${claim.isCorrect ? 'text-green-400' : 'text-red-400'}`}>
                     {claim.isCorrect ? 'Actually correct' : 'Actually wrong'}
                   </span>
                 </div>
-                <p className="text-[13px] text-[#524f48] leading-relaxed">{claim.explanation}</p>
+                <p className="text-[13px] text-[#b3b2b8] leading-relaxed">{claim.explanation}</p>
                 <button
                   onClick={nextClaim}
-                  className="w-full text-center text-[13px] font-semibold text-[#141414] py-2.5 rounded-[2px] active:scale-[0.97]"
+                  className="w-full text-center text-[13px] font-semibold text-[#f5f5f5] py-2.5 rounded-[10px] active:scale-[0.97]"
                     style={{ backgroundColor: color, transition: `transform 250ms ${SPRING}` }}
                   >
                     {currentIndex < claims.length - 1 ? 'Next' : 'See insight'}
@@ -1019,12 +1019,12 @@ function ConfidenceMeterAnimation({ color }: { color: string }) {
           </div>
         </div>
       ) : (
-        <div className="p-5 rounded-[2px] bg-[#ffffff] border border-[#141414]/10 text-center space-y-3" style={cardFade}>
-          <p className="text-[15px] font-bold text-[#141414]">Key Insight</p>
-          <p className="text-sm text-[#524f48] leading-relaxed">
+        <div className="p-5 rounded-[10px] bg-[#161618] border border-white/10 text-center space-y-3" style={cardFade}>
+          <p className="text-[15px] font-bold text-[#f5f5f5]">Key Insight</p>
+          <p className="text-sm text-[#b3b2b8] leading-relaxed">
             AI showed {Math.round(claims.reduce((a, c) => a + c.confidence, 0) / claims.length * 100)}% average confidence on all claims — even the wrong ones.
           </p>
-          <p className="text-base font-semibold text-[#141414]">Confidence ≠ Accuracy</p>
+          <p className="text-base font-semibold text-[#f5f5f5]">Confidence ≠ Accuracy</p>
         </div>
       )}
     </div>
@@ -1084,7 +1084,7 @@ function RedFlagQuizAnimation({ color }: { color: string }) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <span className="text-[13px] font-medium" style={{ color }}>Spot the red flags</span>
-        <span className="text-xs font-medium text-[#75726b]">
+        <span className="text-xs font-medium text-[#8a8990]">
           {score}/{isComplete ? quizClaims.length : Math.max(currentIndex, 0)}
         </span>
       </div>
@@ -1095,7 +1095,7 @@ function RedFlagQuizAnimation({ color }: { color: string }) {
             key={idx}
             className="flex-1 h-[3px] rounded-sm"
             style={{
-              backgroundColor: idx < currentIndex ? color : idx === currentIndex ? hexToRgba(color, 0.5) : '#eeece3',
+              backgroundColor: idx < currentIndex ? color : idx === currentIndex ? hexToRgba(color, 0.5) : '#1e1e21',
               transition: `background-color 350ms ${SPRING}`,
             }}
           />
@@ -1103,8 +1103,8 @@ function RedFlagQuizAnimation({ color }: { color: string }) {
       </div>
 
       {claim ? (
-        <div className="p-3.5 rounded-[2px] bg-[#ffffff] border border-[#141414]/10 space-y-3" style={cardFade}>
-          <p className="text-[15px] font-medium text-[#141414]">{claim.text}</p>
+        <div className="p-3.5 rounded-[10px] bg-[#161618] border border-white/10 space-y-3" style={cardFade}>
+          <p className="text-[15px] font-medium text-[#f5f5f5]">{claim.text}</p>
 
           <div
             style={{
@@ -1117,14 +1117,14 @@ function RedFlagQuizAnimation({ color }: { color: string }) {
             <div className="flex gap-2.5">
               <button
                 onClick={() => answer(false)}
-                className="flex-1 text-[13px] font-semibold text-green-700 py-2.5 rounded-[2px] bg-[#eaf3ed] hover:bg-[#e4f0e7] active:scale-[0.97]"
+                className="flex-1 text-[13px] font-semibold text-green-400 py-2.5 rounded-[10px] bg-[#102217] hover:bg-[#132a1c] active:scale-[0.97]"
                 style={{ transition: `all 250ms ${SPRING}` }}
               >
                 Legit
               </button>
               <button
                 onClick={() => answer(true)}
-                className="flex-1 text-[13px] font-semibold text-red-700 py-2.5 rounded-[2px] bg-[#f9eded] hover:bg-[#f7e5e5] active:scale-[0.97]"
+                className="flex-1 text-[13px] font-semibold text-red-400 py-2.5 rounded-[10px] bg-[#241214] hover:bg-[#2a1618] active:scale-[0.97]"
                 style={{ transition: `all 250ms ${SPRING}` }}
               >
                 Red Flag
@@ -1146,18 +1146,18 @@ function RedFlagQuizAnimation({ color }: { color: string }) {
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     {isCorrectAnswer ? (
-                      <CheckCircle2 size={18} className="text-green-700" />
+                      <CheckCircle2 size={18} className="text-green-400" />
                     ) : (
-                      <XCircle size={18} className="text-red-700" />
+                      <XCircle size={18} className="text-red-400" />
                     )}
-                    <span className={`text-sm font-semibold ${isCorrectAnswer ? 'text-green-700' : 'text-red-700'}`}>
+                    <span className={`text-sm font-semibold ${isCorrectAnswer ? 'text-green-400' : 'text-red-400'}`}>
                       {isCorrectAnswer ? 'Correct' : 'Not quite'}
                     </span>
                   </div>
-                  <p className="text-[13px] text-[#524f48] leading-relaxed">{claim.explanation}</p>
+                  <p className="text-[13px] text-[#b3b2b8] leading-relaxed">{claim.explanation}</p>
                   <button
                     onClick={nextClaim}
-                    className="w-full text-center text-[13px] font-semibold text-[#141414] py-2.5 rounded-[2px] active:scale-[0.97]"
+                    className="w-full text-center text-[13px] font-semibold text-[#f5f5f5] py-2.5 rounded-[10px] active:scale-[0.97]"
                     style={{ backgroundColor: color, transition: `transform 250ms ${SPRING}` }}
                   >
                     {currentIndex < quizClaims.length - 1 ? 'Next' : 'See results'}
@@ -1168,9 +1168,9 @@ function RedFlagQuizAnimation({ color }: { color: string }) {
           </div>
         </div>
       ) : (
-        <div className="p-5 rounded-[2px] bg-[#ffffff] border border-[#141414]/10 text-center space-y-3" style={cardFade}>
+        <div className="p-5 rounded-[10px] bg-[#161618] border border-white/10 text-center space-y-3" style={cardFade}>
           <p className="text-[28px] font-bold" style={{ color }}>{score}/{quizClaims.length}</p>
-          <p className="text-sm text-[#524f48] leading-relaxed">
+          <p className="text-sm text-[#b3b2b8] leading-relaxed">
             {score / quizClaims.length >= 0.8
               ? 'Excellent — you can spot AI hype like a pro.'
               : score / quizClaims.length >= 0.6
@@ -1179,7 +1179,7 @@ function RedFlagQuizAnimation({ color }: { color: string }) {
           </p>
           <button
             onClick={reset}
-            className="text-[13px] font-semibold text-[#141414] px-5 py-2.5 rounded-[2px] active:scale-[0.96]"
+            className="text-[13px] font-semibold text-[#f5f5f5] px-5 py-2.5 rounded-[10px] active:scale-[0.96]"
             style={{ backgroundColor: color, transition: `transform 250ms ${SPRING}` }}
           >
             Try again
@@ -1193,7 +1193,7 @@ function RedFlagQuizAnimation({ color }: { color: string }) {
 // MARK: - Parameter Scale Animation
 
 function ParameterScaleAnimation({ color }: { color: string }) {
-  const BLUE = '#1d4ed8', ORANGE = '#c2410c', GREEN = '#15803d', PURPLE = '#7e22ce'
+  const BLUE = '#3b82f6', ORANGE = '#f97316', GREEN = '#22c55e', PURPLE = '#a855f7'
 
   const [step, setStep] = useState(0)
   const [lp, setLp] = useState(0)
@@ -1384,7 +1384,7 @@ function ParameterScaleAnimation({ color }: { color: string }) {
 
         {/* Direction indicator — only after phase 4, placed below diagram */}
         <g style={{ opacity: lp >= 4 ? 1 : 0, transition: `opacity 350ms ${SPRING}` }}>
-          <text x={W / 2} y={H + 2} textAnchor="middle" fill="#8a877f" fontSize={8} fontWeight={600}>
+          <text x={W / 2} y={H + 2} textAnchor="middle" fill="#7a797f" fontSize={8} fontWeight={600}>
             + 6 direction weights (→ ← on each connection)
           </text>
         </g>
@@ -1418,8 +1418,8 @@ function ParameterScaleAnimation({ color }: { color: string }) {
                 <span className="text-[11px] font-semibold w-[60px] text-right shrink-0" style={{ color: t.accent }}>
                   {t.label}
                 </span>
-                <div className="flex-1 h-5 bg-[#ffffff] border border-[#141414]/10 rounded-[2px] overflow-hidden">
-                  <div className="h-full rounded-[2px]" style={{
+                <div className="flex-1 h-5 bg-[#161618] border border-white/10 rounded-[10px] overflow-hidden">
+                  <div className="h-full rounded-[10px]" style={{
                     width: vis ? `${barW}%` : '0%',
                     backgroundColor: t.accent,
                     transition: `width 900ms ${SPRING}`,
@@ -1439,10 +1439,10 @@ function ParameterScaleAnimation({ color }: { color: string }) {
           transform: lp >= 5 ? 'translateY(0)' : 'translateY(8px)',
           transition: `opacity 450ms ${SPRING}, transform 450ms ${SPRING}`,
         }}>
-          <div className="p-4 rounded-[2px] bg-[#ffffff] border border-[#141414]/10 text-center">
-            <p className="text-[11px] text-[#75726b] mb-1.5">GPT-4 has roughly</p>
+          <div className="p-4 rounded-[10px] bg-[#161618] border border-white/10 text-center">
+            <p className="text-[11px] text-[#8a8990] mb-1.5">GPT-4 has roughly</p>
             <p className="text-xl font-bold tracking-tight" style={{ color: GREEN }}>1,800,000,000,000</p>
-            <p className="text-[11px] text-[#75726b] mt-1.5">parameters — 1.8 trillion weights and biases</p>
+            <p className="text-[11px] text-[#8a8990] mt-1.5">parameters — 1.8 trillion weights and biases</p>
           </div>
         </div>
       </div>
@@ -1456,14 +1456,14 @@ function ParameterScaleAnimation({ color }: { color: string }) {
           {info.title}
         </span>
         {step < 2 && (
-          <span className="text-xs font-bold font-mono px-2 py-0.5 rounded-[2px]"
+          <span className="text-xs font-bold font-mono px-2 py-0.5 rounded-md"
             style={{ color, backgroundColor: hexToRgba(color, 0.12) }}>
             {paramCounts[step]} params
           </span>
         )}
       </div>
 
-      <div className="rounded-[2px] bg-[#efede5] p-4 overflow-hidden">
+      <div className="rounded-[10px] bg-[#151517] p-4 overflow-hidden">
         {step === 0 && renderTwoNodes()}
         {step === 1 && renderThreeNodes()}
         {step === 2 && renderScale()}
@@ -1494,25 +1494,25 @@ function ParameterScaleAnimation({ color }: { color: string }) {
         </div>
       )}
 
-      <p className="text-xs text-[#524f48] leading-relaxed">{info.desc}</p>
+      <p className="text-xs text-[#b3b2b8] leading-relaxed">{info.desc}</p>
 
       <div className="flex gap-2.5">
         {step > 0 && (
           <button onClick={() => goToStep(step - 1)}
-            className="flex-1 text-[13px] font-semibold py-2.5 rounded-[2px] bg-[#ffffff] border border-[#141414]/10 text-[#524f48] active:scale-[0.97]"
+            className="flex-1 text-[13px] font-semibold py-2.5 rounded-[10px] bg-[#161618] border border-white/10 text-[#b3b2b8] active:scale-[0.97]"
             style={{ transition: `transform 200ms ${SPRING}` }}>
             Back
           </button>
         )}
         {step < 2 ? (
           <button onClick={() => goToStep(step + 1)}
-            className="flex-1 text-[13px] font-semibold py-2.5 rounded-[2px] text-[#141414] active:scale-[0.97]"
+            className="flex-1 text-[13px] font-semibold py-2.5 rounded-[10px] text-[#f5f5f5] active:scale-[0.97]"
             style={{ backgroundColor: color, transition: `transform 200ms ${SPRING}` }}>
             {step === 0 ? 'Add 3rd Node' : 'See the Scale'}
           </button>
         ) : (
           <button onClick={() => goToStep(0)}
-            className="flex-1 text-[13px] font-semibold py-2.5 rounded-[2px] text-[#141414] active:scale-[0.97]"
+            className="flex-1 text-[13px] font-semibold py-2.5 rounded-[10px] text-[#f5f5f5] active:scale-[0.97]"
             style={{ backgroundColor: color, transition: `transform 200ms ${SPRING}` }}>
             Start Over
           </button>
@@ -1526,7 +1526,7 @@ function ParameterScaleAnimation({ color }: { color: string }) {
 
 function NeuralNetworkAnimation({ color }: { color: string }) {
   const INPUT = 3, HIDDEN = 4, OUTPUT = 2
-  const BLUE = '#1d4ed8', GREEN = '#15803d', ORANGE = '#c2410c', RED = '#b91c1c'
+  const BLUE = '#3b82f6', GREEN = '#22c55e', ORANGE = '#f97316', RED = '#ef4444'
 
   const [phase, setPhase] = useState(0)
   const [fwdL1, setFwdL1] = useState(0)
@@ -1589,7 +1589,7 @@ function NeuralNetworkAnimation({ color }: { color: string }) {
   */
 
   const phaseInfo: Record<number, { text: string; explanation: string; dotColor: string }> = {
-    0:  { text: 'Tap to Start',               explanation: 'See how data flows through a neural network',            dotColor: '#75726b' },
+    0:  { text: 'Tap to Start',               explanation: 'See how data flows through a neural network',            dotColor: '#8a8990' },
     1:  { text: '① Input Data',               explanation: 'Input values enter the network (e.g., image pixels)',     dotColor: BLUE },
     2:  { text: '② Weighted Sum → Hidden',    explanation: 'Each input × weight, then all summed together',          dotColor: BLUE },
     3:  { text: '③ Hidden Activation',         explanation: 'Hidden neurons activate based on their inputs',          dotColor: color },
@@ -1656,7 +1656,7 @@ function NeuralNetworkAnimation({ color }: { color: string }) {
         const k = `${fromLayer}-${i}-${j}`
 
         els.push(
-          <line key={`${k}-b`} x1={f.x} y1={f.y} x2={t.x} y2={t.y} stroke="#d9d6cc" strokeWidth={1.2} />
+          <line key={`${k}-b`} x1={f.x} y1={f.y} x2={t.x} y2={t.y} stroke="#2a2a2e" strokeWidth={1.2} />
         )
 
         if (isFwd && fwd > 0) {
@@ -1747,7 +1747,7 @@ function NeuralNetworkAnimation({ color }: { color: string }) {
         {(phase === 0 || phase >= 13) && (
           <button
             onClick={startAnimation}
-            className="flex items-center gap-1 text-xs font-semibold text-[#141414] px-3 py-1.5 rounded-[2px] active:scale-[0.95]"
+            className="flex items-center gap-1 text-xs font-semibold text-[#f5f5f5] px-3 py-1.5 rounded-[10px] active:scale-[0.95]"
             style={{ backgroundColor: color, transition: `transform 200ms ${SPRING}` }}
           >
             {phase >= 13 ? '↺ Replay' : '▶ Start'}
@@ -1772,7 +1772,7 @@ function NeuralNetworkAnimation({ color }: { color: string }) {
             <rect x={W - 60} y={4} width={52} height={32} rx={8}
               fill={hexToRgba(errorBorderColor, 0.12)} stroke={errorBorderColor} strokeWidth={0.5}
               style={{ transition: `fill 500ms ${SPRING}, stroke 500ms ${SPRING}` }} />
-            <text x={W - 34} y={16} textAnchor="middle" fill="#75726b" fontSize={8} fontWeight={700}>Error</text>
+            <text x={W - 34} y={16} textAnchor="middle" fill="#8a8990" fontSize={8} fontWeight={700}>Error</text>
             <text x={W - 34} y={30} textAnchor="middle"
               fill={errorBorderColor} fontSize={13} fontWeight={700}
               style={{ transition: `fill 500ms ${SPRING}` }}
@@ -1786,15 +1786,15 @@ function NeuralNetworkAnimation({ color }: { color: string }) {
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: BLUE }} />
-          <span className="text-[10px] text-[#75726b]">Input</span>
+          <span className="text-[10px] text-[#8a8990]">Input</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-          <span className="text-[10px] text-[#75726b]">Hidden</span>
+          <span className="text-[10px] text-[#8a8990]">Hidden</span>
         </div>
         <div className="flex items-center gap-1.5">
           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: GREEN }} />
-          <span className="text-[10px] text-[#75726b]">Output</span>
+          <span className="text-[10px] text-[#8a8990]">Output</span>
         </div>
         <div className="flex-1" />
         {isBackward && (
@@ -1811,7 +1811,7 @@ function NeuralNetworkAnimation({ color }: { color: string }) {
         )}
       </div>
 
-      <p className="text-xs text-[#524f48] text-center" style={{ transition: `opacity 300ms ${SPRING}` }}>
+      <p className="text-xs text-[#b3b2b8] text-center" style={{ transition: `opacity 300ms ${SPRING}` }}>
         {info.explanation}
       </p>
     </div>
@@ -2201,7 +2201,7 @@ function EmbeddingFieldAnimation({ color, paused = false }: { color: string; pau
     <div className="space-y-3">
       <div className="flex items-center gap-2">
         <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-        <span className="text-[13px] font-semibold tracking-tight text-[#141414]">Embedding Space</span>
+        <span className="text-[13px] font-semibold tracking-tight text-[#f5f5f5]">Embedding Space</span>
       </div>
       <canvas
         ref={canvasRef}

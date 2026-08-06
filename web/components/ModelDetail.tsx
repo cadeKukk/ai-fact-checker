@@ -52,11 +52,11 @@ import type { Benchmark } from '@/data/benchmarks'
 import { BENCHMARK_PATTERNS_ALL } from '@/data/benchmarks'
 
 const MODALITY_COLORS: Record<Modality, string> = {
-  Text: '#1d4ed8',
-  Image: '#15803d',
-  Audio: '#c2410c',
-  Video: '#be185d',
-  Code: '#7e22ce',
+  Text: '#3b82f6',
+  Image: '#22c55e',
+  Audio: '#f97316',
+  Video: '#ec4899',
+  Code: '#a855f7',
 }
 
 const MODALITY_ICON_MAP: Record<string, LucideIcon> = {
@@ -180,13 +180,13 @@ export default function ModelDetail({ model, accentColor, onBack }: ModelDetailP
   const accentBg15 = `${accentColor}26`
 
   return (
-    <div className="min-h-screen bg-[#f7f6f2] text-[#141414] p-6">
+    <div className="min-h-screen bg-[#0a0a0a] text-[#f5f5f5] p-6">
       <div className="max-w-2xl lg:max-w-4xl mx-auto space-y-6">
         {/* Back button */}
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-2 text-sm text-[#524f48] hover:text-[#141414] transition-colors"
+          className="flex items-center gap-2 text-sm text-[#b3b2b8] hover:text-[#f5f5f5] transition-colors"
         >
           <ArrowLeft size={20} />
           Back
@@ -199,11 +199,11 @@ export default function ModelDetail({ model, accentColor, onBack }: ModelDetailP
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className="px-4 py-2 rounded-[2px] text-sm font-medium whitespace-nowrap transition-all"
+              className="px-4 py-2 rounded-[10px] text-sm font-medium whitespace-nowrap transition-all"
               style={
                 activeTab === tab.id
-                  ? { backgroundColor: accentColor, color: '#f7f6f2' }
-                  : { backgroundColor: '#ffffff', color: '#524f48' }
+                  ? { backgroundColor: accentColor, color: '#fff' }
+                  : { backgroundColor: '#161618', color: '#b3b2b8' }
               }
             >
               {tab.label}
@@ -214,13 +214,13 @@ export default function ModelDetail({ model, accentColor, onBack }: ModelDetailP
         {/* Model header - always visible */}
         <header>
           <div className="flex items-center gap-2 flex-wrap mb-2">
-            <h1 className="text-[28px] font-bold text-[#141414] leading-tight">
+            <h1 className="text-[28px] font-bold text-[#f5f5f5] leading-tight">
               {model.name}
             </h1>
-            <span className="font-mono text-sm text-[#75726b]">{model.version}</span>
+            <span className="font-mono text-sm text-[#8a8990]">{model.version}</span>
             {model.isOpenSource && (
               <span
-                className="px-2 py-0.5 rounded-[2px] text-xs font-medium"
+                className="px-2 py-0.5 rounded-md text-xs font-medium"
                 style={{ backgroundColor: accentBg20, color: accentColor }}
               >
                 Open Source
@@ -229,13 +229,13 @@ export default function ModelDetail({ model, accentColor, onBack }: ModelDetailP
           </div>
           <TermHighlightedText
             text={model.description}
-            className="block text-[#524f48] text-sm leading-relaxed mb-3"
+            className="block text-[#b3b2b8] text-sm leading-relaxed mb-3"
             onTermTap={showTerm}
             onModelTap={showModel}
             onBenchmarkTap={showBenchmark}
             excludeModelId={model.id}
           />
-          <div className="flex items-center gap-2 text-[#75726b] text-sm">
+          <div className="flex items-center gap-2 text-[#8a8990] text-sm">
             <Calendar size={16} />
             <span>{formatDateAbbrev(model.releaseDate)}</span>
           </div>
@@ -349,15 +349,15 @@ function OverviewTab({
     <div className="space-y-8 lg:grid lg:grid-cols-2 lg:gap-6 lg:space-y-0 lg:items-start">
       {/* SPECIFICATIONS */}
       <section className="lg:col-span-2">
-        <h2 className="text-sm font-semibold text-[#75726b] uppercase tracking-wider mb-4">
+        <h2 className="text-sm font-semibold text-[#8a8990] uppercase tracking-wider mb-4">
           Specifications
         </h2>
-        <div className="rounded-[2px] bg-[#ffffff] border border-[#141414]/10 p-4 space-y-3">
+        <div className="rounded-[10px] bg-[#161618] border border-white/10 p-4 space-y-3">
           {specRows.map(({ icon: Icon, label, value }) => (
             <div key={label} className="flex items-center gap-3">
-              <Icon className="flex-shrink-0 text-[#75726b]" size={18} />
-              <TermHighlightedText text={label} className="text-[#524f48] text-sm" onTermTap={onTermTap} onModelTap={onModelTap} onBenchmarkTap={onBenchmarkTap} excludeModelId={model.id} />
-              <TermHighlightedText text={value} className="ml-auto font-mono text-sm text-[#141414] text-right" onTermTap={onTermTap} onModelTap={onModelTap} onBenchmarkTap={onBenchmarkTap} excludeModelId={model.id} />
+              <Icon className="flex-shrink-0 text-[#8a8990]" size={18} />
+              <TermHighlightedText text={label} className="text-[#b3b2b8] text-sm" onTermTap={onTermTap} onModelTap={onModelTap} onBenchmarkTap={onBenchmarkTap} excludeModelId={model.id} />
+              <TermHighlightedText text={value} className="ml-auto font-mono text-sm text-[#f5f5f5] text-right" onTermTap={onTermTap} onModelTap={onModelTap} onBenchmarkTap={onBenchmarkTap} excludeModelId={model.id} />
             </div>
           ))}
         </div>
@@ -365,21 +365,21 @@ function OverviewTab({
 
       {/* MODALITIES */}
       <section className="lg:col-span-2">
-        <h2 className="text-sm font-semibold text-[#75726b] uppercase tracking-wider mb-4">
+        <h2 className="text-sm font-semibold text-[#8a8990] uppercase tracking-wider mb-4">
           Modalities
         </h2>
-        <div className="rounded-[2px] bg-[#ffffff] border border-[#141414]/10 p-4 flex items-center gap-6">
+        <div className="rounded-[10px] bg-[#161618] border border-white/10 p-4 flex items-center gap-6">
           <div className="flex-1">
-            <p className="text-xs text-[#75726b] mb-2">Input</p>
+            <p className="text-xs text-[#8a8990] mb-2">Input</p>
             <div className="flex flex-wrap gap-2">
               {specs.inputModalities.map((m) => (
                 <ModalityBadge key={m} modality={m} />
               ))}
             </div>
           </div>
-          <div className="w-px h-12 bg-[#d9d6cc]" />
+          <div className="w-px h-12 bg-[#2a2a2e]" />
           <div className="flex-1">
-            <p className="text-xs text-[#75726b] mb-2">Output</p>
+            <p className="text-xs text-[#8a8990] mb-2">Output</p>
             <div className="flex flex-wrap gap-2">
               {specs.outputModalities.map((m) => (
                 <ModalityBadge key={m} modality={m} />
@@ -392,21 +392,21 @@ function OverviewTab({
       {/* PRICING */}
       {pricing && (
         <section>
-          <h2 className="text-sm font-semibold text-[#75726b] uppercase tracking-wider mb-4">
+          <h2 className="text-sm font-semibold text-[#8a8990] uppercase tracking-wider mb-4">
             Pricing
           </h2>
-          <div className="rounded-[2px] bg-[#ffffff] border border-[#141414]/10 p-4 space-y-3">
+          <div className="rounded-[10px] bg-[#161618] border border-white/10 p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[#524f48] text-sm">Input price</span>
-              <span className="font-mono text-sm text-[#15803d]">
+              <span className="text-[#b3b2b8] text-sm">Input price</span>
+              <span className="font-mono text-sm text-[#22c55e]">
                 {pricing.inputPricePerMillionTokens != null
                   ? `$${pricing.inputPricePerMillionTokens}/1M tokens`
                   : '—'}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-[#524f48] text-sm">Output price</span>
-              <span className="font-mono text-sm text-[#15803d]">
+              <span className="text-[#b3b2b8] text-sm">Output price</span>
+              <span className="font-mono text-sm text-[#22c55e]">
                 {pricing.outputPricePerMillionTokens != null
                   ? `$${pricing.outputPricePerMillionTokens}/1M tokens`
                   : '—'}
@@ -414,14 +414,14 @@ function OverviewTab({
             </div>
             {pricing.freeTierAvailable && (
               <span
-                className="inline-block px-2 py-0.5 rounded-[2px] text-xs font-medium"
-                style={{ backgroundColor: '#15803d26', color: '#15803d' }}
+                className="inline-block px-2 py-0.5 rounded-md text-xs font-medium"
+                style={{ backgroundColor: '#22c55e26', color: '#22c55e' }}
               >
                 Free tier available
               </span>
             )}
             {pricing.notes && (
-              <TermHighlightedText text={pricing.notes} className="text-sm text-[#75726b] italic" onTermTap={onTermTap} onModelTap={onModelTap} onBenchmarkTap={onBenchmarkTap} excludeModelId={model.id} />
+              <TermHighlightedText text={pricing.notes} className="text-sm text-[#8a8990] italic" onTermTap={onTermTap} onModelTap={onModelTap} onBenchmarkTap={onBenchmarkTap} excludeModelId={model.id} />
             )}
           </div>
         </section>
@@ -429,20 +429,20 @@ function OverviewTab({
 
       {/* KNOWN LIMITATIONS */}
       <section className="lg:col-span-2">
-        <h2 className="text-sm font-semibold text-[#75726b] uppercase tracking-wider mb-4">
+        <h2 className="text-sm font-semibold text-[#8a8990] uppercase tracking-wider mb-4">
           Known Limitations
         </h2>
         <div
-          className="rounded-[2px] p-4 space-y-2"
+          className="rounded-[10px] p-4 space-y-2"
           style={{ backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
         >
           {limitations.map((lim, i) => (
             <div key={i} className="flex items-start gap-2">
               <XCircle
-                className="flex-shrink-0 mt-0.5 text-red-700"
+                className="flex-shrink-0 mt-0.5 text-red-400"
                 size={18}
               />
-              <TermHighlightedText text={lim} className="text-sm text-[#3a3833]" onTermTap={onTermTap} onModelTap={onModelTap} onBenchmarkTap={onBenchmarkTap} excludeModelId={model.id} />
+              <TermHighlightedText text={lim} className="text-sm text-[#d6d5da]" onTermTap={onTermTap} onModelTap={onModelTap} onBenchmarkTap={onBenchmarkTap} excludeModelId={model.id} />
             </div>
           ))}
         </div>
@@ -457,7 +457,7 @@ function ModalityBadge({ modality }: { modality: Modality }) {
   const IconComponent = MODALITY_ICON_MAP[iconName] ?? AlignLeft
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[2px] text-xs font-medium"
+      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[10px] text-xs font-medium"
       style={{ backgroundColor: `${color}33`, color }}
     >
       <IconComponent size={14} />
@@ -505,10 +505,10 @@ function CapabilitiesTab({
 
   if (total === 0) {
     return (
-      <div className="rounded-[2px] bg-[#ffffff] border border-[#141414]/10 p-12 text-center">
-        <Sparkles className="mx-auto mb-4 text-[#75726b]" size={40} />
-        <p className="text-lg font-medium text-[#141414]">No capabilities documented</p>
-        <p className="text-sm text-[#75726b] mt-1">
+      <div className="rounded-[10px] bg-[#161618] border border-white/10 p-12 text-center">
+        <Sparkles className="mx-auto mb-4 text-[#8a8990]" size={40} />
+        <p className="text-lg font-medium text-[#f5f5f5]">No capabilities documented</p>
+        <p className="text-sm text-[#8a8990] mt-1">
           We don&apos;t have verified capability data for this model yet.
         </p>
       </div>
@@ -519,23 +519,23 @@ function CapabilitiesTab({
     <div className="space-y-6">
       {/* OVERVIEW SUMMARY */}
       <section>
-        <h2 className="text-sm font-semibold text-[#75726b] uppercase tracking-wider mb-3">
+        <h2 className="text-sm font-semibold text-[#8a8990] uppercase tracking-wider mb-3">
           Capability Overview
         </h2>
-        <div className="rounded-[2px] bg-[#ffffff] border border-[#141414]/10 p-5 border border-[#eeece3]">
+        <div className="rounded-[10px] bg-[#161618] border border-white/10 p-5 border border-[#1e1e21]">
           <div className="flex items-end gap-7 mb-5 flex-wrap">
             <div>
-              <div className="text-3xl font-bold text-[#141414] leading-none">
+              <div className="text-3xl font-bold text-[#f5f5f5] leading-none">
                 {avg.toFixed(1)}
-                <span className="text-[#8a877f] text-base font-medium ml-0.5">/5</span>
+                <span className="text-[#7a797f] text-base font-medium ml-0.5">/5</span>
               </div>
-              <div className="text-[10px] font-bold tracking-[1px] text-[#75726b] uppercase mt-1.5">
+              <div className="text-[10px] font-bold tracking-[1px] text-[#8a8990] uppercase mt-1.5">
                 Average Rating
               </div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-[#141414] leading-none">{total}</div>
-              <div className="text-[10px] font-bold tracking-[1px] text-[#75726b] uppercase mt-1.5">
+              <div className="text-3xl font-bold text-[#f5f5f5] leading-none">{total}</div>
+              <div className="text-[10px] font-bold tracking-[1px] text-[#8a8990] uppercase mt-1.5">
                 Capabilities
               </div>
             </div>
@@ -543,12 +543,12 @@ function CapabilitiesTab({
               <div>
                 <div
                   className="text-3xl font-bold leading-none flex items-center gap-1.5"
-                  style={{ color: '#15803d' }}
+                  style={{ color: '#22c55e' }}
                 >
                   <CheckCircle2 size={20} />
                   {verifiedCount}
                 </div>
-                <div className="text-[10px] font-bold tracking-[1px] text-[#75726b] uppercase mt-1.5">
+                <div className="text-[10px] font-bold tracking-[1px] text-[#8a8990] uppercase mt-1.5">
                   Independently Verified
                 </div>
               </div>
@@ -567,7 +567,7 @@ function CapabilitiesTab({
                   >
                     {ratingLabel[r]}
                   </span>
-                  <div className="flex-1 h-2 rounded-full bg-[#f7f6f2] overflow-hidden">
+                  <div className="flex-1 h-2 rounded-full bg-[#0a0a0a] overflow-hidden">
                     <div
                       className="h-full rounded-full"
                       style={{
@@ -577,7 +577,7 @@ function CapabilitiesTab({
                       }}
                     />
                   </div>
-                  <span className="w-6 text-right text-xs font-medium text-[#75726b] tabular-nums">
+                  <span className="w-6 text-right text-xs font-medium text-[#8a8990] tabular-nums">
                     {count}
                   </span>
                 </div>
@@ -590,7 +590,7 @@ function CapabilitiesTab({
       {/* TOP STRENGTHS */}
       {topStrengths.length > 0 && (
         <section>
-          <h2 className="text-sm font-semibold text-[#75726b] uppercase tracking-wider mb-3">
+          <h2 className="text-sm font-semibold text-[#8a8990] uppercase tracking-wider mb-3">
             Top Strengths
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -599,7 +599,7 @@ function CapabilitiesTab({
               return (
                 <div
                   key={c.id}
-                  className="rounded-[2px] p-4 border"
+                  className="rounded-[10px] p-4 border"
                   style={{
                     backgroundColor: hexToRgba(c1, 0.08),
                     borderColor: hexToRgba(c1, 0.25),
@@ -617,7 +617,7 @@ function CapabilitiesTab({
                       {ratingLabel[c.rating]} · {ratingValue[c.rating]}/5
                     </span>
                   </div>
-                  <p className="text-sm font-semibold text-[#141414] leading-snug">{c.name}</p>
+                  <p className="text-sm font-semibold text-[#f5f5f5] leading-snug">{c.name}</p>
                 </div>
               )
             })}
@@ -638,19 +638,19 @@ function CapabilitiesTab({
                 key={opt}
                 type="button"
                 onClick={() => setFilter(opt)}
-                className="flex-shrink-0 px-3 py-1.5 rounded-[2px] text-xs font-semibold whitespace-nowrap transition-all"
+                className="flex-shrink-0 px-3 py-1.5 rounded-[10px] text-xs font-semibold whitespace-nowrap transition-all"
                 style={
                   isActive
-                    ? { backgroundColor: c, color: '#f7f6f2', border: '1px solid transparent' }
+                    ? { backgroundColor: c, color: '#fff', border: '1px solid transparent' }
                     : {
-                        backgroundColor: '#ffffff',
-                        color: '#524f48',
-                        border: '1px solid #d9d6cc',
+                        backgroundColor: '#161618',
+                        color: '#b3b2b8',
+                        border: '1px solid #2a2a2e',
                       }
                 }
               >
                 {opt === 'all' ? 'All' : ratingLabel[opt]}{' '}
-                <span className={isActive ? 'opacity-60' : 'text-[#8a877f]'}>· {count}</span>
+                <span className={isActive ? 'opacity-60' : 'text-[#7a797f]'}>· {count}</span>
               </button>
             )
           })}
@@ -666,11 +666,11 @@ function CapabilitiesTab({
           return (
             <section key={cat.id}>
               <div className="flex items-center gap-2 mb-3">
-                <Icon size={14} className="text-[#75726b]" />
-                <h3 className="text-xs font-bold tracking-[1.5px] text-[#75726b] uppercase">
+                <Icon size={14} className="text-[#8a8990]" />
+                <h3 className="text-xs font-bold tracking-[1.5px] text-[#8a8990] uppercase">
                   {cat.label}
                 </h3>
-                <span className="text-xs text-[#8a877f]">· {list.length}</span>
+                <span className="text-xs text-[#7a797f]">· {list.length}</span>
               </div>
               <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
                 {list.map((cap) => (
@@ -688,7 +688,7 @@ function CapabilitiesTab({
           )
         })}
         {visibleCaps.length === 0 && (
-          <p className="text-center text-[#75726b] py-8">
+          <p className="text-center text-[#8a8990] py-8">
             No capabilities match this filter.
           </p>
         )}
@@ -696,9 +696,9 @@ function CapabilitiesTab({
 
       {/* RATING SCALE LEGEND */}
       <section className="pt-2">
-        <p className="text-[11px] text-[#8a877f] leading-relaxed">
-          <span className="font-semibold text-[#75726b]">Rating scale</span> · Ratings reflect
-          relative strength compared to peers in the same model class. <span style={{ color: '#15803d' }}>Verified</span> indicates the
+        <p className="text-[11px] text-[#7a797f] leading-relaxed">
+          <span className="font-semibold text-[#8a8990]">Rating scale</span> · Ratings reflect
+          relative strength compared to peers in the same model class. <span style={{ color: '#22c55e' }}>Verified</span> indicates the
           claim is backed by a published benchmark or first-party documentation.
         </p>
       </section>
@@ -720,17 +720,17 @@ function CapabilityCard({
   const benchmarks = extractBenchmarks(capability.description)
 
   return (
-    <div className="rounded-[2px] bg-[#ffffff] border border-[#141414]/10 p-4 border border-[#eeece3] hover:border-[#dbd8ce] transition-colors">
+    <div className="rounded-[10px] bg-[#161618] border border-white/10 p-4 border border-[#1e1e21] hover:border-[#3a3a40] transition-colors">
       <div className="flex items-start gap-3 mb-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="font-semibold text-[#141414] text-[15px] leading-snug">
+            <span className="font-semibold text-[#f5f5f5] text-[15px] leading-snug">
               {capability.name}
             </span>
             {capability.isVerified && (
               <span
                 className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium"
-                style={{ backgroundColor: 'rgba(34, 197, 94, 0.15)', color: '#15803d' }}
+                style={{ backgroundColor: 'rgba(34, 197, 94, 0.15)', color: '#22c55e' }}
               >
                 <CheckCircle2 size={10} />
                 Verified
@@ -747,14 +747,14 @@ function CapabilityCard({
         <div className="flex-shrink-0 text-right pl-2">
           <div className="text-lg font-bold leading-none tabular-nums" style={{ color }}>
             {value}
-            <span className="text-[#8a877f] text-xs font-medium">/5</span>
+            <span className="text-[#7a797f] text-xs font-medium">/5</span>
           </div>
         </div>
       </div>
 
       <TermHighlightedText
         text={capability.description}
-        className="block text-sm text-[#524f48] leading-relaxed mb-3"
+        className="block text-sm text-[#b3b2b8] leading-relaxed mb-3"
         onTermTap={onTermTap}
         onModelTap={onModelTap}
         onBenchmarkTap={onBenchmarkTap}
@@ -768,10 +768,10 @@ function CapabilityCard({
               key={bm.id}
               type="button"
               onClick={() => onBenchmarkTap(bm)}
-              className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono text-[#524f48] hover:text-[#141414] hover:border-[#dbd8ce] active:scale-[0.96]"
+              className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-mono text-[#b3b2b8] hover:text-[#f5f5f5] hover:border-[#3a3a40] active:scale-[0.96]"
               style={{
                 backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid #eeece3',
+                border: '1px solid #1e1e21',
                 transition: 'all 200ms cubic-bezier(0.2, 0.8, 0.2, 1)',
               }}
             >
@@ -786,7 +786,7 @@ function CapabilityCard({
           <div
             key={i}
             className="h-1.5 flex-1 rounded-full"
-            style={{ backgroundColor: i <= value ? color : '#eeece3' }}
+            style={{ backgroundColor: i <= value ? color : '#1e1e21' }}
           />
         ))}
       </div>
@@ -812,13 +812,13 @@ function MythsTab({
 
   if (myths.length === 0) {
     return (
-      <div className="rounded-[2px] bg-[#ffffff] border border-[#141414]/10 p-12 text-center">
+      <div className="rounded-[10px] bg-[#161618] border border-white/10 p-12 text-center">
         <BadgeCheck
-          className="mx-auto mb-4 text-green-700"
+          className="mx-auto mb-4 text-green-400"
           size={48}
         />
-        <p className="text-lg font-medium text-[#141414]">No Common Myths</p>
-        <p className="text-sm text-[#75726b] mt-1">
+        <p className="text-lg font-medium text-[#f5f5f5]">No Common Myths</p>
+        <p className="text-sm text-[#8a8990] mt-1">
           No widely circulated myths have been documented for this model.
         </p>
       </div>
@@ -837,7 +837,7 @@ function MythsTab({
               className="w-2.5 h-2.5 rounded-full"
               style={{ backgroundColor: verdictColor[v] }}
             />
-            <span className="text-sm text-[#524f48]">{verdictLabel[v]}</span>
+            <span className="text-sm text-[#b3b2b8]">{verdictLabel[v]}</span>
           </div>
         ))}
       </div>
@@ -870,7 +870,7 @@ function MythCard({
   const label = verdictLabel[myth.verdict]
 
   return (
-    <div className="rounded-[2px] bg-[#ffffff] border border-[#141414]/10 p-4 border border-[#d9d6cc]">
+    <div className="rounded-[10px] bg-[#161618] border border-white/10 p-4 border border-[#2a2a2e]">
       <div className="flex items-center gap-2 mb-2">
         <div
           className="w-2.5 h-2.5 rounded-full"
@@ -880,8 +880,8 @@ function MythCard({
           {label}
         </span>
       </div>
-      <TermHighlightedText text={myth.claim} className="block text-[#141414] font-medium mb-2" onTermTap={onTermTap} onModelTap={onModelTap} onBenchmarkTap={onBenchmarkTap} excludeModelId={modelId} />
-      <TermHighlightedText text={myth.explanation} className="block text-sm text-[#524f48] leading-relaxed mb-3" onTermTap={onTermTap} onModelTap={onModelTap} onBenchmarkTap={onBenchmarkTap} excludeModelId={modelId} />
+      <TermHighlightedText text={myth.claim} className="block text-[#f5f5f5] font-medium mb-2" onTermTap={onTermTap} onModelTap={onModelTap} onBenchmarkTap={onBenchmarkTap} excludeModelId={modelId} />
+      <TermHighlightedText text={myth.explanation} className="block text-sm text-[#b3b2b8] leading-relaxed mb-3" onTermTap={onTermTap} onModelTap={onModelTap} onBenchmarkTap={onBenchmarkTap} excludeModelId={modelId} />
       {myth.source && (
         <button
           type="button"
@@ -934,26 +934,26 @@ function SourceRow({
     <button
       type="button"
       onClick={() => onTap(source)}
-      className="w-full text-left flex items-center gap-3 p-3 rounded-[2px] bg-[#ffffff] border border-[#d9d6cc] hover:border-[#c9c6bc] transition-colors group active:scale-[0.99]"
+      className="w-full text-left flex items-center gap-3 p-3 rounded-[10px] bg-[#161618] border border-[#2a2a2e] hover:border-[#333338] transition-colors group active:scale-[0.99]"
       aria-label={`About source: ${source.title}`}
     >
       <div
-        className="w-10 h-10 rounded-[2px] flex items-center justify-center flex-shrink-0"
+        className="w-10 h-10 rounded-[10px] flex items-center justify-center flex-shrink-0"
         style={{ backgroundColor: `${typeColor}33`, color: typeColor }}
       >
         <BookOpen size={18} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-[#141414] truncate">{source.title}</p>
+        <p className="text-sm font-medium text-[#f5f5f5] truncate">{source.title}</p>
         <span
-          className="inline-block mt-1 px-2 py-0.5 rounded-[2px] text-xs font-medium"
+          className="inline-block mt-1 px-2 py-0.5 rounded-md text-xs font-medium"
           style={{ backgroundColor: `${typeColor}33`, color: typeColor }}
         >
           {typeLabel}
         </span>
       </div>
       <ExternalLink
-        className="flex-shrink-0 text-[#75726b] group-hover:text-[#141414] transition-colors"
+        className="flex-shrink-0 text-[#8a8990] group-hover:text-[#f5f5f5] transition-colors"
         size={18}
       />
     </button>

@@ -108,15 +108,15 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f6f2] text-[#141414] p-6">
+    <div className="min-h-screen bg-[#0a0a0a] text-[#f5f5f5] p-6">
       <div className="max-w-2xl lg:max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div className="border-b border-[#141414]/20 pb-5">
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#2038e6] mb-2">
-            [ SEC. 01 — THE PLAYERS ]
+        <div className="border-b border-white/[0.08] pb-5">
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9fa3fc] mb-2">
+            Directory
           </p>
-          <h1 className="text-4xl text-[#141414] leading-tight">Companies</h1>
-          <p className="text-sm text-[#75726b] mt-1.5">Who builds today&apos;s AI, and what they&apos;ve shipped</p>
+          <h1 className="text-4xl font-semibold tracking-tight text-[#f5f5f5] leading-tight">Companies</h1>
+          <p className="text-sm text-[#8a8990] mt-1.5">Who builds today&apos;s AI, and what they&apos;ve shipped</p>
         </div>
 
         {/* Start here button */}
@@ -124,13 +124,13 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
           <button
             type="button"
             onClick={() => setShowGettingStarted(true)}
-            className="scale-button group w-full py-5 sm:py-7 lg:py-8 px-5 sm:px-6 rounded-[2px] bg-[#141414] hover:bg-[#2038e6] transition-colors text-[#f7f6f2] flex items-center justify-center gap-3"
+            className="scale-button group w-full py-5 sm:py-7 lg:py-8 px-5 sm:px-6 rounded-[14px] bg-[#7065f0] hover:bg-[#7d73f2] transition-colors text-white flex items-center justify-center gap-3"
           >
-            <span className="font-display text-2xl sm:text-3xl lg:text-4xl tracking-tight">Start here</span>
-            <span className="font-mono text-sm opacity-60 group-hover:opacity-100 transition-opacity">↓</span>
+            <span className="text-2xl sm:text-3xl font-semibold tracking-tight">Start here</span>
+            <span className="text-xl opacity-60 group-hover:opacity-100 transition-opacity">↓</span>
           </button>
-          <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#75726b] text-center">
-            V 0.1.5 · Updated Aug 5, 2026
+          <p className="text-[11px] text-[#8a8990] text-center">
+            V 0.1.6 · Updated Aug 6, 2026
           </p>
         </div>
 
@@ -139,11 +139,11 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
           <button
             type="button"
             onClick={() => toggleSort('companies')}
-            className="px-3 py-1.5 rounded-[2px] border font-mono text-xs transition-all"
+            className="px-3 py-1.5 rounded-[10px] border text-xs font-medium transition-all"
             style={
               sortMode === 'companies'
-                ? { backgroundColor: '#2038e6', color: '#f7f6f2', borderColor: '#2038e6' }
-                : { backgroundColor: '#ffffff', color: '#524f48', borderColor: 'rgba(20,20,20,0.2)' }
+                ? { backgroundColor: '#7065f0', color: '#fff', borderColor: '#7065f0' }
+                : { backgroundColor: '#161618', color: '#b3b2b8', borderColor: 'rgba(255,255,255,0.14)' }
             }
           >
             {companies.length} companies {sortMode === 'companies' ? '(A→Z)' : ''}
@@ -151,11 +151,11 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
           <button
             type="button"
             onClick={() => toggleSort('models')}
-            className="px-3 py-1.5 rounded-[2px] border font-mono text-xs transition-all"
+            className="px-3 py-1.5 rounded-[10px] border text-xs font-medium transition-all"
             style={
               sortMode === 'models'
-                ? { backgroundColor: '#2038e6', color: '#f7f6f2', borderColor: '#2038e6' }
-                : { backgroundColor: '#ffffff', color: '#524f48', borderColor: 'rgba(20,20,20,0.2)' }
+                ? { backgroundColor: '#7065f0', color: '#fff', borderColor: '#7065f0' }
+                : { backgroundColor: '#161618', color: '#b3b2b8', borderColor: 'rgba(255,255,255,0.14)' }
             }
           >
             {allModels.length} models {sortMode === 'models' ? '(most first)' : ''}
@@ -163,11 +163,11 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
           <button
             type="button"
             onClick={() => toggleSort('sources')}
-            className="px-3 py-1.5 rounded-[2px] border font-mono text-xs transition-all"
+            className="px-3 py-1.5 rounded-[10px] border text-xs font-medium transition-all"
             style={
               sortMode === 'sources'
-                ? { backgroundColor: '#2038e6', color: '#f7f6f2', borderColor: '#2038e6' }
-                : { backgroundColor: '#ffffff', color: '#524f48', borderColor: 'rgba(20,20,20,0.2)' }
+                ? { backgroundColor: '#7065f0', color: '#fff', borderColor: '#7065f0' }
+                : { backgroundColor: '#161618', color: '#b3b2b8', borderColor: 'rgba(255,255,255,0.14)' }
             }
           >
             {allSources.length} sources {sortMode === 'sources' ? '(most first)' : ''}
@@ -177,7 +177,7 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
         {/* Search bar */}
         <div className="relative">
           <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#75726b]"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8990]"
             size={20}
           />
           <input
@@ -185,13 +185,13 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             placeholder="Search companies or models..."
-            className="w-full pl-10 pr-10 py-3 rounded-[2px] bg-[#ffffff] border border-[#d9d6cc] text-[#141414] placeholder:text-[#75726b] focus:outline-none focus:border-[#2038e6]/50"
+            className="w-full pl-10 pr-10 py-3 rounded-[10px] bg-[#161618] border border-[#2a2a2e] text-[#f5f5f5] placeholder:text-[#8a8990] focus:outline-none focus:border-[#7065f0]/50"
           />
           {searchText && (
             <button
               type="button"
               onClick={() => setSearchText('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#75726b] hover:text-[#141414]"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8a8990] hover:text-[#f5f5f5]"
             >
               <X size={18} />
             </button>
@@ -215,7 +215,7 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
                 key={company.id}
                 type="button"
                 onClick={() => onSelectCompany(company)}
-                className="w-full text-left p-4 rounded-[2px] bg-[#ffffff] border transition-all hover:bg-[#f4f2eb]"
+                className="w-full text-left p-4 rounded-[10px] bg-[#161618] border transition-all hover:bg-[#1b1b1e]"
                 style={{ borderColor: accentBorder20 }}
               >
                 <div className="flex items-start gap-4">
@@ -230,19 +230,19 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
                   {/* Center: content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-[#141414]">{company.name}</span>
+                      <span className="font-bold text-[#f5f5f5]">{company.name}</span>
                       <span className="text-sm" style={{ color: accent }}>
                         {company.models.length} {company.models.length === 1 ? 'model' : 'models'}
                       </span>
                       {sortMode === 'sources' && (
-                        <span className="text-xs text-[#75726b]">
+                        <span className="text-xs text-[#8a8990]">
                           · {sourceCountByCompany[company.id] ?? 0} sources
                         </span>
                       )}
                     </div>
                     <TermHighlightedText
                       text={company.description}
-                      className="block text-sm text-[#524f48] leading-relaxed line-clamp-2 mb-3 opacity-70"
+                      className="block text-sm text-[#b3b2b8] leading-relaxed line-clamp-2 mb-3 opacity-70"
                       onTermTap={showTerm}
                       onModelTap={showModel}
                     />
@@ -251,7 +251,7 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
                       {displayModels.map((model) => (
                         <span
                           key={model.id}
-                          className="px-2 py-0.5 rounded-[2px] text-xs font-medium"
+                          className="px-2 py-0.5 rounded-md text-xs font-medium"
                           style={{ backgroundColor: accentBg15, color: accent }}
                         >
                           {model.name}
@@ -259,7 +259,7 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
                       ))}
                       {remainingCount > 0 && (
                         <span
-                          className="px-2 py-0.5 rounded-[2px] text-xs font-medium"
+                          className="px-2 py-0.5 rounded-md text-xs font-medium"
                           style={{ backgroundColor: accentBg15, color: accent }}
                         >
                           +{remainingCount}
@@ -269,7 +269,7 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
                   </div>
 
                   {/* Right: chevron */}
-                  <ChevronRight className="flex-shrink-0 text-[#75726b] opacity-50" size={20} />
+                  <ChevronRight className="flex-shrink-0 text-[#8a8990] opacity-50" size={20} />
                 </div>
               </button>
             )
@@ -277,7 +277,7 @@ export default function CompanyList({ onSelectCompany }: CompanyListProps) {
         </div>
 
         {filteredCompanies.length === 0 && (
-          <p className="text-center text-[#524f48] py-8 opacity-70">
+          <p className="text-center text-[#b3b2b8] py-8 opacity-70">
             No companies match your search.
           </p>
         )}

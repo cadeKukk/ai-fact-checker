@@ -278,17 +278,17 @@ function rankValues(values: (number | null)[], higherIsBetter: boolean): RankRes
     .filter((e) => e.v !== null) as { v: number; i: number }[]
 
   if (validEntries.length < 2) {
-    return values.map(() => ({ rank: 0, color: '#524f48', isBest: false }))
+    return values.map(() => ({ rank: 0, color: '#b3b2b8', isBest: false }))
   }
 
   validEntries.sort((a, b) => (higherIsBetter ? b.v - a.v : a.v - b.v))
 
-  const results: RankResult[] = values.map(() => ({ rank: -1, color: '#75726b', isBest: false }))
+  const results: RankResult[] = values.map(() => ({ rank: -1, color: '#8a8990', isBest: false }))
   validEntries.forEach((entry, idx) => {
     const rank = idx + 1
-    let color = '#c2410c'
-    if (rank === 1) color = '#15803d'
-    else if (rank === 2 && validEntries.length > 2) color = '#a16207'
+    let color = '#f97316'
+    if (rank === 1) color = '#22c55e'
+    else if (rank === 2 && validEntries.length > 2) color = '#eab308'
     results[entry.i] = { rank, color, isBest: rank === 1 }
   })
 
@@ -380,22 +380,22 @@ export default function CompareView({ onNavigate }: CompareViewProps = {}) {
   }, [breakdowns, selectedModels])
 
   return (
-    <div className="min-h-screen bg-[#f7f6f2] text-[#141414] p-6">
+    <div className="min-h-screen bg-[#0a0a0a] text-[#f5f5f5] p-6">
       <div className="max-w-3xl lg:max-w-5xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-end justify-between border-b border-[#141414]/20 pb-5">
+        <div className="flex items-end justify-between border-b border-white/[0.08] pb-5">
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#2038e6] mb-2">
-              [ SEC. 03 — SIDE BY SIDE ]
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9fa3fc] mb-2">
+              Benchmarks
             </p>
-            <h1 className="text-4xl text-[#141414] leading-tight">Compare</h1>
-            <p className="text-sm text-[#75726b] mt-1.5">Quality, speed, context, value &amp; versatility</p>
+            <h1 className="text-4xl font-semibold tracking-tight text-[#f5f5f5] leading-tight">Compare</h1>
+            <p className="text-sm text-[#8a8990] mt-1.5">Quality, speed, context, value &amp; versatility</p>
           </div>
           {selectedModelIds.length > 0 && (
             <button
               type="button"
               onClick={() => setSelectedModelIds([])}
-              className="text-sm text-[#75726b] hover:text-[#141414] transition-colors"
+              className="text-sm text-[#8a8990] hover:text-[#f5f5f5] transition-colors"
             >
               Clear
             </button>
@@ -407,11 +407,11 @@ export default function CompareView({ onNavigate }: CompareViewProps = {}) {
           <div className="flex flex-wrap gap-2">
             {selectedModels.map((model) => {
               const company = getCompanyForModel(model.id)
-              const accent = company?.accentColor ?? '#2038e6'
+              const accent = company?.accentColor ?? '#7065f0'
               return (
                 <span
                   key={model.id}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] text-sm font-medium"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] text-sm font-medium"
                   style={{ backgroundColor: hexToRgba(accent, 0.2), color: accent }}
                 >
                   {model.name}
@@ -428,7 +428,7 @@ export default function CompareView({ onNavigate }: CompareViewProps = {}) {
         <button
           type="button"
           onClick={() => { setShowPicker(true); setPickerSearch('') }}
-          className="w-full py-3 px-4 rounded-[2px] bg-[#ffffff] border border-dashed border-[#c9c6bc] text-[#524f48] hover:border-[#2038e6]/50 hover:text-[#141414] transition-all flex items-center justify-center gap-2"
+          className="w-full py-3 px-4 rounded-[10px] bg-[#161618] border border-dashed border-[#333338] text-[#b3b2b8] hover:border-[#7065f0]/50 hover:text-[#f5f5f5] transition-all flex items-center justify-center gap-2"
         >
           {selectedModels.length === 0 ? (
             <>
@@ -441,29 +441,29 @@ export default function CompareView({ onNavigate }: CompareViewProps = {}) {
               Add model ({selectedModelIds.length}/{MAX_MODELS})
             </>
           ) : (
-            <span className="text-[#75726b]">Maximum {MAX_MODELS} models selected</span>
+            <span className="text-[#8a8990]">Maximum {MAX_MODELS} models selected</span>
           )}
         </button>
 
         {/* Model picker modal */}
         {showPicker && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#141414]/40">
-            <div className="w-full max-w-lg max-h-[80vh] mb-20 sm:mb-0 rounded-none sm:rounded-[2px] bg-[#ffffff] border border-[#d9d6cc] flex flex-col overflow-hidden">
-              <div className="p-4 border-b border-[#d9d6cc] flex items-center justify-between">
-                <h3 className="font-bold text-[#141414]">Select Models</h3>
-                <button type="button" onClick={() => setShowPicker(false)} className="text-[#75726b] hover:text-[#141414]">
+          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/70">
+            <div className="w-full max-w-lg max-h-[80vh] mb-20 sm:mb-0 rounded-t-2xl sm:rounded-[10px] bg-[#161618] border border-[#2a2a2e] flex flex-col overflow-hidden">
+              <div className="p-4 border-b border-[#2a2a2e] flex items-center justify-between">
+                <h3 className="font-bold text-[#f5f5f5]">Select Models</h3>
+                <button type="button" onClick={() => setShowPicker(false)} className="text-[#8a8990] hover:text-[#f5f5f5]">
                   <X size={20} />
                 </button>
               </div>
-              <div className="p-3 border-b border-[#d9d6cc]">
+              <div className="p-3 border-b border-[#2a2a2e]">
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#75726b]" size={16} />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8990]" size={16} />
                   <input
                     type="text"
                     value={pickerSearch}
                     onChange={(e) => setPickerSearch(e.target.value)}
                     placeholder="Search models..."
-                    className="w-full pl-9 pr-4 py-2 rounded-[2px] bg-[#f7f6f2] border border-[#d9d6cc] text-[#141414] text-sm placeholder:text-[#75726b] focus:outline-none focus:border-[#2038e6]/50"
+                    className="w-full pl-9 pr-4 py-2 rounded-[10px] bg-[#0a0a0a] border border-[#2a2a2e] text-[#f5f5f5] text-sm placeholder:text-[#8a8990] focus:outline-none focus:border-[#7065f0]/50"
                   />
                 </div>
               </div>
@@ -474,7 +474,7 @@ export default function CompareView({ onNavigate }: CompareViewProps = {}) {
                     <div key={company.id}>
                       <div className="flex items-center gap-2 mb-2 px-1">
                         <span style={{ color: company.accentColor }}><IconComponent size={16} /></span>
-                        <span className="text-xs font-semibold text-[#75726b] uppercase tracking-wide">
+                        <span className="text-xs font-semibold text-[#8a8990] uppercase tracking-wide">
                           {company.name}
                         </span>
                       </div>
@@ -488,19 +488,19 @@ export default function CompareView({ onNavigate }: CompareViewProps = {}) {
                               type="button"
                               disabled={isDisabled}
                               onClick={() => toggleModel(model.id)}
-                              className={`w-full text-left px-3 py-2.5 rounded-[2px] flex items-center justify-between transition-all ${
+                              className={`w-full text-left px-3 py-2.5 rounded-[10px] flex items-center justify-between transition-all ${
                                 isSelected
-                                  ? 'bg-[#2038e6]/15 border border-[#2038e6]/30'
+                                  ? 'bg-[#7065f0]/15 border border-[#7065f0]/30'
                                   : isDisabled
-                                  ? 'opacity-40 cursor-not-allowed bg-[#f7f6f2]'
-                                  : 'bg-[#f7f6f2] hover:bg-[#efede5] border border-transparent'
+                                  ? 'opacity-40 cursor-not-allowed bg-[#0a0a0a]'
+                                  : 'bg-[#0a0a0a] hover:bg-[#151517] border border-transparent'
                               }`}
                             >
                               <div>
-                                <span className="text-sm font-medium text-[#141414]">{model.name}</span>
-                                <span className="text-xs text-[#75726b] ml-2">{model.version}</span>
+                                <span className="text-sm font-medium text-[#f5f5f5]">{model.name}</span>
+                                <span className="text-xs text-[#8a8990] ml-2">{model.version}</span>
                               </div>
-                              {isSelected && <Check size={16} className="text-[#2038e6]" />}
+                              {isSelected && <Check size={16} className="text-[#7065f0]" />}
                             </button>
                           )
                         })}
@@ -509,11 +509,11 @@ export default function CompareView({ onNavigate }: CompareViewProps = {}) {
                   )
                 })}
               </div>
-              <div className="p-3 border-t border-[#d9d6cc]">
+              <div className="p-3 border-t border-[#2a2a2e]">
                 <button
                   type="button"
                   onClick={() => setShowPicker(false)}
-                  className="w-full py-2.5 rounded-[2px] bg-[#2038e6] text-[#f7f6f2] font-semibold hover:bg-[#4b60ec] transition-colors"
+                  className="w-full py-2.5 rounded-[10px] bg-[#7065f0] text-white font-semibold hover:bg-[#9fa3fc] transition-colors"
                 >
                   Done ({selectedModelIds.length} selected)
                 </button>
@@ -569,20 +569,20 @@ export default function CompareView({ onNavigate }: CompareViewProps = {}) {
 
         {/* Detailed comparison table (≥2 models) */}
         {selectedModels.length >= 2 && (
-          <div className="rounded-[2px] bg-[#ffffff] border border-[#d9d6cc] overflow-hidden">
-            <div className="px-4 py-3 border-b border-[#d9d6cc]">
-              <h2 className="text-sm font-semibold text-[#141414]">Full specifications</h2>
+          <div className="rounded-[10px] bg-[#161618] border border-[#2a2a2e] overflow-hidden">
+            <div className="px-4 py-3 border-b border-[#2a2a2e]">
+              <h2 className="text-sm font-semibold text-[#f5f5f5]">Full specifications</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-[#d9d6cc]">
-                    <th className="text-left p-3 text-[#75726b] font-medium min-w-[140px]" />
+                  <tr className="border-b border-[#2a2a2e]">
+                    <th className="text-left p-3 text-[#8a8990] font-medium min-w-[140px]" />
                     {selectedModels.map((model) => {
                       const company = getCompanyForModel(model.id)
                       return (
                         <th key={model.id} className="p-3 text-center min-w-[120px]">
-                          <span className="font-bold text-[#141414] text-sm">{model.name}</span>
+                          <span className="font-bold text-[#f5f5f5] text-sm">{model.name}</span>
                           {company && (
                             <span className="block text-xs mt-0.5" style={{ color: company.accentColor }}>
                               {company.shortName}
@@ -685,22 +685,22 @@ export default function CompareView({ onNavigate }: CompareViewProps = {}) {
             </div>
 
             {/* Legend */}
-            <div className="p-3 border-t border-[#d9d6cc] flex flex-wrap gap-4 text-xs text-[#75726b]">
+            <div className="p-3 border-t border-[#2a2a2e] flex flex-wrap gap-4 text-xs text-[#8a8990]">
               <span className="flex items-center gap-1">
-                <Crown size={12} className="text-[#15803d]" /> Best
+                <Crown size={12} className="text-[#22c55e]" /> Best
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-[#a16207]" /> Middle
+                <span className="w-2 h-2 rounded-full bg-[#eab308]" /> Middle
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-[#c2410c]" /> Lowest
+                <span className="w-2 h-2 rounded-full bg-[#f97316]" /> Lowest
               </span>
             </div>
           </div>
         )}
 
         {selectedModels.length === 0 && (
-          <p className="text-center text-[#75726b] py-12 text-sm">
+          <p className="text-center text-[#8a8990] py-12 text-sm">
             Select 2 or 3 models to start comparing.
           </p>
         )}
@@ -723,17 +723,17 @@ function ScoreCard({
   onRemove: () => void
 }) {
   const company = getCompanyForModel(model.id)
-  const accent = company?.accentColor ?? '#2038e6'
+  const accent = company?.accentColor ?? '#7065f0'
   const overall = Math.round(breakdown.overall)
 
   return (
     <div
-      className={`relative rounded-[2px] bg-[#ffffff] border p-4 flex flex-col gap-3 ${
-        isOverallWinner ? 'border-[#15803d]/60 shadow-[0_0_0_1px_rgba(34,197,94,0.25)]' : 'border-[#d9d6cc]'
+      className={`relative rounded-[10px] bg-[#161618] border p-4 flex flex-col gap-3 ${
+        isOverallWinner ? 'border-[#22c55e]/60 shadow-[0_0_0_1px_rgba(34,197,94,0.25)]' : 'border-[#2a2a2e]'
       }`}
     >
       {isOverallWinner && (
-        <span className="absolute -top-2 left-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-[2px] bg-[#15803d] text-[#f7f6f2] text-[10px] font-bold uppercase tracking-wide">
+        <span className="absolute -top-2 left-3 inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#22c55e] text-white text-[10px] font-bold uppercase tracking-wide">
           <Trophy size={10} /> Best overall
         </span>
       )}
@@ -741,7 +741,7 @@ function ScoreCard({
       {/* Top: model name + remove */}
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <h3 className="text-base font-bold text-[#141414] truncate">{model.name}</h3>
+          <h3 className="text-base font-bold text-[#f5f5f5] truncate">{model.name}</h3>
           {company && (
             <p className="text-xs font-medium truncate" style={{ color: accent }}>
               {company.shortName}
@@ -751,7 +751,7 @@ function ScoreCard({
         <button
           type="button"
           onClick={onRemove}
-          className="text-[#93908a] hover:text-[#141414] p-1 -m-1"
+          className="text-[#838289] hover:text-[#f5f5f5] p-1 -m-1"
           aria-label={`Remove ${model.name}`}
         >
           <X size={14} />
@@ -761,11 +761,11 @@ function ScoreCard({
       {/* Overall score */}
       <div>
         <div className="flex items-baseline gap-1">
-          <span className="text-4xl font-extrabold text-[#141414] tabular-nums">{overall}</span>
-          <span className="text-sm text-[#75726b] font-medium">/100</span>
-          <span className="text-[11px] text-[#93908a] ml-auto self-center uppercase tracking-wide">Overall</span>
+          <span className="text-4xl font-extrabold text-[#f5f5f5] tabular-nums">{overall}</span>
+          <span className="text-sm text-[#8a8990] font-medium">/100</span>
+          <span className="text-[11px] text-[#838289] ml-auto self-center uppercase tracking-wide">Overall</span>
         </div>
-        <div className="mt-2 h-1.5 w-full rounded-full bg-[#f7f6f2] overflow-hidden">
+        <div className="mt-2 h-1.5 w-full rounded-full bg-[#0a0a0a] overflow-hidden">
           <div
             className="h-full rounded-full"
             style={{
@@ -788,20 +788,20 @@ function ScoreCard({
           const Icon = dim.icon
           return (
             <div key={dim.id} className="grid grid-cols-[68px_1fr_28px] items-center gap-2">
-              <span className="flex items-center gap-1 text-[11px] text-[#75726b]">
+              <span className="flex items-center gap-1 text-[11px] text-[#8a8990]">
                 <Icon size={11} />
                 {dim.label}
               </span>
-              <div className="h-1 rounded-full bg-[#f7f6f2] overflow-hidden">
+              <div className="h-1 rounded-full bg-[#0a0a0a] overflow-hidden">
                 <div
                   className="h-full rounded-full transition-all"
                   style={{
                     width: v == null ? '0%' : `${Math.round(v)}%`,
-                    background: v == null ? '#c9c6bc' : accent,
+                    background: v == null ? '#333338' : accent,
                   }}
                 />
               </div>
-              <span className="text-[11px] font-semibold text-[#524f48] tabular-nums text-right">
+              <span className="text-[11px] font-semibold text-[#b3b2b8] tabular-nums text-right">
                 {v == null ? '—' : Math.round(v)}
               </span>
             </div>
@@ -827,8 +827,8 @@ function AwardsStrip({
   ]
 
   return (
-    <div className="rounded-[2px] bg-[#ffffff] border border-[#d9d6cc] p-3">
-      <h2 className="text-xs font-semibold text-[#75726b] uppercase tracking-wider mb-2 px-1">Awards</h2>
+    <div className="rounded-[10px] bg-[#161618] border border-[#2a2a2e] p-3">
+      <h2 className="text-xs font-semibold text-[#8a8990] uppercase tracking-wider mb-2 px-1">Awards</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
         {items.map(({ dim, label, Icon }) => {
           const winnerIdxs = winners[dim]
@@ -841,8 +841,8 @@ function AwardsStrip({
           // any one model visually.
           const singleWinner = winnerIdxs.length === 1 ? models[winnerIdxs[0]] : null
           const accent = singleWinner
-            ? (getCompanyForModel(singleWinner.id)?.accentColor ?? '#2038e6')
-            : '#2038e6'
+            ? (getCompanyForModel(singleWinner.id)?.accentColor ?? '#7065f0')
+            : '#7065f0'
 
           let displayName: string
           if (winnerIdxs.length === 0) displayName = '—'
@@ -852,7 +852,7 @@ function AwardsStrip({
           return (
             <div
               key={dim}
-              className="flex items-center gap-2 px-3 py-2 rounded-[2px] bg-[#f7f6f2] border border-[#eeece3]"
+              className="flex items-center gap-2 px-3 py-2 rounded-[10px] bg-[#0a0a0a] border border-[#1e1e21]"
             >
               <span
                 className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center"
@@ -861,11 +861,11 @@ function AwardsStrip({
                 <Icon size={14} />
               </span>
               <div className="min-w-0">
-                <p className="text-[10px] uppercase tracking-wide text-[#75726b] leading-tight">
+                <p className="text-[10px] uppercase tracking-wide text-[#8a8990] leading-tight">
                   {tied && !allTied ? `${label} · Tied` : label}
                 </p>
                 <p
-                  className="text-sm font-semibold text-[#141414] leading-tight"
+                  className="text-sm font-semibold text-[#f5f5f5] leading-tight"
                   title={displayName}
                 >
                   {displayName}
@@ -889,12 +889,12 @@ function topCapabilities(model: AIModel, n: number): Capability[] {
 
 function StrengthsSection({ models }: { models: AIModel[] }) {
   return (
-    <div className="rounded-[2px] bg-[#ffffff] border border-[#d9d6cc] overflow-hidden">
-      <div className="px-4 py-3 border-b border-[#d9d6cc]">
-        <h2 className="text-sm font-semibold text-[#141414]">Strengths</h2>
-        <p className="text-xs text-[#75726b] mt-0.5">Each model&apos;s two highest-rated verified capabilities.</p>
+    <div className="rounded-[10px] bg-[#161618] border border-[#2a2a2e] overflow-hidden">
+      <div className="px-4 py-3 border-b border-[#2a2a2e]">
+        <h2 className="text-sm font-semibold text-[#f5f5f5]">Strengths</h2>
+        <p className="text-xs text-[#8a8990] mt-0.5">Each model&apos;s two highest-rated verified capabilities.</p>
       </div>
-      <div className={`grid gap-px bg-[#d9d6cc] ${
+      <div className={`grid gap-px bg-[#2a2a2e] ${
         models.length === 1 ? 'grid-cols-1' :
         models.length === 2 ? 'grid-cols-1 sm:grid-cols-2' :
         'grid-cols-1 sm:grid-cols-3'
@@ -902,12 +902,12 @@ function StrengthsSection({ models }: { models: AIModel[] }) {
         {models.map((model) => {
           const top = topCapabilities(model, 2)
           const company = getCompanyForModel(model.id)
-          const accent = company?.accentColor ?? '#2038e6'
+          const accent = company?.accentColor ?? '#7065f0'
           return (
-            <div key={model.id} className="bg-[#ffffff] border border-[#141414]/10 p-4 space-y-3">
+            <div key={model.id} className="bg-[#161618] border border-white/10 p-4 space-y-3">
               <p className="text-xs font-semibold" style={{ color: accent }}>{model.name}</p>
               {top.length === 0 && (
-                <p className="text-xs text-[#93908a]">No capability data.</p>
+                <p className="text-xs text-[#838289]">No capability data.</p>
               )}
               {top.map((cap) => (
                 <StrengthRow key={cap.id} cap={cap} />
@@ -926,7 +926,7 @@ function StrengthRow({ cap }: { cap: Capability }) {
   return (
     <div className="space-y-1">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-sm font-medium text-[#141414] truncate">{cap.name}</span>
+        <span className="text-sm font-medium text-[#f5f5f5] truncate">{cap.name}</span>
         <span
           className="flex-shrink-0 text-[10px] font-bold uppercase px-1.5 py-0.5 rounded"
           style={{ backgroundColor: hexToRgba(color, 0.15), color }}
@@ -934,7 +934,7 @@ function StrengthRow({ cap }: { cap: Capability }) {
           {ratingLabel[rating]}
         </span>
       </div>
-      <p className="text-xs text-[#524f48] leading-relaxed">{cap.description}</p>
+      <p className="text-xs text-[#b3b2b8] leading-relaxed">{cap.description}</p>
     </div>
   )
 }
@@ -949,18 +949,18 @@ function ReferencesSection({
   onNavigate?: (target: CompareNavTarget) => void
 }) {
   return (
-    <div className="rounded-[2px] bg-[#ffffff] border border-[#d9d6cc] overflow-hidden">
-      <div className="px-4 py-3 border-b border-[#d9d6cc]">
-        <h2 className="text-sm font-semibold text-[#141414]">Sources &amp; references</h2>
-        <p className="text-xs text-[#75726b] mt-0.5">
+    <div className="rounded-[10px] bg-[#161618] border border-[#2a2a2e] overflow-hidden">
+      <div className="px-4 py-3 border-b border-[#2a2a2e]">
+        <h2 className="text-sm font-semibold text-[#f5f5f5]">Sources &amp; references</h2>
+        <p className="text-xs text-[#8a8990] mt-0.5">
           Jump to the company profile, the original sources, or fact-checks that
           mention each model.
         </p>
       </div>
-      <div className="divide-y divide-[#eeece3]">
+      <div className="divide-y divide-[#1e1e21]">
         {models.map((model) => {
           const company = getCompanyForModel(model.id)
-          const accent = company?.accentColor ?? '#2038e6'
+          const accent = company?.accentColor ?? '#7065f0'
           const sourceCount = model.sources.length
           const fcCount = factCheckCountForModel(model)
           return (
@@ -969,7 +969,7 @@ function ReferencesSection({
               className="p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
             >
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-[#141414] truncate">{model.name}</p>
+                <p className="text-sm font-semibold text-[#f5f5f5] truncate">{model.name}</p>
                 <p className="text-xs truncate" style={{ color: accent }}>
                   {company?.name ?? 'Unknown company'}
                 </p>
@@ -979,7 +979,7 @@ function ReferencesSection({
                   <button
                     type="button"
                     onClick={() => onNavigate({ kind: 'company', companyId: company.id })}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] text-xs font-medium bg-[#f7f6f2] border border-[#eeece3] text-[#524f48] hover:border-[#2038e6]/40 hover:text-[#141414] transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] text-xs font-medium bg-[#0a0a0a] border border-[#1e1e21] text-[#b3b2b8] hover:border-[#7065f0]/40 hover:text-[#f5f5f5] transition-colors"
                   >
                     <Building2 size={12} />
                     View company
@@ -995,7 +995,7 @@ function ReferencesSection({
                         query: company?.shortName ?? model.name,
                       })
                     }
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] text-xs font-medium bg-[#f7f6f2] border border-[#eeece3] text-[#524f48] hover:border-[#2038e6]/40 hover:text-[#141414] transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] text-xs font-medium bg-[#0a0a0a] border border-[#1e1e21] text-[#b3b2b8] hover:border-[#7065f0]/40 hover:text-[#f5f5f5] transition-colors"
                   >
                     <Link2 size={12} />
                     {sourceCount} source{sourceCount === 1 ? '' : 's'}
@@ -1006,10 +1006,10 @@ function ReferencesSection({
                   <button
                     type="button"
                     onClick={() => onNavigate({ kind: 'factcheck', query: model.name })}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] text-xs font-medium border transition-colors ${
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] text-xs font-medium border transition-colors ${
                       fcCount > 0
-                        ? 'bg-[#f7f6f2] border-[#eeece3] text-[#524f48] hover:border-[#2038e6]/40 hover:text-[#141414]'
-                        : 'bg-[#f7f6f2] border-[#eeece3]/60 text-[#93908a] cursor-default hover:cursor-pointer hover:text-[#524f48] hover:border-[#eeece3]'
+                        ? 'bg-[#0a0a0a] border-[#1e1e21] text-[#b3b2b8] hover:border-[#7065f0]/40 hover:text-[#f5f5f5]'
+                        : 'bg-[#0a0a0a] border-[#1e1e21]/60 text-[#838289] cursor-default hover:cursor-pointer hover:text-[#b3b2b8] hover:border-[#1e1e21]'
                     }`}
                   >
                     <ShieldCheck size={12} />
@@ -1143,28 +1143,28 @@ function MethodologySection({
 }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="rounded-[2px] bg-[#ffffff] border border-[#d9d6cc] overflow-hidden">
+    <div className="rounded-[10px] bg-[#161618] border border-[#2a2a2e] overflow-hidden">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-[#efede5] transition-colors"
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-[#151517] transition-colors"
         aria-expanded={open}
       >
         <div className="flex items-center gap-2 min-w-0">
-          <Info size={16} className="text-[#2038e6] flex-shrink-0" />
-          <h2 className="text-sm font-semibold text-[#141414] truncate">
+          <Info size={16} className="text-[#7065f0] flex-shrink-0" />
+          <h2 className="text-sm font-semibold text-[#f5f5f5] truncate">
             How are these scores calculated?
           </h2>
         </div>
         {open ? (
-          <ChevronUp size={16} className="text-[#75726b] flex-shrink-0" />
+          <ChevronUp size={16} className="text-[#8a8990] flex-shrink-0" />
         ) : (
-          <ChevronDown size={16} className="text-[#75726b] flex-shrink-0" />
+          <ChevronDown size={16} className="text-[#8a8990] flex-shrink-0" />
         )}
       </button>
       {open && (
-        <div className="border-t border-[#d9d6cc] p-4 space-y-5">
-          <p className="text-xs text-[#524f48] leading-relaxed">
+        <div className="border-t border-[#2a2a2e] p-4 space-y-5">
+          <p className="text-xs text-[#b3b2b8] leading-relaxed">
             Each model gets a 0–100 score in five dimensions, then a weighted average
             produces the overall score. When a dimension has no published data for a
             model (e.g. no tokens-per-second listed), it's excluded from that model's
@@ -1175,21 +1175,21 @@ function MethodologySection({
           {METHODOLOGY.map((entry) => (
             <div key={entry.label} className="space-y-2">
               <div className="flex items-baseline gap-2 flex-wrap">
-                <h3 className="text-sm font-semibold text-[#141414]">{entry.label}</h3>
-                <span className="text-[11px] font-medium text-[#2038e6] uppercase tracking-wide">
+                <h3 className="text-sm font-semibold text-[#f5f5f5]">{entry.label}</h3>
+                <span className="text-[11px] font-medium text-[#7065f0] uppercase tracking-wide">
                   {entry.weightPct}% of overall
                 </span>
               </div>
-              <p className="text-xs text-[#524f48] leading-relaxed">{entry.formula}</p>
-              <p className="text-[11px] text-[#75726b] leading-relaxed italic">
+              <p className="text-xs text-[#b3b2b8] leading-relaxed">{entry.formula}</p>
+              <p className="text-[11px] text-[#8a8990] leading-relaxed italic">
                 {entry.data}
               </p>
 
               {models.length > 0 && (
-                <div className="rounded-[2px] bg-[#f7f6f2] border border-[#eeece3] overflow-hidden">
+                <div className="rounded-[10px] bg-[#0a0a0a] border border-[#1e1e21] overflow-hidden">
                   <table className="w-full text-[11px]">
                     <thead>
-                      <tr className="border-b border-[#eeece3] text-[#75726b]">
+                      <tr className="border-b border-[#1e1e21] text-[#8a8990]">
                         <th className="text-left px-3 py-1.5 font-medium">Model</th>
                         <th className="text-left px-3 py-1.5 font-medium">Raw value</th>
                         <th className="text-right px-3 py-1.5 font-medium">Score</th>
@@ -1198,25 +1198,25 @@ function MethodologySection({
                     <tbody>
                       {models.map((model, i) => {
                         const company = getCompanyForModel(model.id)
-                        const accent = company?.accentColor ?? '#2038e6'
+                        const accent = company?.accentColor ?? '#7065f0'
                         const { inputs, raw, score } = entry.rowFor(
                           model,
                           models,
                           breakdowns[i],
                         )
                         return (
-                          <tr key={model.id} className="border-b border-[#eeece3]/60 last:border-b-0">
+                          <tr key={model.id} className="border-b border-[#1e1e21]/60 last:border-b-0">
                             <td className="px-3 py-1.5">
-                              <span className="font-medium text-[#141414]">{model.name}</span>
+                              <span className="font-medium text-[#f5f5f5]">{model.name}</span>
                               <span className="block text-[10px]" style={{ color: accent }}>
                                 {company?.shortName ?? ''}
                               </span>
                             </td>
-                            <td className="px-3 py-1.5 text-[#524f48]">
+                            <td className="px-3 py-1.5 text-[#b3b2b8]">
                               <span className="block">{raw}</span>
-                              <span className="block text-[10px] text-[#93908a]">{inputs}</span>
+                              <span className="block text-[10px] text-[#838289]">{inputs}</span>
                             </td>
-                            <td className="px-3 py-1.5 text-right text-[#141414] font-semibold tabular-nums">
+                            <td className="px-3 py-1.5 text-right text-[#f5f5f5] font-semibold tabular-nums">
                               {score == null ? '—' : score}
                             </td>
                           </tr>
@@ -1229,13 +1229,13 @@ function MethodologySection({
             </div>
           ))}
 
-          <div className="pt-2 border-t border-[#eeece3]">
-            <p className="text-xs text-[#524f48] leading-relaxed">
-              <span className="text-[#141414] font-semibold">Overall</span> = 0.40 ·
+          <div className="pt-2 border-t border-[#1e1e21]">
+            <p className="text-xs text-[#b3b2b8] leading-relaxed">
+              <span className="text-[#f5f5f5] font-semibold">Overall</span> = 0.40 ·
               Quality + 0.15 · Speed + 0.15 · Context + 0.20 · Value + 0.10 ·
               Versatility.
             </p>
-            <p className="text-[11px] text-[#75726b] leading-relaxed mt-1">
+            <p className="text-[11px] text-[#8a8990] leading-relaxed mt-1">
               All underlying numbers can be audited via the &ldquo;Sources &amp;
               references&rdquo; section above — each company&apos;s page, source
               list, and matching fact-checks are one tap away.
@@ -1253,7 +1253,7 @@ function SectionHeader({ label, colSpan }: { label: string; colSpan: number }) {
   return (
     <tr>
       <td colSpan={colSpan} className="px-3 pt-4 pb-2">
-        <span className="text-xs font-bold text-[#2038e6] uppercase tracking-wider">{label}</span>
+        <span className="text-xs font-bold text-[#7065f0] uppercase tracking-wider">{label}</span>
       </td>
     </tr>
   )
@@ -1269,10 +1269,10 @@ function SimpleRow({
   getValue: (m: AIModel) => string
 }) {
   return (
-    <tr className="border-b border-[#d9d6cc]/50">
-      <td className="p-3 text-[#75726b]">{label}</td>
+    <tr className="border-b border-[#2a2a2e]/50">
+      <td className="p-3 text-[#8a8990]">{label}</td>
       {models.map((m) => (
-        <td key={m.id} className="p-3 text-center text-[#524f48] text-xs">
+        <td key={m.id} className="p-3 text-center text-[#b3b2b8] text-xs">
           {getValue(m)}
         </td>
       ))}
@@ -1297,12 +1297,12 @@ function RankedRow({
   const ranks = rankValues(numerics, higherIsBetter)
 
   return (
-    <tr className="border-b border-[#d9d6cc]/50">
-      <td className="p-3 text-[#75726b]">{label}</td>
+    <tr className="border-b border-[#2a2a2e]/50">
+      <td className="p-3 text-[#8a8990]">{label}</td>
       {models.map((m, i) => (
         <td key={m.id} className="p-3 text-center">
           <div className="flex items-center justify-center gap-1">
-            {ranks[i].isBest && <Crown size={12} className="text-[#15803d]" />}
+            {ranks[i].isBest && <Crown size={12} className="text-[#22c55e]" />}
             <span className="text-xs font-medium" style={{ color: ranks[i].color }}>
               {getValue(m)}
             </span>
@@ -1326,14 +1326,14 @@ function ModalityRow({
   const ranks = rankValues(counts, true)
 
   return (
-    <tr className="border-b border-[#d9d6cc]/50">
-      <td className="p-3 text-[#75726b]">{label}</td>
+    <tr className="border-b border-[#2a2a2e]/50">
+      <td className="p-3 text-[#8a8990]">{label}</td>
       {models.map((m, i) => {
         const mods = getModalities(m)
         return (
           <td key={m.id} className="p-3 text-center">
             <div className="flex flex-wrap items-center justify-center gap-1">
-              {ranks[i].isBest && mods.length > 1 && <Crown size={10} className="text-[#15803d]" />}
+              {ranks[i].isBest && mods.length > 1 && <Crown size={10} className="text-[#22c55e]" />}
               {mods.map((mod) => {
                 const Icon = MODALITY_ICON_MAP[mod]
                 return (
@@ -1365,16 +1365,16 @@ function BooleanRow({
   getValue: (m: AIModel) => boolean
 }) {
   return (
-    <tr className="border-b border-[#d9d6cc]/50">
-      <td className="p-3 text-[#75726b]">{label}</td>
+    <tr className="border-b border-[#2a2a2e]/50">
+      <td className="p-3 text-[#8a8990]">{label}</td>
       {models.map((m) => {
         const val = getValue(m)
         return (
           <td key={m.id} className="p-3 text-center">
             {val ? (
-              <CheckCircle2 size={16} className="inline text-[#15803d]" />
+              <CheckCircle2 size={16} className="inline text-[#22c55e]" />
             ) : (
-              <XCircle size={16} className="inline text-[#75726b]/50" />
+              <XCircle size={16} className="inline text-[#8a8990]/50" />
             )}
           </td>
         )

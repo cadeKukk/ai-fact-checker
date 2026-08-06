@@ -107,38 +107,33 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f6f2] lg:flex">
+    <div className="min-h-screen bg-[#0a0a0a] lg:flex">
       {/* Desktop sidebar — hidden on mobile */}
-      <aside className="hidden lg:flex flex-col fixed top-0 left-0 h-full w-60 bg-[#f7f6f2] border-r border-[#141414]/15 z-50 py-10 px-6">
+      <aside className="hidden lg:flex flex-col fixed top-0 left-0 h-full w-60 bg-[#0a0a0a] border-r border-white/[0.08] z-50 py-10 px-6">
         <div className="mb-10">
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#75726b] mb-2">
-            [ AI LITERACY ]
-          </p>
-          <h1 className="font-display text-[26px] leading-none text-[#141414]">AI Fact Checker</h1>
-          <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#75726b] mt-2">
-            Verified AI information
-          </p>
+          <h1 className="text-xl font-semibold tracking-tight text-[#f5f5f5]">AI Fact Checker</h1>
+          <p className="text-xs text-[#8a8990] mt-1">Verified AI information</p>
         </div>
-        <nav className="flex flex-col border-t border-[#141414]/15">
-          {tabs.map((tab, index) => {
+        <nav className="flex flex-col gap-1">
+          {tabs.map((tab) => {
+            const Icon = tab.icon
             const isActive = activeTab === tab.id
             return (
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
-                className={`group flex items-baseline gap-3 py-3 text-left border-b border-[#141414]/15 transition-colors duration-150 ${
-                  isActive ? 'text-[#141414]' : 'text-[#75726b] hover:text-[#141414]'
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-[10px] text-left transition-colors duration-150 ${
+                  isActive
+                    ? 'bg-white/[0.06] text-[#f5f5f5]'
+                    : 'text-[#8a8990] hover:text-[#f5f5f5] hover:bg-white/[0.03]'
                 }`}
               >
-                <span
-                  className={`font-mono text-[10px] tabular-nums ${
-                    isActive ? 'text-[#2038e6]' : 'text-[#75726b] group-hover:text-[#2038e6]'
-                  }`}
-                >
-                  0{index + 1}
-                </span>
-                <span className="text-sm font-medium tracking-tight">{tab.label}</span>
-                {isActive && <span className="ml-auto font-mono text-[10px] text-[#2038e6]">●</span>}
+                <Icon
+                  size={17}
+                  strokeWidth={2}
+                  className={isActive ? 'text-[#9fa3fc]' : ''}
+                />
+                <span className="text-sm font-medium">{tab.label}</span>
               </button>
             )
           })}
@@ -148,7 +143,7 @@ export default function Home() {
             href="https://cadekukk.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-mono text-[10px] uppercase tracking-[0.1em] text-[#75726b] hover:text-[#2038e6] transition-colors"
+            className="text-xs text-[#8a8990] hover:text-[#9fa3fc] transition-colors"
           >
             Built by Cade Kukk ↗
           </a>
@@ -164,7 +159,7 @@ export default function Home() {
 
       {/* Mobile bottom nav — hidden on desktop */}
       <div className="fixed bottom-0 left-0 right-0 z-50 lg:hidden">
-        <div className="flex items-stretch justify-around bg-[#f7f6f2]/95 backdrop-blur-sm border-t border-[#141414]/20">
+        <div className="flex items-stretch justify-around bg-[#0a0a0a]/90 backdrop-blur-md border-t border-white/[0.08]">
           {tabs.map((tab) => {
             const Icon = tab.icon
             const isActive = activeTab === tab.id
@@ -172,14 +167,12 @@ export default function Home() {
               <button
                 key={tab.id}
                 onClick={() => handleTabChange(tab.id)}
-                className={`flex flex-col items-center gap-0.5 px-3 py-2.5 flex-1 transition-colors duration-150 border-t-2 -mt-px ${
-                  isActive
-                    ? 'border-[#2038e6] text-[#141414]'
-                    : 'border-transparent text-[#75726b] hover:text-[#141414]'
+                className={`flex flex-col items-center gap-0.5 px-3 py-2.5 flex-1 transition-colors duration-150 ${
+                  isActive ? 'text-[#9fa3fc]' : 'text-[#8a8990] hover:text-[#f5f5f5]'
                 }`}
               >
                 <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
-                <span className="font-mono text-[9px] uppercase tracking-[0.08em]">{tab.label}</span>
+                <span className="text-[10px] font-medium">{tab.label}</span>
               </button>
             )
           })}

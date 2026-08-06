@@ -173,20 +173,20 @@ export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
   }, [feedbackOpen])
 
   return (
-    <div className="min-h-screen bg-[#f7f6f2] text-[#141414] p-6">
+    <div className="min-h-screen bg-[#0a0a0a] text-[#f5f5f5] p-6">
       <div className="max-w-2xl lg:max-w-4xl mx-auto space-y-6">
-        <p className="text-xs text-[#75726b] text-center">
+        <p className="text-xs text-[#8a8990] text-center">
           Developed by Cade Kukk in collaboration with Dr. Blackwood and Professor Dolence
         </p>
 
         {/* Header */}
-        <div className="flex items-end justify-between gap-4 w-full border-b border-[#141414]/20 pb-5">
+        <div className="flex items-end justify-between gap-4 w-full border-b border-white/[0.08] pb-5">
           <div className="min-w-0">
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#2038e6] mb-2">
-              [ SEC. 05 — EVIDENCE ]
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9fa3fc] mb-2">
+              Evidence
             </p>
-            <h1 className="text-4xl text-[#141414] leading-tight">Sources</h1>
-            <p className="text-sm text-[#75726b] mt-1.5">{allSources.length} verified sources</p>
+            <h1 className="text-4xl font-semibold tracking-tight text-[#f5f5f5] leading-tight">Sources</h1>
+            <p className="text-sm text-[#8a8990] mt-1.5">{allSources.length} verified sources</p>
           </div>
           <button
             type="button"
@@ -194,30 +194,30 @@ export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
               setFeedbackStatus(null)
               setFeedbackOpen(true)
             }}
-            className="flex items-center gap-1.5 flex-shrink-0 px-3.5 py-2 rounded-[2px] text-sm font-medium bg-[#ffffff] text-[#524f48] border border-[#d9d6cc] hover:border-[#2038e6]/40 hover:text-[#141414] transition-colors touch-manipulation mt-0.5"
+            className="flex items-center gap-1.5 flex-shrink-0 px-3.5 py-2 rounded-[10px] text-sm font-medium bg-[#161618] text-[#b3b2b8] border border-[#2a2a2e] hover:border-[#7065f0]/40 hover:text-[#f5f5f5] transition-colors touch-manipulation mt-0.5"
             aria-haspopup="dialog"
             aria-expanded={feedbackOpen}
           >
-            <MessageSquare size={16} className="text-[#2038e6]" aria-hidden />
+            <MessageSquare size={16} className="text-[#7065f0]" aria-hidden />
             Feedback
           </button>
         </div>
 
         {/* Search bar */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#75726b]" size={20} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8990]" size={20} />
           <input
             type="text"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             placeholder="Search sources..."
-            className="w-full pl-10 pr-10 py-3 rounded-[2px] bg-[#ffffff] border border-[#d9d6cc] text-[#141414] placeholder:text-[#75726b] focus:outline-none focus:border-[#2038e6]/50"
+            className="w-full pl-10 pr-10 py-3 rounded-[10px] bg-[#161618] border border-[#2a2a2e] text-[#f5f5f5] placeholder:text-[#8a8990] focus:outline-none focus:border-[#7065f0]/50"
           />
           {searchText && (
             <button
               type="button"
               onClick={() => setSearchText('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#75726b] hover:text-[#141414]"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8a8990] hover:text-[#f5f5f5]"
             >
               <X size={18} />
             </button>
@@ -229,10 +229,10 @@ export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
           <button
             type="button"
             onClick={() => setSelectedType(null)}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-[2px] text-sm font-medium transition-all ${
+            className={`flex-shrink-0 px-3 py-1.5 rounded-[10px] text-sm font-medium transition-all ${
               selectedType === null
-                ? 'bg-[#2038e6] text-[#f7f6f2]'
-                : 'bg-[#ffffff] text-[#524f48] border border-[#d9d6cc]'
+                ? 'bg-[#7065f0] text-white'
+                : 'bg-[#161618] text-[#b3b2b8] border border-[#2a2a2e]'
             }`}
           >
             All ({allSources.length})
@@ -248,11 +248,11 @@ export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
                 key={type}
                 type="button"
                 onClick={() => setSelectedType(isActive ? null : type)}
-                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] text-sm font-medium transition-all border"
+                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] text-sm font-medium transition-all border"
                 style={
                   isActive
                     ? { backgroundColor: hexToRgba(color, 0.25), color, borderColor: hexToRgba(color, 0.4) }
-                    : { backgroundColor: '#ffffff', color: '#524f48', borderColor: '#d9d6cc' }
+                    : { backgroundColor: '#161618', color: '#b3b2b8', borderColor: '#2a2a2e' }
                 }
               >
                 <Icon size={14} />
@@ -277,7 +277,7 @@ export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
                     <span className="text-sm font-bold" style={{ color }}>
                       {sourceTypeLabel[type]}
                     </span>
-                    <span className="text-xs text-[#75726b]">({typeSources.length})</span>
+                    <span className="text-xs text-[#8a8990]">({typeSources.length})</span>
                   </div>
                   <div className="space-y-2 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0">
                     {typeSources.map((source) => (
@@ -297,18 +297,18 @@ export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
         )}
 
         {filteredSources.length === 0 && (
-          <p className="text-center text-[#524f48] py-8 opacity-70">
+          <p className="text-center text-[#b3b2b8] py-8 opacity-70">
             No sources match your search.
           </p>
         )}
 
         {/* Verified Sources info card */}
-        <div className="rounded-[2px] p-4 bg-[#ffffff] border border-[#d9d6cc] space-y-3">
+        <div className="rounded-[10px] p-4 bg-[#161618] border border-[#2a2a2e] space-y-3">
           <div className="flex items-center gap-2">
-            <ShieldCheck size={18} className="text-[#2038e6]" />
-            <h3 className="font-bold text-[#141414] text-sm">Verified Sources</h3>
+            <ShieldCheck size={18} className="text-[#7065f0]" />
+            <h3 className="font-bold text-[#f5f5f5] text-sm">Verified Sources</h3>
           </div>
-          <p className="text-xs text-[#75726b] leading-relaxed">
+          <p className="text-xs text-[#8a8990] leading-relaxed">
             All information in this app is backed by verified sources. We use multiple source types
             to ensure accuracy:
           </p>
@@ -319,12 +319,12 @@ export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
               return (
                 <div key={type} className="flex items-center gap-2">
                   <div
-                    className="w-6 h-6 rounded-[2px] flex items-center justify-center flex-shrink-0"
+                    className="w-6 h-6 rounded-[10px] flex items-center justify-center flex-shrink-0"
                     style={{ backgroundColor: hexToRgba(color, 0.15), color }}
                   >
                     <Icon size={12} />
                   </div>
-                  <span className="text-xs text-[#524f48]">{sourceTypeLabel[type]}</span>
+                  <span className="text-xs text-[#b3b2b8]">{sourceTypeLabel[type]}</span>
                 </div>
               )
             })}
@@ -334,31 +334,31 @@ export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
 
       {feedbackOpen && (
         <div
-          className="fixed inset-0 z-[210] min-h-0 h-[100dvh] max-h-[100dvh] flex items-end sm:items-center justify-center bg-[#141414]/40 p-4 sm:p-6 overflow-hidden overscroll-none"
+          className="fixed inset-0 z-[210] min-h-0 h-[100dvh] max-h-[100dvh] flex items-end sm:items-center justify-center bg-black/70 p-4 sm:p-6 overflow-hidden overscroll-none"
           onClick={closeFeedback}
           role="presentation"
         >
           <div
-            className="w-full max-w-lg max-h-[min(90dvh,36rem)] overflow-y-auto overscroll-contain rounded-[2px] bg-[#edeae1] border border-[#d9d6cc] p-5 shadow-2xl touch-manipulation"
+            className="w-full max-w-lg max-h-[min(90dvh,36rem)] overflow-y-auto overscroll-contain rounded-[10px] bg-[#18181a] border border-[#2a2a2e] p-5 shadow-2xl touch-manipulation"
             onClick={(e) => e.stopPropagation()}
             role="dialog"
             aria-modal="true"
             aria-labelledby="feedback-title"
           >
             <div className="flex items-center justify-between gap-3 mb-3">
-              <h2 id="feedback-title" className="text-lg font-bold text-[#141414]">
+              <h2 id="feedback-title" className="text-lg font-bold text-[#f5f5f5]">
                 Feedback
               </h2>
               <button
                 type="button"
                 onClick={closeFeedback}
-                className="w-8 h-8 rounded-full bg-[#eeece3] flex items-center justify-center text-[#75726b] hover:text-[#141414]"
+                className="w-8 h-8 rounded-full bg-[#1e1e21] flex items-center justify-center text-[#8a8990] hover:text-[#f5f5f5]"
                 aria-label="Close feedback"
               >
                 <X size={16} />
               </button>
             </div>
-            <p className="text-sm text-[#75726b] leading-relaxed mb-3">
+            <p className="text-sm text-[#8a8990] leading-relaxed mb-3">
               Share bugs, ideas, or anything that would make this app more useful. If you&apos;d like to hear back, please include a way to contact you (such as an email or phone number) in your message.
             </p>
             <textarea
@@ -368,13 +368,13 @@ export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
                 if (feedbackStatus) setFeedbackStatus(null)
               }}
               rows={7}
-              className="w-full resize-y min-h-[140px] rounded-[2px] bg-[#f7f6f2] border border-[#d9d6cc] text-[#141414] p-3 text-base leading-relaxed placeholder:text-[#93908a] focus:outline-none focus:border-[#2038e6]/50"
+              className="w-full resize-y min-h-[140px] rounded-[10px] bg-[#0a0a0a] border border-[#2a2a2e] text-[#f5f5f5] p-3 text-base leading-relaxed placeholder:text-[#838289] focus:outline-none focus:border-[#7065f0]/50"
               placeholder="Bugs, ideas, unclear text — anything that helps us improve the site…"
             />
             {feedbackStatus && (
               <p
                 className={`mt-2 text-xs leading-relaxed ${
-                  feedbackStatus.startsWith('Thanks!') ? 'text-[#15803d]' : 'text-amber-700/90'
+                  feedbackStatus.startsWith('Thanks!') ? 'text-[#22c55e]' : 'text-amber-400/90'
                 }`}
               >
                 {feedbackStatus}
@@ -384,7 +384,7 @@ export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
               <button
                 type="button"
                 onClick={closeFeedback}
-                className="px-4 py-2.5 rounded-[2px] text-sm font-medium bg-[#eeece3] text-[#524f48] hover:text-[#141414]"
+                className="px-4 py-2.5 rounded-[10px] text-sm font-medium bg-[#1e1e21] text-[#b3b2b8] hover:text-[#f5f5f5]"
               >
                 Cancel
               </button>
@@ -392,7 +392,7 @@ export default function SourcesView({ initialQuery }: SourcesViewProps = {}) {
                 type="button"
                 onClick={submitFeedback}
                 disabled={!feedbackText.trim() || feedbackSubmitting}
-                className="px-4 py-2.5 rounded-[2px] text-sm font-semibold bg-[#2038e6] text-[#f7f6f2] disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110"
+                className="px-4 py-2.5 rounded-[10px] text-sm font-semibold bg-[#7065f0] text-white disabled:opacity-40 disabled:cursor-not-allowed hover:brightness-110"
               >
                 {feedbackSubmitting ? 'Sending…' : 'Submit feedback'}
               </button>
@@ -417,33 +417,33 @@ function SourceRow({ source, onTap }: { source: Source; onTap: (s: Source) => vo
     <button
       type="button"
       onClick={() => onTap(source)}
-      className="w-full text-left flex items-center gap-3 p-3 rounded-[2px] bg-[#ffffff] border border-[#d9d6cc] hover:border-[#2038e6]/30 transition-all group active:scale-[0.99]"
+      className="w-full text-left flex items-center gap-3 p-3 rounded-[10px] bg-[#161618] border border-[#2a2a2e] hover:border-[#7065f0]/30 transition-all group active:scale-[0.99]"
       aria-label={`About source: ${source.title}`}
     >
       <div
-        className="flex-shrink-0 w-10 h-10 rounded-[2px] flex items-center justify-center"
+        className="flex-shrink-0 w-10 h-10 rounded-[10px] flex items-center justify-center"
         style={{ backgroundColor: hexToRgba(color, 0.15), color }}
       >
         <Icon size={18} />
       </div>
       <div className="flex-1 min-w-0">
-        <h3 className="font-semibold text-[#141414] text-sm group-hover:text-[#2038e6] transition-colors truncate">
+        <h3 className="font-semibold text-[#f5f5f5] text-sm group-hover:text-[#7065f0] transition-colors truncate">
           {source.title}
         </h3>
-        <p className="text-xs text-[#75726b] truncate mt-0.5">{source.url}</p>
+        <p className="text-xs text-[#8a8990] truncate mt-0.5">{source.url}</p>
         <div className="flex items-center gap-2 mt-1">
           <span
-            className="px-2 py-0.5 rounded-[2px] text-xs font-medium"
+            className="px-2 py-0.5 rounded-md text-xs font-medium"
             style={{ backgroundColor: hexToRgba(color, 0.15), color }}
           >
             {label}
           </span>
-          <span className="text-xs text-[#75726b]">
+          <span className="text-xs text-[#8a8990]">
             Accessed {source.dateAccessed}
           </span>
         </div>
       </div>
-      <ChevronRight size={16} className="text-[#75726b] flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+      <ChevronRight size={16} className="text-[#8a8990] flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
     </button>
   )
 }

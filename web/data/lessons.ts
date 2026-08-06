@@ -6,7 +6,7 @@ export const lessons: AILesson[] = [
     title: 'Why Artificial Intelligence Literacy Matters',
     subtitle: "Understanding AI helps you separate fact from fiction in today's world.",
     icon: 'Brain',
-    color: '#1d4ed8',
+    color: '#3b82f6',
     sections: [
       {
         content:
@@ -74,7 +74,7 @@ export const lessons: AILesson[] = [
     title: 'Neural Networks Explained',
     subtitle: 'The building blocks of modern AI, inspired by (but very different from) the brain.',
     icon: 'Network',
-    color: '#7e22ce',
+    color: '#a855f7',
     sections: [
       {
         heading: 'The Basic Idea',
@@ -129,7 +129,7 @@ export const lessons: AILesson[] = [
     title: 'How Language Models Work',
     subtitle: 'The technology behind ChatGPT, Claude, and other AI assistants.',
     icon: 'MessageCircle',
-    color: '#c2410c',
+    color: '#f97316',
     sections: [
       {
         heading: 'Predicting the Next Word',
@@ -177,7 +177,7 @@ export const lessons: AILesson[] = [
     title: 'Tokens & Context Windows',
     subtitle: 'Understanding how AI models process and remember text.',
     icon: 'AlignLeft',
-    color: '#0e7490',
+    color: '#06b6d4',
     sections: [
       {
         heading: 'What Are Tokens?',
@@ -253,7 +253,7 @@ export const lessons: AILesson[] = [
     title: 'Parameters & Model Size',
     subtitle: "Why '70 billion parameters' matters (and why it doesn't).",
     icon: 'Scale',
-    color: '#be185d',
+    color: '#ec4899',
     sections: [
       {
         heading: 'What Are Parameters?',
@@ -310,7 +310,7 @@ export const lessons: AILesson[] = [
     title: "What AI Can & Can't Do",
     subtitle: 'Cutting through the hype to understand real capabilities.',
     icon: 'CheckCircle',
-    color: '#15803d',
+    color: '#22c55e',
     sections: [
       {
         heading: 'What AI Does Well',
@@ -360,7 +360,7 @@ export const lessons: AILesson[] = [
     title: 'Spotting AI Misinformation',
     subtitle: 'How to evaluate claims about AI capabilities.',
     icon: 'ShieldAlert',
-    color: '#b91c1c',
+    color: '#ef4444',
     sections: [
       {
         heading: 'Common Red Flags',

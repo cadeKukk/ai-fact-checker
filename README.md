@@ -31,12 +31,14 @@ There's also a built-in **AI Fundamentals mini-course** ("Start here") — 8 ani
 
 ### Design
 
-The UI follows the editorial "paper and ink" design language of [cadekukk.vercel.app](https://cadekukk.vercel.app/):
+Dark, clean, and minimal — inspired by [micro1.ai](https://www.micro1.ai/):
 
-- Warm paper background (`#f7f6f2`) with near-black ink (`#141414`) and hairline rules
-- Electric blue accent (`#2038e6`)
-- Instrument Serif for display headings, Space Mono for uppercase micro-labels
-- Numbered sections (`[ SEC. 01 — THE PLAYERS ]`) and sharp, bordered cards
+- Near-black surfaces (`#0a0a0a`) with subtle white-alpha cards and hairline borders
+- Violet brand accent (`#7065f0`)
+- [Outfit](https://fonts.google.com/specimen/Outfit) geometric sans throughout, soft 10–14px corner rounding
+- Small uppercase violet section kickers above each page title
+
+![AI Fundamentals mini-course](docs/screenshot-course.png)
 
 ### Tech stack
 

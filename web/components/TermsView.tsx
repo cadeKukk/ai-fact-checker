@@ -61,7 +61,7 @@ function TermCard({
 
   return (
     <div
-      className="rounded-[2px] bg-[#ffffff] border transition-all"
+      className="rounded-[10px] bg-[#161618] border transition-all"
       style={{ borderColor: isExpanded ? hexToRgba(color, 0.4) : 'rgba(51,51,51,1)' }}
     >
       <button
@@ -70,15 +70,15 @@ function TermCard({
         className="w-full text-left p-4 flex items-center gap-3"
       >
         <div
-          className="flex-shrink-0 w-8 h-8 rounded-[2px] flex items-center justify-center"
+          className="flex-shrink-0 w-8 h-8 rounded-[10px] flex items-center justify-center"
           style={{ backgroundColor: hexToRgba(color, 0.15), color }}
         >
           <CategoryIcon size={16} />
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-[#141414] text-sm">{term.term}</h3>
+          <h3 className="font-bold text-[#f5f5f5] text-sm">{term.term}</h3>
           <p
-            className={`text-xs text-[#75726b] mt-0.5 ${
+            className={`text-xs text-[#8a8990] mt-0.5 ${
               isExpanded ? '' : 'line-clamp-2'
             }`}
           >
@@ -86,31 +86,31 @@ function TermCard({
           </p>
         </div>
         {isExpanded ? (
-          <ChevronUp size={16} className="text-[#75726b] flex-shrink-0" />
+          <ChevronUp size={16} className="text-[#8a8990] flex-shrink-0" />
         ) : (
-          <ChevronDown size={16} className="text-[#75726b] flex-shrink-0" />
+          <ChevronDown size={16} className="text-[#8a8990] flex-shrink-0" />
         )}
       </button>
 
       {isExpanded && (
-        <div className="px-4 pb-4 space-y-3 border-t border-[#d9d6cc] pt-3">
+        <div className="px-4 pb-4 space-y-3 border-t border-[#2a2a2e] pt-3">
           <TermHighlightedText
             text={term.fullExplanation}
-            className="text-sm text-[#524f48] leading-relaxed"
+            className="text-sm text-[#b3b2b8] leading-relaxed"
             onTermTap={onTermTap}
             onModelTap={onModelTap}
             excludeTermId={term.id}
           />
 
           {term.example && (
-            <div className="rounded-[2px] bg-[#f7f6f2] p-3">
-              <pre className="text-xs text-[#524f48] font-mono whitespace-pre-wrap">{term.example}</pre>
+            <div className="rounded-[10px] bg-[#0a0a0a] p-3">
+              <pre className="text-xs text-[#b3b2b8] font-mono whitespace-pre-wrap">{term.example}</pre>
             </div>
           )}
 
           {term.relatedTerms.length > 0 && (
             <div className="flex flex-wrap items-center gap-1.5">
-              <span className="text-xs text-[#75726b]">Related:</span>
+              <span className="text-xs text-[#8a8990]">Related:</span>
               {term.relatedTerms.map((rt) => {
                 const related = findTerm(rt)
                 if (related) {
@@ -120,7 +120,7 @@ function TermCard({
                       key={rt}
                       type="button"
                       onClick={() => onTermTap(related)}
-                      className="px-2 py-0.5 rounded-[2px] text-xs font-medium active:scale-[0.95] transition-all"
+                      className="px-2 py-0.5 rounded-md text-xs font-medium active:scale-[0.95] transition-all"
                       style={{ color: rc, backgroundColor: hexToRgba(rc, 0.15) }}
                     >
                       {rt}
@@ -130,7 +130,7 @@ function TermCard({
                 return (
                   <span
                     key={rt}
-                    className="px-2 py-0.5 rounded-[2px] text-xs font-medium text-[#75726b] bg-[#141414]/[0.04]"
+                    className="px-2 py-0.5 rounded-md text-xs font-medium text-[#8a8990] bg-white/[0.05]"
                   >
                     {rt}
                   </span>
@@ -199,32 +199,32 @@ export default function TermsView() {
   }, [filteredTerms, selectedCategory])
 
   return (
-    <div className="min-h-screen bg-[#f7f6f2] text-[#141414] p-6">
+    <div className="min-h-screen bg-[#0a0a0a] text-[#f5f5f5] p-6">
       <div className="max-w-2xl lg:max-w-4xl mx-auto space-y-6">
         {/* Header */}
-        <div className="border-b border-[#141414]/20 pb-5">
-          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#2038e6] mb-2">
-            [ SEC. 04 — GLOSSARY ]
+        <div className="border-b border-white/[0.08] pb-5">
+          <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#9fa3fc] mb-2">
+            Glossary
           </p>
-          <h1 className="text-4xl text-[#141414] leading-tight">Terms</h1>
-          <p className="text-sm text-[#75726b] mt-1.5">{allTerms.length} terms</p>
+          <h1 className="text-4xl font-semibold tracking-tight text-[#f5f5f5] leading-tight">Terms</h1>
+          <p className="text-sm text-[#8a8990] mt-1.5">{allTerms.length} terms</p>
         </div>
 
         {/* Search bar */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#75726b]" size={20} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#8a8990]" size={20} />
           <input
             type="text"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             placeholder="Search terms..."
-            className="w-full pl-10 pr-10 py-3 rounded-[2px] bg-[#ffffff] border border-[#d9d6cc] text-[#141414] placeholder:text-[#75726b] focus:outline-none focus:border-[#2038e6]/50"
+            className="w-full pl-10 pr-10 py-3 rounded-[10px] bg-[#161618] border border-[#2a2a2e] text-[#f5f5f5] placeholder:text-[#8a8990] focus:outline-none focus:border-[#7065f0]/50"
           />
           {searchText && (
             <button
               type="button"
               onClick={() => setSearchText('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#75726b] hover:text-[#141414]"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8a8990] hover:text-[#f5f5f5]"
             >
               <X size={18} />
             </button>
@@ -236,10 +236,10 @@ export default function TermsView() {
           <button
             type="button"
             onClick={() => setSelectedCategory(null)}
-            className={`flex-shrink-0 px-3 py-1.5 rounded-[2px] text-sm font-medium transition-all ${
+            className={`flex-shrink-0 px-3 py-1.5 rounded-[10px] text-sm font-medium transition-all ${
               selectedCategory === null
-                ? 'bg-[#2038e6] text-[#f7f6f2]'
-                : 'bg-[#ffffff] text-[#524f48] border border-[#d9d6cc]'
+                ? 'bg-[#7065f0] text-white'
+                : 'bg-[#161618] text-[#b3b2b8] border border-[#2a2a2e]'
             }`}
           >
             All
@@ -253,11 +253,11 @@ export default function TermsView() {
                 key={cat}
                 type="button"
                 onClick={() => setSelectedCategory(isActive ? null : cat)}
-                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-[2px] text-sm font-medium transition-all border"
+                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] text-sm font-medium transition-all border"
                 style={
                   isActive
                     ? { backgroundColor: hexToRgba(color, 0.25), color, borderColor: hexToRgba(color, 0.4) }
-                    : { backgroundColor: '#ffffff', color: '#524f48', borderColor: '#d9d6cc' }
+                    : { backgroundColor: '#161618', color: '#b3b2b8', borderColor: '#2a2a2e' }
                 }
               >
                 <Icon size={14} />
@@ -295,7 +295,7 @@ export default function TermsView() {
                     <span className="text-sm font-bold" style={{ color }}>
                       {termCategoryLabel[cat]}
                     </span>
-                    <span className="text-xs text-[#75726b]">({terms.length})</span>
+                    <span className="text-xs text-[#8a8990]">({terms.length})</span>
                   </div>
                   <div className="space-y-2 lg:grid lg:grid-cols-2 lg:gap-3 lg:space-y-0 lg:items-start">
                     {terms.map((term) => (
@@ -316,7 +316,7 @@ export default function TermsView() {
         ) : null}
 
         {filteredTerms.length === 0 && (
-          <p className="text-center text-[#524f48] py-8 opacity-70">
+          <p className="text-center text-[#b3b2b8] py-8 opacity-70">
             No terms match your search.
           </p>
         )}

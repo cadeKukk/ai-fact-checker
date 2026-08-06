@@ -132,21 +132,21 @@ export const ratingLabel: Record<CapabilityRating, string> = {
   poor: 'Poor', fair: 'Fair', good: 'Good', excellent: 'Excellent', exceptional: 'Exceptional',
 }
 export const ratingColor: Record<CapabilityRating, string> = {
-  poor: '#b91c1c', fair: '#c2410c', good: '#a16207', excellent: '#15803d', exceptional: '#0f766e',
+  poor: '#ef4444', fair: '#f97316', good: '#eab308', excellent: '#22c55e', exceptional: '#2dd4bf',
 }
 
 export const verdictLabel: Record<MythVerdict, string> = {
   confirmed: 'Confirmed', busted: 'Busted', plausible: 'Plausible', misleading: 'Misleading', exaggerated: 'Exaggerated',
 }
 export const verdictColor: Record<MythVerdict, string> = {
-  confirmed: '#15803d', busted: '#b91c1c', plausible: '#a16207', misleading: '#c2410c', exaggerated: '#7e22ce',
+  confirmed: '#22c55e', busted: '#ef4444', plausible: '#eab308', misleading: '#f97316', exaggerated: '#a855f7',
 }
 
 export const confidenceLabel: Record<ConfidenceLevel, string> = {
   high: 'High Confidence', medium: 'Medium Confidence', low: 'Low Confidence',
 }
 export const confidenceColor: Record<ConfidenceLevel, string> = {
-  high: '#15803d', medium: '#a16207', low: '#c2410c',
+  high: '#22c55e', medium: '#eab308', low: '#f97316',
 }
 
 export const sourceTypeLabel: Record<SourceType, string> = {
@@ -154,8 +154,8 @@ export const sourceTypeLabel: Record<SourceType, string> = {
   blogPost: 'Blog Post', newsArticle: 'News Article', apiReference: 'API Reference',
 }
 export const sourceTypeColor: Record<SourceType, string> = {
-  officialDocs: '#1d4ed8', github: '#7e22ce', researchPaper: '#c2410c',
-  blogPost: '#15803d', newsArticle: '#0e7490', apiReference: '#be185d',
+  officialDocs: '#3b82f6', github: '#a855f7', researchPaper: '#f97316',
+  blogPost: '#22c55e', newsArticle: '#06b6d4', apiReference: '#ec4899',
 }
 
 export const termCategoryLabel: Record<TermCategory, string> = {
@@ -163,8 +163,8 @@ export const termCategoryLabel: Record<TermCategory, string> = {
   inference: 'Inference', performance: 'Performance', safety: 'Safety & Ethics', practical: 'Practical Usage',
 }
 export const termCategoryColor: Record<TermCategory, string> = {
-  fundamentals: '#1d4ed8', architecture: '#7e22ce', training: '#c2410c',
-  inference: '#15803d', performance: '#0e7490', safety: '#b91c1c', practical: '#0f766e',
+  fundamentals: '#3b82f6', architecture: '#a855f7', training: '#f97316',
+  inference: '#22c55e', performance: '#06b6d4', safety: '#ef4444', practical: '#2dd4bf',
 }
 
 export const modalityIcon: Record<Modality, string> = {

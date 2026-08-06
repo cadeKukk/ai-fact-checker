@@ -430,14 +430,14 @@ export const benchmarkCategoryLabel: Record<BenchmarkCategory, string> = {
 }
 
 export const benchmarkCategoryColor: Record<BenchmarkCategory, string> = {
-  reasoning: '#7e22ce',
-  coding: '#15803d',
-  agent: '#c2410c',
-  multimodal: '#0e7490',
-  knowledge: '#1d4ed8',
-  language: '#be185d',
-  safety: '#b91c1c',
-  general: '#7e22ce',
+  reasoning: '#a855f7',
+  coding: '#22c55e',
+  agent: '#f97316',
+  multimodal: '#06b6d4',
+  knowledge: '#3b82f6',
+  language: '#ec4899',
+  safety: '#ef4444',
+  general: '#a855f7',
 }
 
 const BENCHMARK_LOOKUP: Map<string, Benchmark> = (() => {

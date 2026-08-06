@@ -137,7 +137,7 @@ function PopupHeaderActions({
         <button
           type="button"
           onClick={onBack}
-          className="w-8 h-8 rounded-full bg-[#eeece3] flex items-center justify-center text-[#75726b] hover:text-[#141414] active:scale-[0.92]"
+          className="w-8 h-8 rounded-full bg-[#1e1e21] flex items-center justify-center text-[#8a8990] hover:text-[#f5f5f5] active:scale-[0.92]"
           style={{ transition: `all 250ms ${SPRING}` }}
           aria-label="Back to previous"
         >
@@ -147,7 +147,7 @@ function PopupHeaderActions({
       <button
         type="button"
         onClick={onClose}
-        className="w-8 h-8 rounded-full bg-[#eeece3] flex items-center justify-center text-[#75726b] hover:text-[#141414] active:scale-[0.92]"
+        className="w-8 h-8 rounded-full bg-[#1e1e21] flex items-center justify-center text-[#8a8990] hover:text-[#f5f5f5] active:scale-[0.92]"
         style={{ transition: `all 250ms ${SPRING}` }}
         aria-label="Close"
       >
@@ -199,11 +199,11 @@ export function TermPopup({
   return (
     <div className="fixed inset-0 z-[200] flex items-end justify-center" onClick={dismiss}>
       <div
-        className="absolute inset-0 bg-[#141414]/35"
+        className="absolute inset-0 bg-black/60"
         style={{ opacity: visible ? 1 : 0, transition: `opacity 300ms ${SPRING}` }}
       />
       <div
-        className="relative w-full max-w-lg mx-4 mb-4 rounded-[2px] bg-[#ffffff] border border-[#141414]/10 overflow-hidden shadow-2xl"
+        className="relative w-full max-w-lg mx-4 mb-4 rounded-[10px] bg-[#161618] border border-white/10 overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
         style={{
           opacity: visible ? 1 : 0,
@@ -212,19 +212,19 @@ export function TermPopup({
         }}
       >
         <div className="flex justify-center pt-3 pb-1">
-          <div className="w-9 h-1 rounded-full bg-[#c9c6bc]" />
+          <div className="w-9 h-1 rounded-full bg-[#333338]" />
         </div>
 
         <div className="px-5 pb-5 space-y-4 max-h-[70vh] overflow-y-auto">
           <div className="flex items-center gap-3">
             <div
-              className="w-11 h-11 rounded-[2px] flex items-center justify-center text-lg font-bold"
+              className="w-11 h-11 rounded-[10px] flex items-center justify-center text-lg font-bold"
               style={{ backgroundColor: hexToRgba(color, 0.2), color }}
             >
               {term.term.charAt(0)}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-bold text-[#141414]">{term.term}</h3>
+              <h3 className="text-lg font-bold text-[#f5f5f5]">{term.term}</h3>
               <span className="text-[11px] font-semibold" style={{ color }}>
                 {termCategoryLabel[term.category]}
               </span>
@@ -234,18 +234,18 @@ export function TermPopup({
 
           <TermHighlightedText
             text={term.shortDefinition}
-            className="block text-[15px] text-[#524f48] leading-relaxed"
+            className="block text-[15px] text-[#b3b2b8] leading-relaxed"
             onTermTap={handleTermTap}
             onModelTap={handleModelTap}
             onBenchmarkTap={handleBenchmarkTap}
             excludeTermId={term.id}
           />
 
-          <div className="p-3.5 rounded-[2px] bg-[#efede5] space-y-2">
-            <span className="text-[11px] font-bold text-[#75726b] tracking-wide">DETAILED EXPLANATION</span>
+          <div className="p-3.5 rounded-[10px] bg-[#151517] space-y-2">
+            <span className="text-[11px] font-bold text-[#8a8990] tracking-wide">DETAILED EXPLANATION</span>
             <TermHighlightedText
               text={term.fullExplanation}
-              className="block text-[13px] text-[#524f48] leading-relaxed"
+              className="block text-[13px] text-[#b3b2b8] leading-relaxed"
               onTermTap={handleTermTap}
               onModelTap={handleModelTap}
               onBenchmarkTap={handleBenchmarkTap}
@@ -254,15 +254,15 @@ export function TermPopup({
           </div>
 
           {term.example && (
-            <div className="p-3.5 rounded-[2px] bg-[#efede5] space-y-2">
-              <span className="text-[11px] font-bold text-yellow-600 tracking-wide">EXAMPLE</span>
-              <pre className="text-[12px] text-[#524f48] font-mono whitespace-pre-wrap leading-relaxed">{term.example}</pre>
+            <div className="p-3.5 rounded-[10px] bg-[#151517] space-y-2">
+              <span className="text-[11px] font-bold text-yellow-400 tracking-wide">EXAMPLE</span>
+              <pre className="text-[12px] text-[#b3b2b8] font-mono whitespace-pre-wrap leading-relaxed">{term.example}</pre>
             </div>
           )}
 
           {term.relatedTerms.length > 0 && (
             <div className="space-y-2">
-              <span className="text-[11px] font-bold text-[#75726b] tracking-wide">RELATED</span>
+              <span className="text-[11px] font-bold text-[#8a8990] tracking-wide">RELATED</span>
               <div className="flex flex-wrap gap-1.5">
                 {term.relatedTerms.map((rt) => {
                   const related = findTermByName(rt)
@@ -273,7 +273,7 @@ export function TermPopup({
                         key={rt}
                         type="button"
                         onClick={() => onTermTap(related)}
-                        className="text-[11px] font-semibold px-2.5 py-1 rounded-[2px] active:scale-[0.95] transition-all"
+                        className="text-[11px] font-semibold px-2.5 py-1 rounded-[10px] active:scale-[0.95] transition-all"
                         style={{ color: rc, backgroundColor: hexToRgba(rc, 0.15) }}
                       >
                         {rt}
@@ -281,7 +281,7 @@ export function TermPopup({
                     ) : (
                       <span
                         key={rt}
-                        className="text-[11px] font-semibold px-2.5 py-1 rounded-[2px]"
+                        className="text-[11px] font-semibold px-2.5 py-1 rounded-[10px]"
                         style={{ color: rc, backgroundColor: hexToRgba(rc, 0.15) }}
                       >
                         {rt}
@@ -297,7 +297,7 @@ export function TermPopup({
                         key={rt}
                         type="button"
                         onClick={() => onBenchmarkTap(relatedBench)}
-                        className="text-[11px] font-semibold px-2.5 py-1 rounded-[2px] active:scale-[0.95] transition-all"
+                        className="text-[11px] font-semibold px-2.5 py-1 rounded-[10px] active:scale-[0.95] transition-all"
                         style={{ color: bc, backgroundColor: hexToRgba(bc, 0.15) }}
                       >
                         {rt}
@@ -307,7 +307,7 @@ export function TermPopup({
                   return (
                     <span
                       key={rt}
-                      className="text-[11px] font-semibold px-2.5 py-1 rounded-[2px] text-[#75726b] bg-[#141414]/[0.04]"
+                      className="text-[11px] font-semibold px-2.5 py-1 rounded-[10px] text-[#8a8990] bg-white/[0.05]"
                     >
                       {rt}
                     </span>
@@ -364,11 +364,11 @@ export function ModelPopup({
   return (
     <div className="fixed inset-0 z-[200] flex items-end justify-center" onClick={dismiss}>
       <div
-        className="absolute inset-0 bg-[#141414]/35"
+        className="absolute inset-0 bg-black/60"
         style={{ opacity: visible ? 1 : 0, transition: `opacity 300ms ${SPRING}` }}
       />
       <div
-        className="relative w-full max-w-lg mx-4 mb-4 rounded-[2px] bg-[#ffffff] border border-[#141414]/10 overflow-hidden shadow-2xl"
+        className="relative w-full max-w-lg mx-4 mb-4 rounded-[10px] bg-[#161618] border border-white/10 overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
         style={{
           opacity: visible ? 1 : 0,
@@ -377,41 +377,41 @@ export function ModelPopup({
         }}
       >
         <div className="flex justify-center pt-3 pb-1">
-          <div className="w-9 h-1 rounded-full bg-[#c9c6bc]" />
+          <div className="w-9 h-1 rounded-full bg-[#333338]" />
         </div>
 
         <div className="px-5 pb-5 space-y-3 max-h-[70vh] overflow-y-auto">
           <div className="flex items-center gap-3">
             <div
-              className="w-11 h-11 rounded-[2px] flex items-center justify-center text-lg font-bold"
+              className="w-11 h-11 rounded-[10px] flex items-center justify-center text-lg font-bold"
               style={{ backgroundColor: hexToRgba(color, 0.2), color }}
             >
               {model.name.charAt(0)}
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-bold text-[#141414] leading-tight">{model.name}</h3>
-              <p className="text-[12px] text-[#66635c] mt-0.5">{company.name}</p>
+              <h3 className="text-lg font-bold text-[#f5f5f5] leading-tight">{model.name}</h3>
+              <p className="text-[12px] text-[#9d9ca3] mt-0.5">{company.name}</p>
             </div>
             <PopupHeaderActions onBack={onBack} onClose={dismiss} />
           </div>
 
           {matched.toLowerCase() !== model.name.toLowerCase() && (
-            <p className="text-[11px] text-[#66635c]">
-              Mention: <span className="font-semibold text-[#141414]/90">&ldquo;{matched}&rdquo;</span> &rarr; {model.name}
+            <p className="text-[11px] text-[#9d9ca3]">
+              Mention: <span className="font-semibold text-[#f5f5f5]/90">&ldquo;{matched}&rdquo;</span> &rarr; {model.name}
             </p>
           )}
 
           <TermHighlightedText
             text={model.description}
-            className="block text-[15px] text-[#524f48] leading-relaxed"
+            className="block text-[15px] text-[#b3b2b8] leading-relaxed"
             onTermTap={handleTermTap}
             onModelTap={handleModelTap}
             onBenchmarkTap={handleBenchmarkTap}
             excludeModelId={model.id}
           />
 
-          <div className="flex flex-wrap gap-2 text-[11px] text-[#66635c]">
-            <span className="px-2 py-1 rounded-[2px] bg-[#efede5]">
+          <div className="flex flex-wrap gap-2 text-[11px] text-[#9d9ca3]">
+            <span className="px-2 py-1 rounded-[10px] bg-[#151517]">
               Context:{' '}
               {model.specs.contextWindow >= 1_000_000
                 ? `${(model.specs.contextWindow / 1_000_000).toFixed(1)}M`
@@ -419,7 +419,7 @@ export function ModelPopup({
               tokens
             </span>
             {model.specs.trainingDataCutoff && (
-              <span className="px-2 py-1 rounded-[2px] bg-[#efede5]">Trained to {model.specs.trainingDataCutoff}</span>
+              <span className="px-2 py-1 rounded-[10px] bg-[#151517]">Trained to {model.specs.trainingDataCutoff}</span>
             )}
           </div>
         </div>
@@ -430,7 +430,7 @@ export function ModelPopup({
 
 // ---------------- Benchmark popup ----------------
 
-const BENCHMARK_HIGHLIGHT_COLOR = '#b45309'
+const BENCHMARK_HIGHLIGHT_COLOR = '#f59e0b'
 
 export function BenchmarkPopup({
   benchmark,
@@ -471,11 +471,11 @@ export function BenchmarkPopup({
   return (
     <div className="fixed inset-0 z-[200] flex items-end justify-center" onClick={dismiss}>
       <div
-        className="absolute inset-0 bg-[#141414]/35"
+        className="absolute inset-0 bg-black/60"
         style={{ opacity: visible ? 1 : 0, transition: `opacity 300ms ${SPRING}` }}
       />
       <div
-        className="relative w-full max-w-lg mx-4 mb-4 rounded-[2px] bg-[#ffffff] border border-[#141414]/10 overflow-hidden shadow-2xl"
+        className="relative w-full max-w-lg mx-4 mb-4 rounded-[10px] bg-[#161618] border border-white/10 overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
         style={{
           opacity: visible ? 1 : 0,
@@ -484,19 +484,19 @@ export function BenchmarkPopup({
         }}
       >
         <div className="flex justify-center pt-3 pb-1">
-          <div className="w-9 h-1 rounded-full bg-[#c9c6bc]" />
+          <div className="w-9 h-1 rounded-full bg-[#333338]" />
         </div>
 
         <div className="px-5 pb-5 space-y-4 max-h-[70vh] overflow-y-auto">
           <div className="flex items-start gap-3">
             <div
-              className="w-11 h-11 rounded-[2px] flex items-center justify-center flex-shrink-0"
+              className="w-11 h-11 rounded-[10px] flex items-center justify-center flex-shrink-0"
               style={{ backgroundColor: hexToRgba(color, 0.2), color }}
             >
               <Beaker size={20} />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-bold text-[#141414] leading-tight">{benchmark.name}</h3>
+              <h3 className="text-lg font-bold text-[#f5f5f5] leading-tight">{benchmark.name}</h3>
               <span className="text-[11px] font-semibold" style={{ color }}>
                 BENCHMARK · {benchmarkCategoryLabel[benchmark.category].toUpperCase()}
               </span>
@@ -506,18 +506,18 @@ export function BenchmarkPopup({
 
           <TermHighlightedText
             text={benchmark.shortDescription}
-            className="block text-[15px] text-[#524f48] leading-relaxed"
+            className="block text-[15px] text-[#b3b2b8] leading-relaxed"
             onTermTap={handleTermTap}
             onModelTap={handleModelTap}
             onBenchmarkTap={handleBenchmarkTap}
             excludeBenchmarkId={benchmark.id}
           />
 
-          <div className="p-3.5 rounded-[2px] bg-[#efede5] space-y-2">
-            <span className="text-[11px] font-bold text-[#75726b] tracking-wide">WHAT IT TESTS</span>
+          <div className="p-3.5 rounded-[10px] bg-[#151517] space-y-2">
+            <span className="text-[11px] font-bold text-[#8a8990] tracking-wide">WHAT IT TESTS</span>
             <TermHighlightedText
               text={benchmark.details}
-              className="block text-[13px] text-[#524f48] leading-relaxed"
+              className="block text-[13px] text-[#b3b2b8] leading-relaxed"
               onTermTap={handleTermTap}
               onModelTap={handleModelTap}
               onBenchmarkTap={handleBenchmarkTap}
@@ -528,21 +528,21 @@ export function BenchmarkPopup({
           {(benchmark.metric || benchmark.releaseYear || benchmark.source) && (
             <div className="grid grid-cols-2 gap-2">
               {benchmark.metric && (
-                <div className="p-2.5 rounded-[2px] bg-[#efede5]">
-                  <span className="text-[10px] font-bold text-[#75726b] tracking-wide">METRIC</span>
-                  <p className="text-[12px] text-[#141414] mt-0.5">{benchmark.metric}</p>
+                <div className="p-2.5 rounded-[10px] bg-[#151517]">
+                  <span className="text-[10px] font-bold text-[#8a8990] tracking-wide">METRIC</span>
+                  <p className="text-[12px] text-[#f5f5f5] mt-0.5">{benchmark.metric}</p>
                 </div>
               )}
               {benchmark.releaseYear && (
-                <div className="p-2.5 rounded-[2px] bg-[#efede5]">
-                  <span className="text-[10px] font-bold text-[#75726b] tracking-wide">RELEASED</span>
-                  <p className="text-[12px] text-[#141414] mt-0.5">{benchmark.releaseYear}</p>
+                <div className="p-2.5 rounded-[10px] bg-[#151517]">
+                  <span className="text-[10px] font-bold text-[#8a8990] tracking-wide">RELEASED</span>
+                  <p className="text-[12px] text-[#f5f5f5] mt-0.5">{benchmark.releaseYear}</p>
                 </div>
               )}
               {benchmark.source && (
-                <div className="p-2.5 rounded-[2px] bg-[#efede5] col-span-2">
-                  <span className="text-[10px] font-bold text-[#75726b] tracking-wide">CREATED BY</span>
-                  <p className="text-[12px] text-[#141414] mt-0.5">{benchmark.source}</p>
+                <div className="p-2.5 rounded-[10px] bg-[#151517] col-span-2">
+                  <span className="text-[10px] font-bold text-[#8a8990] tracking-wide">CREATED BY</span>
+                  <p className="text-[12px] text-[#f5f5f5] mt-0.5">{benchmark.source}</p>
                 </div>
               )}
             </div>
@@ -636,11 +636,11 @@ export function SourcePopup({
   return (
     <div className="fixed inset-0 z-[200] flex items-end justify-center" onClick={dismiss}>
       <div
-        className="absolute inset-0 bg-[#141414]/35"
+        className="absolute inset-0 bg-black/60"
         style={{ opacity: visible ? 1 : 0, transition: `opacity 300ms ${SPRING}` }}
       />
       <div
-        className="relative w-full max-w-lg mx-4 mb-4 rounded-[2px] bg-[#ffffff] border border-[#141414]/10 overflow-hidden shadow-2xl"
+        className="relative w-full max-w-lg mx-4 mb-4 rounded-[10px] bg-[#161618] border border-white/10 overflow-hidden shadow-2xl"
         onClick={(e) => e.stopPropagation()}
         style={{
           opacity: visible ? 1 : 0,
@@ -649,19 +649,19 @@ export function SourcePopup({
         }}
       >
         <div className="flex justify-center pt-3 pb-1">
-          <div className="w-9 h-1 rounded-full bg-[#c9c6bc]" />
+          <div className="w-9 h-1 rounded-full bg-[#333338]" />
         </div>
 
         <div className="px-5 pb-5 space-y-4 max-h-[70vh] overflow-y-auto">
           <div className="flex items-start gap-3">
             <div
-              className="w-11 h-11 rounded-[2px] flex items-center justify-center flex-shrink-0"
+              className="w-11 h-11 rounded-[10px] flex items-center justify-center flex-shrink-0"
               style={{ backgroundColor: hexToRgba(color, 0.2), color }}
             >
               <Icon size={20} />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-bold text-[#141414] leading-tight break-words">{source.title}</h3>
+              <h3 className="text-lg font-bold text-[#f5f5f5] leading-tight break-words">{source.title}</h3>
               <span className="text-[11px] font-semibold tracking-wide" style={{ color }}>
                 SOURCE · {typeLabel.toUpperCase()}
               </span>
@@ -669,18 +669,18 @@ export function SourcePopup({
             <PopupHeaderActions onBack={onBack} onClose={dismiss} />
           </div>
 
-          <p className="text-[15px] text-[#524f48] leading-relaxed">{description}</p>
+          <p className="text-[15px] text-[#b3b2b8] leading-relaxed">{description}</p>
 
-          <div className="p-3.5 rounded-[2px] bg-[#efede5] space-y-2.5">
+          <div className="p-3.5 rounded-[10px] bg-[#151517] space-y-2.5">
             <div className="flex items-center gap-2">
-              <LinkIcon size={12} className="text-[#75726b] flex-shrink-0" />
-              <span className="text-[11px] font-bold text-[#75726b] tracking-wide">LINK</span>
+              <LinkIcon size={12} className="text-[#8a8990] flex-shrink-0" />
+              <span className="text-[11px] font-bold text-[#8a8990] tracking-wide">LINK</span>
             </div>
-            <p className="text-[12px] text-[#141414] font-mono break-all leading-relaxed">{source.url}</p>
-            <p className="text-[11px] text-[#75726b]">{host}</p>
+            <p className="text-[12px] text-[#f5f5f5] font-mono break-all leading-relaxed">{source.url}</p>
+            <p className="text-[11px] text-[#8a8990]">{host}</p>
           </div>
 
-          <div className="flex items-center gap-2 text-[11px] text-[#75726b]">
+          <div className="flex items-center gap-2 text-[11px] text-[#8a8990]">
             <Calendar size={12} />
             <span>Accessed {source.dateAccessed}</span>
           </div>
@@ -689,7 +689,7 @@ export function SourcePopup({
             href={source.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3 rounded-[2px] font-semibold text-[14px] active:scale-[0.98]"
+            className="flex items-center justify-center gap-2 w-full py-3 rounded-[10px] font-semibold text-[14px] active:scale-[0.98]"
             style={{
               backgroundColor: hexToRgba(color, 0.18),
               color,
