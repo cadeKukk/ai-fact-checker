@@ -92,4 +92,4 @@ npx vercel --prod
 
 All model specs, pricing, benchmarks, and claims live in `web/data/` as typed TypeScript modules (`companies.ts`, `factcheck.ts`, `terms.ts`, `benchmarks.ts`, `lessons.ts`). Every claim traces back to a source listed in the Sources tab.
 
-The app version and data-freshness date live in one place — `web/lib/appMeta.ts` — and are shown in the sidebar footer and on the Learn home page. Model and company information is current as of **August 2026** (v0.4.2). AI moves fast; always verify against primary sources.
+The app version and data-freshness date live in one place — `web/lib/appMeta.ts` — and are shown in the sidebar footer and on the Learn home page. Model and company information is current as of **August 2026** (v0.4.3). AI moves fast; always verify against primary sources.

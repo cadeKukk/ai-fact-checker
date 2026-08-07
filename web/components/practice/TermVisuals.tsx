@@ -31,7 +31,8 @@ export const TERM_VISUAL_KEYFRAMES = `
 @keyframes tvTyping { 0% { width: 0 } 60%,100% { width: 34px } }
 @keyframes tvCycle { 0%,24%,100% { opacity: 0 } 6%,18% { opacity: 1 } }
 @keyframes tvHinge { 0%,12%,100% { transform: rotate(0deg) } 45%,75% { transform: rotate(var(--rot,-24deg)) } }
-@keyframes tvZigzag { 0%,10% { transform: translate(0,0) } 30% { transform: translate(20px,-11px) } 50% { transform: translate(38px,11px) } 70% { transform: translate(56px,-11px) } 88%,100% { transform: translate(72px,0) } }
+@keyframes tvZigzag { 0% { opacity: 0; transform: translate(0,0) } 8% { opacity: 1 } 10% { transform: translate(0,0) } 30% { transform: translate(20px,-11px) } 50% { transform: translate(38px,11px) } 70% { transform: translate(56px,-11px) } 84% { opacity: 1 } 88%,100% { opacity: 0; transform: translate(72px,0) } }
+@keyframes tvTravel { 0% { opacity: 0; transform: translate(0,0) } 10% { opacity: 1 } 58% { opacity: 1; transform: translate(var(--tx,0px), var(--ty,0px)) } 72%,100% { opacity: 0; transform: translate(var(--tx,0px), var(--ty,0px)) } }
 @keyframes tvSwapA { 0%,42% { opacity: 1 } 52%,92% { opacity: 0 } 100% { opacity: 1 } }
 @keyframes tvSwapB { 0%,42% { opacity: 0 } 52%,92% { opacity: 1 } 100% { opacity: 0 } }
 `
@@ -102,7 +103,8 @@ const TokenizerVisual: VisualFn = ({ c }) => (
     {/* word slides into a machine, chips come out */}
     <rect x="44" y="30" width="32" height="30" rx="6" fill={DIM} stroke={c} strokeWidth="1.5" />
     <circle cx="60" cy="45" r="6" fill="none" stroke={c} strokeWidth="1.5" style={anim('tvSpin', 2.4, 0, { animationTimingFunction: 'linear' })} strokeDasharray="6 4" />
-    <g style={anim('tvSlide', 3, 0, { '--tx': '26px' } as never)}>
+    {/* the word travels into the machine and is consumed */}
+    <g style={anim('tvTravel', 3, 0, { '--tx': '32px' } as never)}>
       <rect x="6" y="39" width="30" height="12" rx="3" fill={MUTED} />
     </g>
     {[0, 1, 2].map((i) => (
@@ -187,7 +189,7 @@ const TransformerVisual: VisualFn = ({ c }) => (
     {[0, 1, 2, 3].map((i) => (
       <rect key={i} x="34" y={64 - i * 14} width="52" height="10" rx="3" fill="none" stroke={i === 3 ? c : MUTED} strokeWidth="1.5" />
     ))}
-    <circle r="3" fill={c} style={anim('tvSlide', 2.2, 0, { '--ty': '-44px' } as never)} cx="60" cy="72" />
+    <circle r="3" fill={c} style={anim('tvTravel', 2.2, 0, { '--ty': '-44px' } as never)} cx="60" cy="72" />
     {[0, 1, 2, 3].map((i) => (
       <rect key={i} x="34" y={64 - i * 14} width="52" height="10" rx="3" fill={c} opacity=".12" style={anim('tvPulse', 2.2, 0.4 * i)} />
     ))}
@@ -272,8 +274,9 @@ const MultimodalVisual: VisualFn = ({ c }) => (
 
 const PreTrainingVisual: VisualFn = ({ c }) => (
   <g>
+    {/* documents stream in and are absorbed by the model */}
     {[0, 1, 2].map((i) => (
-      <g key={i} style={anim('tvSlide', 2.7, i * 0.9, { '--tx': '40px' } as never)}>
+      <g key={i} style={anim('tvTravel', 2.7, i * 0.9, { '--tx': '46px' } as never)}>
         <rect x={4} y={18 + i * 20} width="18" height="22" rx="2.5" fill={DIM} stroke={MUTED} strokeWidth="1.2" />
         <rect x={8} y={24 + i * 20} width="10" height="2" rx="1" fill={TEXT} opacity=".7" />
         <rect x={8} y={29 + i * 20} width="7" height="2" rx="1" fill={TEXT} opacity=".45" />
@@ -291,7 +294,8 @@ const FineTuningVisual: VisualFn = ({ c }) => (
     <circle cx="60" cy="45" r="15" fill="none" stroke={MUTED} strokeWidth="1.5" opacity=".8" />
     <circle cx="60" cy="45" r="7" fill="none" stroke={c} strokeWidth="1.5" />
     <circle cx="60" cy="45" r="2.6" fill={c} style={anim('tvScale', 2, 0, { '--sc': '1.5' } as never)} />
-    <g style={anim('tvSlide', 2.8, 0, { '--tx': '-26px', '--ty': '20px' } as never)}>
+    {/* the adjustment dart flies in and lands on the bullseye */}
+    <g style={anim('tvTravel', 2.8, 0, { '--tx': '-26px', '--ty': '26px' } as never)}>
       <path d="M86 19 l6 -6 M86 19 l8 -2 M86 19 l2 8" stroke={c} strokeWidth="1.6" strokeLinecap="round" />
       <circle cx="86" cy="19" r="3" fill={c} />
     </g>
@@ -402,7 +406,7 @@ const AlignmentVisual: VisualFn = ({ c }) => (
     <path d="M14 30 C 50 30 70 30 106 30" stroke={MUTED} strokeWidth="1.5" strokeDasharray="5 4" />
     <path d="M14 62 C 50 62 70 62 106 62" stroke={MUTED} strokeWidth="1.5" strokeDasharray="5 4" />
     <path d="M14 46 C 44 46 50 40 70 44 S 100 46 106 46" stroke={c} strokeWidth="1.6" fill="none" opacity=".7" />
-    <circle r="5" fill={c} style={anim('tvSlide', 3, 0, { '--tx': '80px' } as never)} cx="18" cy="45" />
+    <circle r="5" fill={c} style={anim('tvTravel', 3, 0, { '--tx': '80px' } as never)} cx="18" cy="45" />
     <circle cx="100" cy="46" r="8" fill="none" stroke={GREEN} strokeWidth="1.6" style={anim('tvPulse', 2, 0)} />
     <circle cx="100" cy="46" r="3" fill={GREEN} />
   </g>
@@ -429,8 +433,8 @@ const PromptInjectionVisual: VisualFn = ({ c }) => (
     {[0, 1, 2, 4, 5].map((i) => (
       <rect key={i} x="41" y={22 + i * 9} width={i % 2 ? 30 : 38} height="4" rx="2" fill={TEXT} opacity=".5" />
     ))}
-    {/* a hidden red instruction slides into the document */}
-    <g style={anim('tvSlide', 3, 0, { '--tx': '31px' } as never)}>
+    {/* a hidden red instruction slips into the document and embeds itself */}
+    <g style={anim('tvTravel', 3, 0, { '--tx': '38px' } as never)}>
       <rect x="4" y="53" width="34" height="9" rx="2.5" fill={RED} opacity=".85" />
       <rect x="8" y="56" width="22" height="2.6" rx="1.3" fill="#0a0a0a" opacity=".7" />
     </g>
@@ -466,8 +470,10 @@ const ToolUseVisual: VisualFn = ({ c }) => (
     </g>
     <circle cx="42" cy="45" r="6" fill="#0f0f11" stroke={c} strokeWidth="1.4" />
     {/* wrench rocks toward the gear, pivoting at its head */}
-    <g style={animAt('tvSway', 2.6, 0, 88, 34, { '--rot': '9deg' } as never)}>
-      <path d="M88 26 a8 8 0 1 0 8 8 l-4 -1 -8 14 -6 -3.5 8 -14 z" fill={MUTED} stroke={TEXT} strokeWidth="1" transform="rotate(30 88 34)" />
+    <g transform="translate(-7 7)">
+      <g style={animAt('tvSway', 2.6, 0, 88, 34, { '--rot': '9deg' } as never)}>
+        <path d="M88 26 a8 8 0 1 0 8 8 l-4 -1 -8 14 -6 -3.5 8 -14 z" fill={MUTED} stroke={TEXT} strokeWidth="1" transform="rotate(30 88 34)" />
+      </g>
     </g>
   </g>
 )
@@ -516,7 +522,8 @@ const AgentVisual: VisualFn = ({ c }) => (
         <text x={x as number} y={(y as number) + 2.6} textAnchor="middle" fontSize="6.4" fill={c} fontWeight="700">{label as string}</text>
       </g>
     ))}
-    <path d="M72 24 l6 2 l-4 5" fill="none" stroke={c} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+    {/* the direction arrow orbits together with the dashed ring */}
+    <path d="M72 24 l6 2 l-4 5" fill="none" stroke={c} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" style={animAt('tvSpin', 8, 0, 60, 45, { animationTimingFunction: 'linear' })} />
   </g>
 )
 
@@ -621,8 +628,8 @@ const ComputerUseVisual: VisualFn = ({ c }) => (
     <rect x="28" y="34" width="30" height="5" rx="2.5" fill={TEXT} opacity=".4" />
     <rect x="28" y="44" width="22" height="5" rx="2.5" fill={TEXT} opacity=".3" />
     <rect x="66" y="50" width="26" height="12" rx="4" fill={c} opacity=".85" style={anim('tvFlash', 3)} />
-    {/* cursor glides to the button and clicks */}
-    <g style={anim('tvSlide', 3, 0, { '--tx': '34px', '--ty': '22px' } as never)}>
+    {/* cursor glides to the button, clicks, and fades */}
+    <g style={anim('tvTravel', 3, 0, { '--tx': '34px', '--ty': '22px' } as never)}>
       <path d="M42 30 l0 12 l3.4 -3 l2.2 5 l2.6 -1.2 l-2.2 -4.8 l4.6 -.6 z" fill="#f5f5f5" stroke="#0a0a0a" strokeWidth=".8" />
     </g>
   </g>
@@ -764,9 +771,12 @@ const NeuralNetworkVisual: VisualFn = ({ c }) => (
         <line key={`b${y1}${y2}`} x1="60" y1={y1} x2="98" y2={y2} stroke={MUTED} strokeWidth=".8" opacity=".6" />
       )),
     )}
-    {/* signal pulses travel layer to layer */}
-    {[45, 36, 55].map((y, i) => (
-      <circle key={`p${i}`} r="2.2" fill={c} cx="22" cy={y} style={anim('tvSlide', 2.6, i * 0.3, { '--tx': '38px', '--ty': `${NN_LAYERS[1][i + 1 > 3 ? 1 : i] - y}px` } as never)} />
+    {/* signal pulses travel from real input nodes to real hidden nodes */}
+    {NN_LAYERS[0].map((y, i) => (
+      <circle key={`p${i}`} r="2.2" fill={c} cx="22" cy={y} style={anim('tvTravel', 2.6, i * 0.3, { '--tx': '38px', '--ty': `${NN_LAYERS[1][i] - y}px` } as never)} />
+    ))}
+    {NN_LAYERS[1].slice(1, 3).map((y, i) => (
+      <circle key={`q${i}`} r="2.2" fill={c} cx="60" cy={y} style={anim('tvTravel', 2.6, 1.1 + i * 0.3, { '--tx': '38px', '--ty': `${NN_LAYERS[2][i] - y}px` } as never)} />
     ))}
     {/* nodes light up in waves, layer by layer */}
     {NN_LAYERS.map((ys, li) =>
@@ -787,14 +797,14 @@ const NodeVisual: VisualFn = ({ c }) => (
       <g key={y}>
         <circle cx="14" cy={y} r="4" fill={DIM} stroke={TEXT} strokeWidth="1.2" />
         <line x1="18" y1={y} x2="52" y2="45" stroke={MUTED} strokeWidth={[1, 2.4, 1.6][i]} opacity=".8" />
-        <circle r="2" fill={c} cx="20" cy={y} style={anim('tvSlide', 2.4, i * 0.15, { '--tx': '30px', '--ty': `${45 - y}px` } as never)} />
+        <circle r="2" fill={c} cx="20" cy={y} style={anim('tvTravel', 2.4, i * 0.15, { '--tx': '30px', '--ty': `${45 - y}px` } as never)} />
       </g>
     ))}
     <circle cx="62" cy="45" r="11" fill={DIM} stroke={c} strokeWidth="1.6" />
     <text x="62" y="48.5" textAnchor="middle" fontSize="10" fill={c} fontWeight="800">Σ</text>
     <circle cx="62" cy="45" r="11" fill={c} opacity=".35" style={anim('tvCycle', 2.4, 1.1)} />
     <line x1="73" y1="45" x2="100" y2="45" stroke={MUTED} strokeWidth="1.6" />
-    <circle r="2.4" fill={c} cx="76" cy="45" style={anim('tvSlide', 2.4, 1.3, { '--tx': '26px' } as never)} />
+    <circle r="2.4" fill={c} cx="76" cy="45" style={anim('tvTravel', 2.4, 1.3, { '--tx': '26px' } as never)} />
     <path d="M100 41 l5 4 l-5 4" fill="none" stroke={TEXT} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
   </g>
 )
@@ -810,7 +820,7 @@ const WeightsVisual: VisualFn = ({ c }) => (
       <g key={y}>
         <circle cx="16" cy={y} r="5" fill={DIM} stroke={TEXT} strokeWidth="1.2" />
         <line x1="21" y1={y} x2="84" y2={y} stroke={hot ? c : MUTED} strokeWidth={w} strokeLinecap="round" opacity={hot ? 0.95 : 0.8} />
-        <circle r={hot ? 2.6 : 1.8} fill={hot ? c : TEXT} cx="24" cy={y} style={anim('tvSlide', hot ? 1.6 : 2.6, i * 0.2, { '--tx': '56px' } as never)} />
+        <circle r={hot ? 2.6 : 1.8} fill={hot ? c : TEXT} cx="24" cy={y} style={anim('tvTravel', hot ? 1.6 : 2.6, i * 0.2, { '--tx': '56px' } as never)} />
         <rect x="42" y={y - 12} width="21" height="10" rx="3" fill="#0f0f11" stroke={hot ? c : MUTED} strokeWidth="1" />
         <text x="52.5" y={y - 4.5} textAnchor="middle" fontSize="7" fill={hot ? c : TEXT} fontWeight="700">{label}</text>
       </g>
@@ -846,7 +856,7 @@ const BackpropVisual: VisualFn = ({ c }) => (
       <path d="M91.5 31.5 l5 5 M96.5 31.5 l-5 5" stroke="#0a0a0a" strokeWidth="1.6" strokeLinecap="round" />
     </g>
     {/* error pulse travels backward through the network */}
-    <circle r="2.6" fill={RED} cx="94" cy="34" style={anim('tvSlide', 3.2, 0.4, { '--tx': '-68px', '--ty': '11px' } as never)} />
+    <circle r="2.6" fill={RED} cx="94" cy="34" style={anim('tvTravel', 3.2, 0.4, { '--tx': '-68px', '--ty': '0px' } as never)} />
     <path d="M86 22 H 40 M44 18.5 L 39 22 L 44 25.5" stroke={RED} strokeWidth="1.3" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity=".8" style={anim('tvPulse', 3.2, 0.6)} />
     {/* weights glow as they update */}
     {[34, 56].map((y1, i) => (
