@@ -2,6 +2,61 @@ import { AILesson } from './types'
 
 export const lessons: AILesson[] = [
   {
+    category: 'Welcome',
+    title: 'How to Use This App',
+    subtitle: 'A two-minute guided tour of AI Fact Checker before the course begins.',
+    icon: 'Compass',
+    color: '#7065f0',
+    sections: [
+      {
+        content:
+          "Welcome! AI Fact Checker is a verified-information platform: every claim you'll read here — model specs, pricing, capabilities, myths — traces back to a primary source you can check yourself.\n\nBefore the course starts, here's a quick tour so you know your way around.",
+      },
+      {
+        heading: 'The Most Important Tip: Tap the Highlighted Words',
+        content:
+          "Anywhere in this app, text that is underlined or highlighted in a non-standard color is clickable. Tap it and the definition opens right where you are, so you never lose your place.\n\nDefinitions often contain more highlighted terms — tap those too. You can chain from one definition to the next, building understanding as you go.\n\nTry it right now on this sentence: a large language model reads your prompt as tokens, and sometimes produces a hallucination.",
+      },
+      {
+        heading: 'Learn: Course + Quiz',
+        content:
+          "You're here now. The Learn tab is the front door of the app:",
+        bullets: [
+          'AI Fundamentals — this course. Short, visual lessons with interactive animations. Your progress saves automatically, so you can leave and pick up where you stopped.',
+          'Knowledge Check — a 10-question quiz below the lessons. Animated visuals illustrate each concept, and every answer comes with an explanation. Great for making the vocabulary stick.',
+        ],
+      },
+      {
+        heading: 'The Reference Sections',
+        content:
+          'Four sections in the sidebar (or bottom bar on your phone) hold the verified data:',
+        bullets: [
+          'Companies — every major AI lab and its models, with specs, pricing, real capabilities, known limitations, and myth-vs-fact breakdowns',
+          'Fact Check — clear answers to common AI questions, each tagged with a confidence level based on the strength of the evidence',
+          'Compare — put any models side by side across quality, speed, context, value, and versatility',
+          'Sources — the receipts: every document, paper, and article behind the claims in this app',
+        ],
+        visual: {
+          type: 'flow',
+          elements: [
+            'Learn the fundamentals (this course)',
+            'Test yourself (Knowledge Check)',
+            'Explore companies & models',
+            'Verify claims (Fact Check & Sources)',
+          ],
+          caption: 'A natural path through the app',
+        },
+      },
+      {
+        heading: 'Search From Anywhere',
+        content:
+          "Press ⌘K (Mac) or Ctrl+K (Windows), or tap the search bar, to open the search palette from any page. It covers companies, models, fact-checked questions, and the full glossary — so if you ever hit an unfamiliar term without a highlight, search will find it.",
+      },
+    ],
+    keyTakeaway:
+      "If it's highlighted, it's tappable — definitions open in place and chain to related terms. When in doubt, ⌘K searches everything.",
+  },
+  {
     category: 'Introduction',
     title: 'Why Artificial Intelligence Literacy Matters',
     subtitle: "Understanding AI helps you separate fact from fiction in today's world.",
@@ -9,8 +64,13 @@ export const lessons: AILesson[] = [
     color: '#3b82f6',
     sections: [
       {
+        heading: 'First, a Reading Tip',
         content:
-          "AI is everywhere—in your phone, your search results, your social media feed. Companies make bold claims about what AI can do. News headlines swing between 'AI will solve everything' and 'AI will destroy us all.'\n\nThe truth? It's somewhere in between, and understanding the basics helps you navigate this landscape.",
+          "As you read this course, any text that is underlined or highlighted in a non-standard color is clickable — tap it to view the definition right in context. Definitions contain more highlighted words, so you can chain from term to term inside the pop-up to build a deeper understanding without ever leaving the lesson.\n\nYou'll see terms like neural network, parameters, and tokens highlighted as we go. Use them.",
+      },
+      {
+        content:
+          "Now, why does this course exist? AI is everywhere—in your phone, your search results, your social media feed. Companies make bold claims about what AI can do. News headlines swing between 'AI will solve everything' and 'AI will destroy us all.'\n\nThe truth? It's somewhere in between, and understanding the basics helps you navigate this landscape.",
       },
       {
         heading: "What You'll Learn",
@@ -26,7 +86,7 @@ export const lessons: AILesson[] = [
       {
         heading: 'No Technical Background Needed',
         content:
-          "We'll explain everything in plain language with helpful visuals. By the end, you'll be able to evaluate AI claims critically and use this app to fact-check what you hear.",
+          "We'll explain everything in plain language with helpful visuals. By the end, you'll be able to evaluate AI claims critically and use the rest of this app — Companies, Fact Check, Compare, and Sources — to verify what you hear.",
       },
     ],
     keyTakeaway:
@@ -408,7 +468,7 @@ export const lessons: AILesson[] = [
       {
         heading: 'Keep Learning!',
         content:
-          "That's what AI Fact Checker is for! Browse model specs with verified information. Check the Myths section for common misconceptions. Use the Fact Check tab to search for answers. And always check our Sources.",
+          "That's what AI Fact Checker is for! Take the Knowledge Check quiz on the Learn page to lock in the vocabulary. Browse Companies for verified model specs and myth-vs-fact breakdowns. Use Fact Check to search for answers, Compare to weigh models side by side, and press ⌘K anytime to search everything. And always check our Sources.",
       },
     ],
     keyTakeaway:

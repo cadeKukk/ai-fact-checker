@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
   Brain,
+  Compass,
   Cpu,
   Network,
   MessageCircle,
@@ -30,7 +31,7 @@ import { APP_VERSION, LAST_UPDATED, DATA_SNAPSHOT } from '@/lib/appMeta'
 import TermVisual, { PLAYABLE_TERM_IDS, TERM_VISUAL_KEYFRAMES } from '@/components/practice/TermVisuals'
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string; size?: number }>> = {
-  Brain, Cpu, Network, MessageCircle, AlignLeft, Scale, CheckCircle, ShieldAlert,
+  Brain, Compass, Cpu, Network, MessageCircle, AlignLeft, Scale, CheckCircle, ShieldAlert,
 }
 
 function hexToRgba(hex: string, alpha: number): string {
@@ -78,7 +79,7 @@ export default function LearnHome() {
             AI Fundamentals
           </h1>
           <p className="text-sm text-[#8a8990] mt-1.5">
-            An {lessons.length}-lesson mini-course on how AI actually works — no technical background needed
+            {lessons.length} short lessons on how AI actually works — starting with a guided tour of this app, no technical background needed
           </p>
         </div>
 
