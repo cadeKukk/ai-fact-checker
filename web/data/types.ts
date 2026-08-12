@@ -103,7 +103,7 @@ export interface AITerm {
 }
 
 export interface AILessonVisual {
-  type: 'diagram' | 'comparison' | 'flow' | 'scale' | 'neuralNetwork' | 'tokenizer' | 'nextWord' | 'confidenceMeter' | 'quiz' | 'parameterScale' | 'embedding'
+  type: 'diagram' | 'comparison' | 'flow' | 'scale' | 'neuralNetwork' | 'tokenizer' | 'nextWord' | 'confidenceMeter' | 'quiz' | 'parameterScale' | 'embedding' | 'tapTermDemo' | 'sectionExplorer' | 'searchDemo'
   elements: string[]
   caption?: string
 }

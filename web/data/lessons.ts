@@ -4,53 +4,41 @@ export const lessons: AILesson[] = [
   {
     category: 'Welcome',
     title: 'How to Use This App',
-    subtitle: 'A two-minute guided tour of AI Fact Checker before the course begins.',
+    subtitle: 'A hands-on, two-minute walkthrough — learn the app by actually using it.',
     icon: 'Compass',
     color: '#7065f0',
     sections: [
       {
         content:
-          "Welcome! AI Fact Checker is a verified-information platform: every claim you'll read here — model specs, pricing, capabilities, myths — traces back to a primary source you can check yourself.\n\nBefore the course starts, here's a quick tour so you know your way around.",
+          "Welcome! AI Fact Checker is a verified-information platform: every claim you'll read here — model specs, pricing, capabilities, myths — traces back to a primary source you can check yourself.\n\nInstead of telling you how the app works, this lesson lets you try each part right here. Three quick exercises and you'll know your way around.",
       },
       {
-        heading: 'The Most Important Tip: Tap the Highlighted Words',
+        heading: 'The Most Important Skill: Tap the Highlighted Words',
         content:
-          "Anywhere in this app, text that is underlined or highlighted in a non-standard color is clickable. Tap it and the definition opens right where you are, so you never lose your place.\n\nDefinitions often contain more highlighted terms — tap those too. You can chain from one definition to the next, building understanding as you go.\n\nTry it right now on this sentence: a large language model reads your prompt as tokens, and sometimes produces a hallucination.",
-      },
-      {
-        heading: 'Learn: Course + Quiz',
-        content:
-          "You're here now. The Learn tab is the front door of the app:",
-        bullets: [
-          'AI Fundamentals — this course. Short, visual lessons with interactive animations. Your progress saves automatically, so you can leave and pick up where you stopped.',
-          'Knowledge Check — a 10-question quiz below the lessons. Animated visuals illustrate each concept, and every answer comes with an explanation. Great for making the vocabulary stick.',
-        ],
-      },
-      {
-        heading: 'The Reference Sections',
-        content:
-          'Four sections in the sidebar (or bottom bar on your phone) hold the verified data:',
-        bullets: [
-          'Companies — every major AI lab and its models, with specs, pricing, real capabilities, known limitations, and myth-vs-fact breakdowns',
-          'Fact Check — clear answers to common AI questions, each tagged with a confidence level based on the strength of the evidence',
-          'Compare — put any models side by side across quality, speed, context, value, and versatility',
-          'Sources — the receipts: every document, paper, and article behind the claims in this app',
-        ],
+          "Anywhere in this app, text that is underlined or highlighted in a non-standard color is clickable — the definition opens right where you are, and definitions contain more highlighted words you can keep tapping. Try both steps below:",
         visual: {
-          type: 'flow',
-          elements: [
-            'Learn the fundamentals (this course)',
-            'Test yourself (Knowledge Check)',
-            'Explore companies & models',
-            'Verify claims (Fact Check & Sources)',
-          ],
-          caption: 'A natural path through the app',
+          type: 'tapTermDemo',
+          elements: [],
+          caption: 'This works in every lesson, model page, and answer in the app.',
+        },
+      },
+      {
+        heading: 'Explore the Five Sections',
+        content:
+          'The app has five sections, and this map works like the real navigation. Tap each one to see what it holds:',
+        visual: {
+          type: 'sectionExplorer',
+          elements: [],
         },
       },
       {
         heading: 'Search From Anywhere',
         content:
-          "Press ⌘K (Mac) or Ctrl+K (Windows), or tap the search bar, to open the search palette from any page. It covers companies, models, fact-checked questions, and the full glossary — so if you ever hit an unfamiliar term without a highlight, search will find it.",
+          "If you're ever looking for something specific — a model, a company, a term, a question — search covers everything. This is a live mini version of the real search:",
+        visual: {
+          type: 'searchDemo',
+          elements: [],
+        },
       },
     ],
     keyTakeaway:

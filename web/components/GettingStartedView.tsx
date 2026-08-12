@@ -20,10 +20,20 @@ import {
   CheckCircle2,
   XCircle,
   Compass,
+  GraduationCap,
+  Building2,
+  ShieldCheck,
+  ArrowLeftRight,
+  Link as LinkIcon,
+  Search,
 } from 'lucide-react'
 import { lessons } from '@/data/lessons'
+import { companies, getAllModels, getAllSources } from '@/data/companies'
+import { allTerms } from '@/data/terms'
+import { factCheckQAs } from '@/data/factcheck'
 import { loadProgress, saveProgress } from '@/lib/courseProgress'
 import type { AICompany, AIModel, AITerm, AILessonSection, AILessonVisual } from '@/data/types'
+import { termCategoryLabel, termCategoryColor } from '@/data/types'
 import { TermPopup, TermHighlightedText, ModelPopup, BenchmarkPopup, useTermPopup } from './TermHighlight'
 import type { Benchmark } from '@/data/benchmarks'
 
@@ -590,9 +600,417 @@ function VisualContent({ visual, lessonColor, pauseAnimations }: { visual: AILes
       {visual.type === 'quiz' && <RedFlagQuizAnimation color={lessonColor} />}
       {visual.type === 'parameterScale' && <ParameterScaleAnimation color={lessonColor} />}
       {visual.type === 'embedding' && <EmbeddingFieldAnimation color={lessonColor} paused={pauseAnimations} />}
+      {visual.type === 'tapTermDemo' && <TapTermDemo color={lessonColor} />}
+      {visual.type === 'sectionExplorer' && <SectionExplorer color={lessonColor} />}
+      {visual.type === 'searchDemo' && <SearchDemo color={lessonColor} />}
 
       {visual.caption && (
         <p className="text-xs font-medium text-[#8a8990] italic mt-3">{visual.caption}</p>
+      )}
+    </div>
+  )
+}
+
+// MARK: - Interactive walkthrough: tap-a-term practice
+
+function TaskRow({ done, label, color }: { done: boolean; label: string; color: string }) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <div
+        className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center border"
+        style={{
+          backgroundColor: done ? color : 'transparent',
+          borderColor: done ? color : 'rgba(255,255,255,0.2)',
+          transform: done ? 'scale(1)' : 'scale(0.92)',
+          transition: `all 300ms ${SPRING_BOUNCE}`,
+        }}
+      >
+        {done && <Check size={12} strokeWidth={3} className="text-white" />}
+      </div>
+      <span
+        className="text-[13px] font-medium"
+        style={{ color: done ? '#f5f5f5' : '#8a8990', transition: 'color 300ms' }}
+      >
+        {label}
+      </span>
+    </div>
+  )
+}
+
+type TapDemoCard =
+  | { kind: 'term'; term: AITerm }
+  | { kind: 'model'; model: AIModel; company: AICompany }
+
+function TapTermDemo({ color }: { color: string }) {
+  const [card, setCard] = useState<TapDemoCard | null>(null)
+  const [tapped, setTapped] = useState(false)
+  const [chained, setChained] = useState(false)
+
+  const handleFirstTap = useCallback((term: AITerm) => {
+    setCard({ kind: 'term', term })
+    setTapped(true)
+  }, [])
+
+  const handleChainTerm = useCallback((term: AITerm) => {
+    setCard({ kind: 'term', term })
+    setChained(true)
+  }, [])
+
+  const handleChainModel = useCallback((info: { model: AIModel; company: AICompany; matched: string }) => {
+    setCard({ kind: 'model', model: info.model, company: info.company })
+    setChained(true)
+  }, [])
+
+  const noopModel = useCallback(() => {}, [])
+  const done = tapped && chained
+  const catColor = card?.kind === 'term' ? termCategoryColor[card.term.category] : color
+
+  return (
+    <div>
+      {/* Task checklist */}
+      <div className="flex flex-col gap-2 mb-4">
+        <TaskRow done={tapped} label="1. Tap a highlighted word in the sentence below" color={color} />
+        <TaskRow done={chained} label="2. Inside the definition, tap another highlighted word to chain" color={color} />
+      </div>
+
+      {/* Practice sentence */}
+      <div className="p-4 rounded-[10px] bg-[#1c1c1f] border border-white/10">
+        <TermHighlightedText
+          text="Sometimes a large language model produces a hallucination — an answer that sounds right but isn't."
+          className="text-[15px] text-[#d6d5db] leading-[1.8]"
+          onTermTap={handleFirstTap}
+          onModelTap={noopModel}
+        />
+      </div>
+
+      {/* Inline definition card — mirrors the real popup so the skill transfers */}
+      {card && (
+        <div
+          key={card.kind === 'term' ? card.term.id : card.model.id}
+          className="mt-3 p-4 rounded-[10px] border"
+          style={{
+            backgroundColor: hexToRgba(catColor, 0.07),
+            borderColor: hexToRgba(catColor, 0.3),
+            animation: `tapDemoIn 350ms ${SPRING_BOUNCE}`,
+          }}
+        >
+          <style>{`@keyframes tapDemoIn { from { opacity: 0; transform: translateY(6px) scale(0.98); } to { opacity: 1; transform: none; } }`}</style>
+          <div className="flex items-start justify-between gap-3 mb-2">
+            <div>
+              <p className="text-[15px] font-bold text-[#f5f5f5]">
+                {card.kind === 'term' ? card.term.term : card.model.name}
+              </p>
+              <span className="text-[10px] font-bold tracking-wide" style={{ color: catColor }}>
+                {card.kind === 'term'
+                  ? termCategoryLabel[card.term.category].toUpperCase()
+                  : `MODEL · ${card.company.name.toUpperCase()}`}
+              </span>
+            </div>
+            <button
+              onClick={() => setCard(null)}
+              className="flex-shrink-0 w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[#8a8990]"
+              aria-label="Close definition"
+            >
+              <X size={12} />
+            </button>
+          </div>
+          <TermHighlightedText
+            text={card.kind === 'term' ? card.term.fullExplanation : card.model.description}
+            className="text-[13px] text-[#b3b2b8] leading-[1.7]"
+            onTermTap={handleChainTerm}
+            onModelTap={handleChainModel}
+            excludeTermId={card.kind === 'term' ? card.term.id : undefined}
+            excludeModelId={card.kind === 'model' ? card.model.id : undefined}
+          />
+          {card.kind === 'model' && (
+            <p className="text-[11px] font-medium mt-2.5 text-[#8a8990]">
+              Full specs, pricing, and myths for this model live in the Companies section.
+            </p>
+          )}
+          {!chained && (
+            <p className="text-[11px] font-medium mt-2.5" style={{ color: catColor }}>
+              See the highlighted words above? Tap one to jump to its definition.
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Success state */}
+      {done && (
+        <div
+          className="mt-3 flex items-center gap-2.5 p-3 rounded-[10px]"
+          style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', animation: `tapDemoIn 350ms ${SPRING_BOUNCE}` }}
+        >
+          <CheckCircle2 size={16} className="text-green-400 flex-shrink-0" />
+          <span className="text-[13px] font-medium text-green-400">
+            That&apos;s the skill! It works exactly like this on every page of the app.
+          </span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// MARK: - Interactive walkthrough: app section explorer
+
+function SectionExplorer({ color }: { color: string }) {
+  const modelCount = getAllModels().length
+  const sourceCount = getAllSources().length
+  const sections = [
+    {
+      id: 'learn',
+      label: 'Learn',
+      icon: GraduationCap,
+      blurb: "You're here now. Short visual lessons with saved progress, plus the Knowledge Check quiz — 10 illustrated questions to make the vocabulary stick.",
+      chips: ['AI Fundamentals course', 'Knowledge Check quiz'],
+    },
+    {
+      id: 'companies',
+      label: 'Companies',
+      icon: Building2,
+      blurb: `Every major AI lab and its models — specs, pricing, real capabilities, known limitations, and myth-vs-fact breakdowns.`,
+      chips: [`${companies.length} companies`, `${modelCount} models`, 'Myths vs facts'],
+    },
+    {
+      id: 'factcheck',
+      label: 'Fact Check',
+      icon: ShieldCheck,
+      blurb: 'Clear answers to common AI questions, each tagged with a confidence level based on the strength of the evidence.',
+      chips: [`${factCheckQAs.length} questions answered`, 'Confidence levels'],
+    },
+    {
+      id: 'compare',
+      label: 'Compare',
+      icon: ArrowLeftRight,
+      blurb: 'Put any models side by side across quality, speed, context window, value, and versatility.',
+      chips: ['Side-by-side specs', 'Radar charts'],
+    },
+    {
+      id: 'sources',
+      label: 'Sources',
+      icon: LinkIcon,
+      blurb: `The receipts: every document, paper, and article behind the claims in this app.`,
+      chips: [`${sourceCount}+ sources`, 'Papers · docs · journalism'],
+    },
+  ]
+
+  const [active, setActive] = useState<string | null>(null)
+  const [visited, setVisited] = useState<Set<string>>(new Set())
+
+  const open = (id: string) => {
+    setActive(id)
+    setVisited((prev) => {
+      const next = new Set(prev)
+      next.add(id)
+      return next
+    })
+  }
+
+  const activeSection = sections.find((s) => s.id === active)
+  const allVisited = visited.size === sections.length
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-[11px] font-bold tracking-wide text-[#8a8990]">
+          TAP EACH SECTION TO EXPLORE
+        </span>
+        <span className="text-[11px] font-bold" style={{ color: allVisited ? '#4ade80' : color }}>
+          {visited.size} of {sections.length}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-5 gap-1.5">
+        {sections.map(({ id, label, icon: Icon }) => {
+          const isActive = active === id
+          const isVisited = visited.has(id)
+          return (
+            <button
+              key={id}
+              onClick={() => open(id)}
+              className="relative flex flex-col items-center gap-1.5 py-3 px-1 rounded-[10px] border active:scale-[0.96]"
+              style={{
+                backgroundColor: isActive ? hexToRgba(color, 0.15) : '#1c1c1f',
+                borderColor: isActive ? hexToRgba(color, 0.5) : 'rgba(255,255,255,0.08)',
+                transition: `all 250ms ${SPRING}`,
+              }}
+            >
+              {isVisited && (
+                <span className="absolute top-1 right-1 w-3.5 h-3.5 rounded-full bg-green-500 flex items-center justify-center">
+                  <Check size={9} strokeWidth={3.5} className="text-white" />
+                </span>
+              )}
+              <Icon size={17} style={{ color: isActive ? color : '#8a8990', transition: 'color 250ms' }} />
+              <span
+                className="text-[9px] lg:text-[10px] font-bold leading-none"
+                style={{ color: isActive ? '#f5f5f5' : '#8a8990' }}
+              >
+                {label}
+              </span>
+            </button>
+          )
+        })}
+      </div>
+
+      {activeSection && (
+        <div
+          key={activeSection.id}
+          className="mt-3 p-4 rounded-[10px] border"
+          style={{
+            backgroundColor: hexToRgba(color, 0.06),
+            borderColor: hexToRgba(color, 0.2),
+            animation: `tapDemoIn 300ms ${SPRING_BOUNCE}`,
+          }}
+        >
+          <style>{`@keyframes tapDemoIn { from { opacity: 0; transform: translateY(6px) scale(0.98); } to { opacity: 1; transform: none; } }`}</style>
+          <p className="text-[13px] text-[#d6d5db] leading-[1.7]">{activeSection.blurb}</p>
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {activeSection.chips.map((chip) => (
+              <span
+                key={chip}
+                className="text-[11px] font-semibold px-2 py-1 rounded-md"
+                style={{ backgroundColor: hexToRgba(color, 0.14), color: '#c9c7f5' }}
+              >
+                {chip}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {allVisited && (
+        <div
+          className="mt-3 flex items-center gap-2.5 p-3 rounded-[10px]"
+          style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', animation: `tapDemoIn 350ms ${SPRING_BOUNCE}` }}
+        >
+          <CheckCircle2 size={16} className="text-green-400 flex-shrink-0" />
+          <span className="text-[13px] font-medium text-green-400">
+            You&apos;ve seen the whole map — the same icons live in the sidebar (or bottom bar on your phone).
+          </span>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// MARK: - Interactive walkthrough: live mini search
+
+type MiniSearchResult = { kind: 'Company' | 'Model' | 'Term' | 'Question'; title: string; sub: string }
+
+const MINI_SEARCH_KIND_COLOR: Record<MiniSearchResult['kind'], string> = {
+  Company: '#60a5fa',
+  Model: '#a78bfa',
+  Term: '#4ade80',
+  Question: '#fbbf24',
+}
+
+function buildMiniSearchIndex(): MiniSearchResult[] {
+  const out: MiniSearchResult[] = []
+  for (const c of companies) {
+    out.push({ kind: 'Company', title: c.name, sub: c.headquarters })
+    for (const m of c.models) {
+      out.push({ kind: 'Model', title: m.name, sub: c.name })
+    }
+  }
+  for (const t of allTerms) {
+    out.push({ kind: 'Term', title: t.term, sub: t.shortDefinition })
+  }
+  for (const q of factCheckQAs) {
+    out.push({ kind: 'Question', title: q.question, sub: 'Fact Check' })
+  }
+  return out
+}
+
+function SearchDemo({ color }: { color: string }) {
+  const [query, setQuery] = useState('')
+  const [tried, setTried] = useState(false)
+
+  const index = useRef<MiniSearchResult[] | null>(null)
+  if (index.current === null) {
+    index.current = buildMiniSearchIndex()
+  }
+
+  const q = query.trim().toLowerCase()
+  const results = q.length >= 2 ? index.current.filter((r) => r.title.toLowerCase().includes(q)).slice(0, 5) : []
+
+  const runQuery = (value: string) => {
+    setQuery(value)
+    if (value.trim().length >= 2) setTried(true)
+  }
+
+  const suggestions = ['Fable', 'Kimi', 'conscious', 'Gemini']
+
+  return (
+    <div>
+      <div className="flex flex-col gap-2 mb-4">
+        <TaskRow done={tried} label="Try a search — type below or tap a suggestion" color={color} />
+      </div>
+
+      <div
+        className="flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] border bg-[#1c1c1f]"
+        style={{ borderColor: q ? hexToRgba(color, 0.5) : 'rgba(255,255,255,0.1)', transition: 'border-color 200ms' }}
+      >
+        <Search size={15} className="text-[#8a8990] flex-shrink-0" />
+        <input
+          value={query}
+          onChange={(e) => runQuery(e.target.value)}
+          placeholder="Search companies, models, questions…"
+          className="flex-1 bg-transparent text-[14px] text-[#f5f5f5] placeholder-[#5f5e66] outline-none"
+        />
+        <kbd className="hidden lg:inline text-[10px] font-bold text-[#8a8990] bg-white/10 px-1.5 py-0.5 rounded">⌘K</kbd>
+      </div>
+
+      <div className="flex flex-wrap gap-1.5 mt-2.5">
+        {suggestions.map((s) => (
+          <button
+            key={s}
+            onClick={() => runQuery(s)}
+            className="text-[11px] font-semibold px-2.5 py-1 rounded-md border border-white/10 text-[#b3b2b8] active:scale-95"
+            style={{ backgroundColor: query === s ? hexToRgba(color, 0.15) : '#1c1c1f', transition: 'all 200ms' }}
+          >
+            {s}
+          </button>
+        ))}
+      </div>
+
+      {q.length >= 2 && (
+        <div className="mt-3 rounded-[10px] border border-white/10 overflow-hidden" style={{ animation: `tapDemoIn 250ms ${SPRING}` }}>
+          <style>{`@keyframes tapDemoIn { from { opacity: 0; transform: translateY(6px) scale(0.98); } to { opacity: 1; transform: none; } }`}</style>
+          {results.length === 0 ? (
+            <p className="text-[13px] text-[#8a8990] p-3.5 bg-[#1c1c1f]">No matches — try one of the suggestions.</p>
+          ) : (
+            results.map((r, i) => (
+              <div
+                key={`${r.kind}-${r.title}`}
+                className="flex items-center gap-3 px-3.5 py-2.5 bg-[#1c1c1f]"
+                style={{ borderTop: i > 0 ? '1px solid rgba(255,255,255,0.06)' : 'none' }}
+              >
+                <span
+                  className="flex-shrink-0 text-[9px] font-bold tracking-wide px-1.5 py-0.5 rounded w-[62px] text-center"
+                  style={{ color: MINI_SEARCH_KIND_COLOR[r.kind], backgroundColor: hexToRgba(MINI_SEARCH_KIND_COLOR[r.kind], 0.12) }}
+                >
+                  {r.kind.toUpperCase()}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[13px] font-medium text-[#f5f5f5] truncate">{r.title}</p>
+                  <p className="text-[11px] text-[#8a8990] truncate">{r.sub}</p>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
+
+      {tried && (
+        <div
+          className="mt-3 flex items-center gap-2.5 p-3 rounded-[10px]"
+          style={{ backgroundColor: 'rgba(34, 197, 94, 0.1)', animation: `tapDemoIn 350ms ${SPRING_BOUNCE}` }}
+        >
+          <CheckCircle2 size={16} className="text-green-400 flex-shrink-0" />
+          <span className="text-[13px] font-medium text-green-400">
+            In the real search, results are links. Press ⌘K (Mac) or Ctrl+K (Windows) to open it from any page.
+          </span>
+        </div>
       )}
     </div>
   )
