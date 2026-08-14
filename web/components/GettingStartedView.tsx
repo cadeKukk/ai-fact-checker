@@ -42,6 +42,17 @@ import { loadProgress, saveProgress } from '@/lib/courseProgress'
 import type { AICompany, AIModel, AITerm, AILessonSection, AILessonVisual } from '@/data/types'
 import { termCategoryLabel, termCategoryColor } from '@/data/types'
 import { TermPopup, TermHighlightedText, ModelPopup, BenchmarkPopup, useTermPopup } from './TermHighlight'
+import {
+  LayerStack3D,
+  AttentionPlayground,
+  MoERouter,
+  TrainingStages,
+  ThinkingBudget,
+  AgentLoopSim,
+  ChartCrime,
+  InjectionDemo,
+  QuantizeSlider,
+} from './AdvancedVisuals'
 import type { Benchmark } from '@/data/benchmarks'
 
 const SPRING = 'cubic-bezier(0.2, 0.8, 0.2, 1)'
@@ -625,6 +636,15 @@ function VisualContent({ visual, lessonColor, pauseAnimations }: { visual: AILes
       {visual.type === 'tapTermDemo' && <TapTermDemo color={lessonColor} />}
       {visual.type === 'sectionExplorer' && <SectionExplorer color={lessonColor} />}
       {visual.type === 'searchDemo' && <SearchDemo color={lessonColor} />}
+      {visual.type === 'layerStack' && <LayerStack3D color={lessonColor} />}
+      {visual.type === 'attention' && <AttentionPlayground color={lessonColor} />}
+      {visual.type === 'moeRouter' && <MoERouter color={lessonColor} />}
+      {visual.type === 'trainingStages' && <TrainingStages color={lessonColor} />}
+      {visual.type === 'thinkingBudget' && <ThinkingBudget color={lessonColor} />}
+      {visual.type === 'agentLoop' && <AgentLoopSim color={lessonColor} />}
+      {visual.type === 'chartCrime' && <ChartCrime color={lessonColor} />}
+      {visual.type === 'injectionDemo' && <InjectionDemo color={lessonColor} />}
+      {visual.type === 'quantizeSlider' && <QuantizeSlider color={lessonColor} />}
 
       {visual.caption && (
         <p className="text-xs font-medium text-[#8a8990] italic mt-3">{visual.caption}</p>
