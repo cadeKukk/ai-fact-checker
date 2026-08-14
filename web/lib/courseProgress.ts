@@ -7,12 +7,15 @@ export interface CourseProgress {
   completed: boolean
 }
 
-const KEY = 'aifc-course-progress'
+/** Storage key for the intro course (AI Fundamentals). */
+export const INTRO_COURSE_KEY = 'aifc-course-progress'
+/** Storage key for the advanced course (AI in Depth). */
+export const ADVANCED_COURSE_KEY = 'aifc-advanced-progress'
 
-export function loadProgress(): CourseProgress | null {
+export function loadProgress(key: string = INTRO_COURSE_KEY): CourseProgress | null {
   if (typeof window === 'undefined') return null
   try {
-    const raw = window.localStorage.getItem(KEY)
+    const raw = window.localStorage.getItem(key)
     if (!raw) return null
     const parsed = JSON.parse(raw) as Partial<CourseProgress>
     if (typeof parsed.current !== 'number') return null
@@ -26,16 +29,19 @@ export function loadProgress(): CourseProgress | null {
   }
 }
 
-export function saveProgress(update: Partial<CourseProgress> & { current: number }) {
+export function saveProgress(
+  update: Partial<CourseProgress> & { current: number },
+  key: string = INTRO_COURSE_KEY,
+) {
   if (typeof window === 'undefined') return
-  const prev = loadProgress()
+  const prev = loadProgress(key)
   const next: CourseProgress = {
     current: update.current,
     max: Math.max(update.current, update.max ?? 0, prev?.max ?? 0),
     completed: update.completed ?? prev?.completed ?? false,
   }
   try {
-    window.localStorage.setItem(KEY, JSON.stringify(next))
+    window.localStorage.setItem(key, JSON.stringify(next))
   } catch {
     // storage full or blocked — progress just won't persist
   }

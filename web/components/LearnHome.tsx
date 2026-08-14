@@ -21,17 +21,26 @@ import {
   Link as LinkIcon,
   ClipboardCheck,
   Flame,
+  Layers,
+  Database,
+  BrainCircuit,
+  Bot,
+  BarChart3,
+  Lock,
+  HardDrive,
 } from 'lucide-react'
 import { lessons } from '@/data/lessons'
+import { advancedLessons } from '@/data/advancedLessons'
 import { companies, getAllModels, getAllSources } from '@/data/companies'
 import { factCheckQAs } from '@/data/factcheck'
-import { loadProgress, type CourseProgress } from '@/lib/courseProgress'
+import { loadProgress, ADVANCED_COURSE_KEY, type CourseProgress } from '@/lib/courseProgress'
 import { loadPracticeStats, type PracticeStats } from '@/lib/practiceStats'
 import { APP_VERSION, LAST_UPDATED, DATA_SNAPSHOT } from '@/lib/appMeta'
 import TermVisual, { PLAYABLE_TERM_IDS, TERM_VISUAL_KEYFRAMES } from '@/components/practice/TermVisuals'
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string; size?: number }>> = {
   Brain, Compass, Cpu, Network, MessageCircle, AlignLeft, Scale, CheckCircle, ShieldAlert,
+  Layers, Database, BrainCircuit, Bot, BarChart3, Lock, HardDrive,
 }
 
 function hexToRgba(hex: string, alpha: number): string {
@@ -43,11 +52,13 @@ function hexToRgba(hex: string, alpha: number): string {
 export default function LearnHome() {
   const router = useRouter()
   const [progress, setProgress] = useState<CourseProgress | null>(null)
+  const [advProgress, setAdvProgress] = useState<CourseProgress | null>(null)
   const [practiceStats, setPracticeStats] = useState<PracticeStats | null>(null)
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
     setProgress(loadProgress())
+    setAdvProgress(loadProgress(ADVANCED_COURSE_KEY))
     setPracticeStats(loadPracticeStats())
     setHydrated(true)
   }, [])
@@ -151,6 +162,71 @@ export default function LearnHome() {
               )
             })}
           </div>
+        </div>
+
+        {/* Advanced course */}
+        <div>
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-[#8a8990] mb-3">Go deeper</h2>
+          {hydrated && progress?.completed ? (
+            <div className="rounded-[14px] border border-[#8b5cf6]/30 overflow-hidden" style={{ background: 'linear-gradient(150deg, rgba(139,92,246,.12) 0%, #161618 55%)' }}>
+              <Link href="/learn/advanced" className="scale-button group block p-5 sm:p-6">
+                <div className="flex items-center gap-2 mb-1.5">
+                  <Layers size={16} className="text-[#b79df8]" />
+                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#b79df8]">Advanced course</p>
+                </div>
+                <p className="text-xl font-semibold tracking-tight text-[#f5f5f5]">AI in Depth</p>
+                <p className="text-sm text-[#8a8990] mt-1 leading-relaxed">
+                  {advancedLessons.length} lessons that open the black box: transformers and attention, the training
+                  pipeline, reasoning modes, agents &amp; MCP, benchmark literacy, AI security, and open weights.
+                </p>
+                <span className="inline-flex items-center gap-1.5 mt-3 text-[13px] font-semibold text-[#b79df8] group-hover:text-[#cbb8fa] transition-colors">
+                  {advProgress?.completed
+                    ? 'Review the advanced course'
+                    : advProgress && (advProgress.max > 0 || advProgress.current > 0)
+                      ? `Continue — Lesson ${Math.min(advProgress.current + 1, advancedLessons.length)} of ${advancedLessons.length}`
+                      : 'Start the advanced course'}
+                  <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                </span>
+              </Link>
+              <div className="border-t border-white/[0.06] px-5 sm:px-6 py-3 flex flex-wrap gap-x-4 gap-y-1.5">
+                {advancedLessons.map((l, i) => {
+                  const Icon = ICON_MAP[l.icon] ?? Layers
+                  const isDone = advProgress?.completed || i < (advProgress?.max ?? 0)
+                  return (
+                    <button
+                      key={l.title}
+                      type="button"
+                      onClick={() => router.push(`/learn/advanced?lesson=${i}`)}
+                      className="flex items-center gap-1.5 text-[12px] text-[#8a8990] hover:text-[#d6d5db] transition-colors"
+                    >
+                      {isDone ? (
+                        <Check size={11} className="text-green-400 flex-shrink-0" />
+                      ) : (
+                        <Icon size={11} className="flex-shrink-0 text-[#b79df8]" />
+                      )}
+                      {l.title}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          ) : (
+            <div className="rounded-[14px] bg-[#131315] border border-white/[0.07] p-5 sm:p-6">
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-10 h-10 rounded-[10px] bg-white/[0.05] flex items-center justify-center">
+                  <Lock size={17} className="text-[#5f5e66]" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5f5e66]">Advanced course</p>
+                  <p className="text-lg font-semibold tracking-tight text-[#b3b2b8]">AI in Depth</p>
+                  <p className="text-sm text-[#6f6e76] mt-1 leading-relaxed">
+                    {advancedLessons.length} lessons on transformers, training, reasoning, agents, benchmarks, security,
+                    and open weights. Finish AI Fundamentals above to unlock it.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Knowledge check quiz */}

@@ -19,6 +19,8 @@ Built by [Cade Kukk](https://cadekukk.vercel.app/) in collaboration with Dr. Bla
 
 The front door is **Learn** — a 9-lesson animated mini-course (AI Fundamentals) that opens with an interactive walkthrough of the app itself: practice tapping highlighted terms (and chaining through definitions), explore a live map of the app's five sections, and try a working mini version of the global search. The rest of the course covers neural networks, language models, tokens, parameters, and how to spot AI misinformation. Course progress is saved locally, so returning visitors pick up where they left off.
 
+Finishing AI Fundamentals unlocks **AI in Depth** (`/learn/advanced`) — a 7-lesson advanced course on transformer architecture, the training pipeline, reasoning and test-time compute, agents and MCP, benchmark literacy, AI security (jailbreaks vs. prompt injection), and the open-weight ecosystem.
+
 After the course, **Knowledge Check** (`/learn/practice`) tests what stuck: a 10-question quiz on AI terminology in which every concept is illustrated by a hand-built animated visual. Questions alternate between "which term describes this concept?" and "what does this term refer to?", and each answer is followed by an explanation with the term's definition and a concrete example. 46 terms are in rotation — from foundations like neural networks, nodes, weights, and backpropagation up to current topics like MCP and data contamination — each with its own looping SVG scene; score, accuracy, streaks, and lifetime stats persist locally.
 
 ![Knowledge Check quiz](docs/screenshot-practice.png)
@@ -26,7 +28,7 @@ After the course, **Knowledge Check** (`/learn/practice`) tests what stuck: a 10
 Behind it, four reference sections backed by a hand-curated, source-cited dataset:
 
 - **Companies** (`/companies`) — 9 AI companies and 36 models (including Moonshot AI's Kimi K3, GPT-5.6 Sol, Claude Opus 5, Grok 4.5, and DeepSeek V4), each with specs, pricing, capabilities, known limitations, and myth vs. fact breakdowns.
-- **Fact Check** (`/fact-check`) — verified answers to common AI questions, each tagged with a confidence level that reflects the strength of available evidence.
+- **Fact Check** (`/fact-check`) — 60 verified answers to common AI questions — from "Can AI think?" to energy use, copyright law, deepfakes, AI companions, self-driving, and political bias — each tagged with a confidence level that reflects the strength of available evidence.
 - **Compare** (`/compare`) — side-by-side model comparison across quality, speed, context, value, and versatility, with transparent scoring.
 - **Sources** (`/sources`) — 75+ primary sources behind every claim: official documentation, peer-reviewed and arXiv research papers, GitHub repositories, and news coverage.
 
@@ -90,6 +92,6 @@ npx vercel --prod
 
 ## Data
 
-All model specs, pricing, benchmarks, and claims live in `web/data/` as typed TypeScript modules (`companies.ts`, `factcheck.ts`, `terms.ts`, `benchmarks.ts`, `lessons.ts`). Every claim traces back to a source listed in the Sources tab.
+All model specs, pricing, benchmarks, and claims live in `web/data/` as typed TypeScript modules (`companies.ts`, `factcheck.ts`, `terms.ts`, `benchmarks.ts`, `lessons.ts`, `advancedLessons.ts`). Every claim traces back to a source listed in the Sources tab.
 
-The app version and data-freshness date live in one place — `web/lib/appMeta.ts` — and are shown in the sidebar footer and on the Learn home page. Model and company information is current as of **August 2026** (v0.4.5). AI moves fast; always verify against primary sources.
+The app version and data-freshness date live in one place — `web/lib/appMeta.ts` — and are shown in the sidebar footer and on the Learn home page. Model and company information is current as of **August 2026** (v0.5.0). AI moves fast; always verify against primary sources.

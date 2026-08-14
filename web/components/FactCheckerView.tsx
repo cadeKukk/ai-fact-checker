@@ -14,6 +14,7 @@ import { factCheckQAs } from '@/data/factcheck'
 import type { AICompany, AIModel, AITerm, FactCheckQA, ConfidenceLevel } from '@/data/types'
 import { confidenceLabel, confidenceColor } from '@/data/types'
 import { findModelRefByMatch } from '@/data/modelHighlightData'
+import { DATA_SNAPSHOT } from '@/lib/appMeta'
 import { ModelPopup, TermPopup, BenchmarkPopup, TermHighlightedText, useTermPopup } from './TermHighlight'
 
 function hexToRgba(hex: string, alpha: number): string {
@@ -249,7 +250,7 @@ export default function FactCheckerView({ initialQuery = '' }: FactCheckerViewPr
         <div className="rounded-[10px] p-4 bg-[#161618] border border-[#2a2a2e] flex items-start gap-3">
           <Info size={18} className="text-[#8a8990] flex-shrink-0 mt-0.5" />
           <p className="text-xs text-[#8a8990] leading-relaxed">
-            These answers are based on publicly available information and research as of early 2026.
+            These answers are based on publicly available information and research as of {DATA_SNAPSHOT}.
             AI is a rapidly evolving field—always verify claims with primary sources. Confidence
             levels reflect the strength of available evidence, not absolute certainty.
           </p>

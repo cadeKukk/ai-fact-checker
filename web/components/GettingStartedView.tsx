@@ -26,6 +26,13 @@ import {
   ArrowLeftRight,
   Link as LinkIcon,
   Search,
+  Layers,
+  Database,
+  BrainCircuit,
+  Bot,
+  BarChart3,
+  Lock,
+  HardDrive,
 } from 'lucide-react'
 import { lessons } from '@/data/lessons'
 import { companies, getAllModels, getAllSources } from '@/data/companies'
@@ -42,6 +49,7 @@ const SPRING_BOUNCE = 'cubic-bezier(0.34, 1.56, 0.64, 1)'
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string; size?: number }>> = {
   Brain, Cpu, Network, MessageCircle, AlignLeft, Scale, CheckCircle, ShieldAlert, Compass,
+  Layers, Database, BrainCircuit, Bot, BarChart3, Lock, HardDrive,
 }
 
 function hexToRgba(hex: string, alpha: number): string {
@@ -75,11 +83,23 @@ interface GettingStartedViewProps {
   onClose: () => void
   /** Lesson index to open on. When omitted, resumes from saved progress. */
   initialLesson?: number
+  /** Lesson set to render. Defaults to the intro course (AI Fundamentals). */
+  courseLessons?: typeof lessons
+  /** localStorage key for this course's progress. */
+  progressKey?: string
+  /** Header label, e.g. "AI FUNDAMENTALS" or "AI IN DEPTH". */
+  courseLabel?: string
 }
 
-export default function GettingStartedView({ onClose, initialLesson }: GettingStartedViewProps) {
+export default function GettingStartedView({
+  onClose,
+  initialLesson,
+  courseLessons = lessons,
+  progressKey,
+  courseLabel = 'AI FUNDAMENTALS',
+}: GettingStartedViewProps) {
   const [currentLesson, setCurrentLesson] = useState(() =>
-    initialLesson !== undefined ? Math.min(Math.max(initialLesson, 0), lessons.length - 1) : 0
+    initialLesson !== undefined ? Math.min(Math.max(initialLesson, 0), courseLessons.length - 1) : 0
   )
 
   // Resume from saved progress when no explicit lesson was requested.
@@ -88,15 +108,17 @@ export default function GettingStartedView({ onClose, initialLesson }: GettingSt
     if (didRestoreRef.current) return
     didRestoreRef.current = true
     if (initialLesson !== undefined) return
-    const saved = loadProgress()
-    if (saved && saved.current > 0 && !saved.completed) setCurrentLesson(saved.current)
-  }, [initialLesson])
+    const saved = loadProgress(progressKey)
+    if (saved && saved.current > 0 && !saved.completed) {
+      setCurrentLesson(Math.min(saved.current, courseLessons.length - 1))
+    }
+  }, [initialLesson, progressKey, courseLessons.length])
 
   // Persist progress as the user moves through lessons.
   useEffect(() => {
     if (!didRestoreRef.current) return
-    saveProgress({ current: currentLesson })
-  }, [currentLesson])
+    saveProgress({ current: currentLesson }, progressKey)
+  }, [currentLesson, progressKey])
   const {
     activeTerm,
     activeModel,
@@ -112,7 +134,7 @@ export default function GettingStartedView({ onClose, initialLesson }: GettingSt
     canGoBack,
   } = useTermPopup()
   const scrollRef = useRef<HTMLDivElement>(null)
-  const lesson = lessons[currentLesson]
+  const lesson = courseLessons[currentLesson]
   const color = lesson.color
   const LessonIcon = ICON_MAP[lesson.icon] ?? Brain
   const contentFade = useFadeIn(currentLesson, 450)
@@ -131,13 +153,13 @@ export default function GettingStartedView({ onClose, initialLesson }: GettingSt
   }, [currentLesson])
 
   const goForward = useCallback(() => {
-    if (currentLesson < lessons.length - 1) {
+    if (currentLesson < courseLessons.length - 1) {
       setCurrentLesson((p) => p + 1)
     } else {
-      saveProgress({ current: currentLesson, completed: true })
+      saveProgress({ current: currentLesson, completed: true }, progressKey)
       onClose()
     }
-  }, [currentLesson, onClose])
+  }, [currentLesson, onClose, courseLessons.length, progressKey])
 
   const renderPrev = () =>
     currentLesson > 0 ? (
@@ -152,7 +174,7 @@ export default function GettingStartedView({ onClose, initialLesson }: GettingSt
     ) : null
 
   const renderForward = () =>
-    currentLesson < lessons.length - 1 ? (
+    currentLesson < courseLessons.length - 1 ? (
       <button
         onClick={goForward}
         className="flex items-center gap-1.5 px-6 py-3.5 rounded-[10px] text-[#f5f5f5] font-semibold text-[15px] active:scale-[0.97]"
@@ -191,12 +213,12 @@ export default function GettingStartedView({ onClose, initialLesson }: GettingSt
             <X size={14} />
           </button>
           <span className="text-[11px] font-bold tracking-[1.5px] text-[#7065f0]">
-            AI FUNDAMENTALS
+            {courseLabel}
           </span>
         </div>
 
         <nav className="flex-1 overflow-y-auto px-2 pb-4 space-y-1">
-          {lessons.map((l, i) => {
+          {courseLessons.map((l, i) => {
             const TileIcon = ICON_MAP[l.icon] ?? Brain
             const isCurrent = i === currentLesson
             const isCompleted = i < currentLesson
@@ -251,14 +273,14 @@ export default function GettingStartedView({ onClose, initialLesson }: GettingSt
             <div
               className="h-full"
               style={{
-                width: `${((currentLesson + 1) / lessons.length) * 100}%`,
+                width: `${((currentLesson + 1) / courseLessons.length) * 100}%`,
                 background: lesson.color,
                 transition: `width 350ms ${SPRING}, background 350ms ${SPRING}`,
               }}
             />
           </div>
           <p className="text-[11px] text-[#8a8990] mt-2">
-            Lesson {currentLesson + 1} of {lessons.length}
+            Lesson {currentLesson + 1} of {courseLessons.length}
           </p>
         </div>
       </aside>
@@ -276,15 +298,15 @@ export default function GettingStartedView({ onClose, initialLesson }: GettingSt
               <X size={14} />
             </button>
             <span className="text-[11px] font-bold tracking-[1.5px] text-[#7065f0]">
-              AI FUNDAMENTALS
+              {courseLabel}
             </span>
             <span className="ml-auto text-xs font-bold text-[#8a8990]">
-              {currentLesson + 1}/{lessons.length}
+              {currentLesson + 1}/{courseLessons.length}
             </span>
           </div>
 
           <div className="flex gap-1">
-            {lessons.map((l, i) => {
+            {courseLessons.map((l, i) => {
               const isCurrent = i === currentLesson
               const isCompleted = i < currentLesson
               const TileIcon = ICON_MAP[l.icon] ?? Brain
@@ -761,8 +783,8 @@ function SectionExplorer({ color }: { color: string }) {
       id: 'learn',
       label: 'Learn',
       icon: GraduationCap,
-      blurb: "You're here now. Short visual lessons with saved progress, plus the Knowledge Check quiz — 10 illustrated questions to make the vocabulary stick.",
-      chips: ['AI Fundamentals course', 'Knowledge Check quiz'],
+      blurb: "You're here now. Short visual lessons with saved progress, plus the Knowledge Check quiz — 10 illustrated questions to make the vocabulary stick. Finish this course and an advanced one (AI in Depth) unlocks.",
+      chips: ['AI Fundamentals course', 'AI in Depth (advanced)', 'Knowledge Check quiz'],
     },
     {
       id: 'companies',
