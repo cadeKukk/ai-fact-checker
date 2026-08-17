@@ -9,6 +9,8 @@ import {
   AlertTriangle,
   AlertCircle,
   Info,
+  BookOpen,
+  ExternalLink,
 } from 'lucide-react'
 import { factCheckQAs } from '@/data/factcheck'
 import type { AICompany, AIModel, AITerm, FactCheckQA, ConfidenceLevel } from '@/data/types'
@@ -120,6 +122,30 @@ function FactCheckAnswerCard({
               </span>
             )
           })}
+        </div>
+      )}
+      {qa.sources.length > 0 && (
+        <div className="mt-3 pt-3 border-t border-white/[0.06]">
+          <div className="flex items-center gap-1.5 mb-1.5">
+            <BookOpen size={12} className="text-[#8a8990]" />
+            <span className="text-[11px] uppercase tracking-wide text-[#8a8990] font-semibold">Sources</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            {qa.sources.map((source) => (
+              <a
+                key={source.id}
+                href={source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group inline-flex items-start gap-1.5 text-xs text-[#9a99a2] hover:text-[#e8e6ef] transition-colors"
+              >
+                <ExternalLink size={11} className="mt-0.5 shrink-0 opacity-50 group-hover:opacity-100" />
+                <span className="underline decoration-white/15 underline-offset-2 group-hover:decoration-white/40">
+                  {source.title}
+                </span>
+              </a>
+            ))}
+          </div>
         </div>
       )}
     </div>

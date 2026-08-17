@@ -1985,6 +1985,18 @@ export const additionalSources: Source[] = [
   { id: 'src-kimi-k2-report', title: 'Kimi K2: Open Agentic Intelligence (Moonshot AI Technical Report)', url: 'https://arxiv.org/abs/2507.20534', type: 'researchPaper', dateAccessed: '2026-08-06' },
   { id: 'src-swebench-paper', title: 'SWE-bench: Can Language Models Resolve Real-World GitHub Issues?', url: 'https://arxiv.org/abs/2310.06770', type: 'researchPaper', dateAccessed: '2026-08-06' },
   { id: 'src-gpqa-paper', title: 'GPQA: A Graduate-Level Google-Proof Q&A Benchmark', url: 'https://arxiv.org/abs/2311.12022', type: 'researchPaper', dateAccessed: '2026-08-06' },
+  { id: 'src-distillation', title: 'Distilling the Knowledge in a Neural Network (Hinton et al.)', url: 'https://arxiv.org/abs/1503.02531', type: 'researchPaper', dateAccessed: '2026-08-17' },
+  { id: 'src-lora', title: 'LoRA: Low-Rank Adaptation of Large Language Models', url: 'https://arxiv.org/abs/2106.09685', type: 'researchPaper', dateAccessed: '2026-08-17' },
+  { id: 'src-llm-int8', title: 'LLM.int8(): 8-bit Matrix Multiplication for Transformers at Scale', url: 'https://arxiv.org/abs/2208.07339', type: 'researchPaper', dateAccessed: '2026-08-17' },
+  { id: 'src-toolformer', title: 'Toolformer: Language Models Can Teach Themselves to Use Tools', url: 'https://arxiv.org/abs/2302.04761', type: 'researchPaper', dateAccessed: '2026-08-17' },
+  { id: 'src-react-paper', title: 'ReAct: Synergizing Reasoning and Acting in Language Models', url: 'https://arxiv.org/abs/2210.03629', type: 'researchPaper', dateAccessed: '2026-08-17' },
+  { id: 'src-universal-jailbreak', title: 'Universal and Transferable Adversarial Attacks on Aligned Language Models', url: 'https://arxiv.org/abs/2307.15043', type: 'researchPaper', dateAccessed: '2026-08-17' },
+  { id: 'src-indirect-injection', title: 'Not What You Signed Up For: Compromising LLM-Integrated Applications with Indirect Prompt Injection', url: 'https://arxiv.org/abs/2302.12173', type: 'researchPaper', dateAccessed: '2026-08-17' },
+  { id: 'src-test-time-compute', title: 'Scaling LLM Test-Time Compute Optimally Can Be More Effective than Scaling Model Parameters', url: 'https://arxiv.org/abs/2408.03314', type: 'researchPaper', dateAccessed: '2026-08-17' },
+  { id: 'src-sycophancy-paper', title: 'Towards Understanding Sycophancy in Language Models (Anthropic)', url: 'https://arxiv.org/abs/2310.13548', type: 'researchPaper', dateAccessed: '2026-08-17' },
+  { id: 'src-weak-to-strong', title: 'Weak-to-Strong Generalization: Eliciting Strong Capabilities with Weak Supervision (OpenAI)', url: 'https://arxiv.org/abs/2312.09390', type: 'researchPaper', dateAccessed: '2026-08-17' },
+  { id: 'src-model-collapse-nature', title: 'AI Models Collapse When Trained on Recursively Generated Data (Nature)', url: 'https://www.nature.com/articles/s41586-024-07566-y', type: 'researchPaper', dateAccessed: '2026-08-17' },
+  { id: 'src-alignment-faking-paper', title: 'Alignment Faking in Large Language Models (Anthropic)', url: 'https://arxiv.org/abs/2412.14093', type: 'researchPaper', dateAccessed: '2026-08-17' },
 
   // Official Documentation & Blogs
   { id: 'src-openai-safety', title: 'OpenAI Safety & Alignment Research', url: 'https://openai.com/safety', type: 'officialDocs', dateAccessed: '2026-04-15' },

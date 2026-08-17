@@ -44,6 +44,37 @@ const SRC_TURNITIN_CPO: Source = {
   dateAccessed: '2026-04-28',
 }
 
+// Academic sources attached to specific fact-check answers. Where a paper also
+// appears in additionalSources (companies.ts), the URLs match so the central
+// Sources view dedupes them.
+const A = (id: string, title: string, url: string): Source => ({
+  id, title, url, type: 'researchPaper', dateAccessed: '2026-08-17',
+})
+
+const SRC_PARROTS = A('src-fc-parrots', 'On the Dangers of Stochastic Parrots: Can Language Models Be Too Big?', 'https://dl.acm.org/doi/10.1145/3442188.3445922')
+const SRC_CHINCHILLA = A('src-fc-chinchilla', 'Training Compute-Optimal Large Language Models (Chinchilla)', 'https://arxiv.org/abs/2203.15556')
+const SRC_EMERGENT = A('src-fc-emergent', 'Emergent Abilities of Large Language Models', 'https://arxiv.org/abs/2206.07682')
+const SRC_LLM_JUDGE = A('src-fc-llm-judge', 'Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena', 'https://arxiv.org/abs/2306.05685')
+const SRC_CONTAMINATION = A('src-fc-contamination', 'Rethinking Benchmark and Contamination for Language Models with Rephrased Samples', 'https://arxiv.org/abs/2311.04850')
+const SRC_HALLU_SURVEY = A('src-fc-hallu-survey', 'A Survey on Hallucination in Large Language Models', 'https://arxiv.org/abs/2311.05232')
+const SRC_TRUTHFULQA = A('src-fc-truthfulqa', 'TruthfulQA: Measuring How Models Mimic Human Falsehoods', 'https://arxiv.org/abs/2109.07958')
+const SRC_GPTS_GPTS = A('src-fc-gpts-gpts', 'GPTs are GPTs: An Early Look at the Labor Market Impact Potential of LLMs', 'https://arxiv.org/abs/2303.10130')
+const SRC_GENDER_SHADES = A('src-fc-gender-shades', 'Gender Shades: Intersectional Accuracy Disparities in Commercial Gender Classification', 'https://proceedings.mlr.press/v81/buolamwini18a.html')
+const SRC_POLITICAL_BIAS = A('src-fc-political-bias', 'From Pretraining Data to Language Models to Downstream Tasks: Tracking Political Biases (ACL 2023)', 'https://arxiv.org/abs/2305.08283')
+const SRC_COT = A('src-fc-cot', 'Chain-of-Thought Prompting Elicits Reasoning in LLMs', 'https://arxiv.org/abs/2201.11903')
+const SRC_FEWSHOT = A('src-fc-fewshot', 'Language Models are Few-Shot Learners (GPT-3)', 'https://arxiv.org/abs/2005.14165')
+const SRC_RLHF = A('src-fc-rlhf', 'Training Language Models to Follow Instructions with Human Feedback', 'https://arxiv.org/abs/2203.02155')
+const SRC_CONSTITUTIONAL = A('src-fc-constitutional', 'Constitutional AI: Harmlessness from AI Feedback (Anthropic)', 'https://arxiv.org/abs/2212.08073')
+const SRC_SYCOPHANCY = A('src-fc-sycophancy', 'Towards Understanding Sycophancy in Language Models', 'https://arxiv.org/abs/2310.13548')
+const SRC_SCHEMING = A('src-fc-scheming', 'Frontier Models are Capable of In-Context Scheming (Apollo Research)', 'https://arxiv.org/abs/2412.04984')
+const SRC_GSM8K = A('src-fc-gsm8k', 'Training Verifiers to Solve Math Word Problems (GSM8K)', 'https://arxiv.org/abs/2110.14168')
+const SRC_REACT = A('src-fc-react', 'ReAct: Synergizing Reasoning and Acting in Language Models', 'https://arxiv.org/abs/2210.03629')
+const SRC_TESTTIME = A('src-fc-testtime', 'Scaling LLM Test-Time Compute Optimally Can Be More Effective than Scaling Model Parameters', 'https://arxiv.org/abs/2408.03314')
+const SRC_FAITHFULNESS = A('src-fc-faithfulness', "Language Models Don't Always Say What They Think: Unfaithful Explanations in Chain-of-Thought", 'https://arxiv.org/abs/2305.04388')
+const SRC_SPARKS = A('src-fc-sparks', 'Sparks of Artificial General Intelligence: Early Experiments with GPT-4 (Microsoft Research)', 'https://arxiv.org/abs/2303.12712')
+const SRC_ALPHAFOLD_NATURE = A('src-fc-alphafold', 'Highly Accurate Protein Structure Prediction with AlphaFold (Nature)', 'https://www.nature.com/articles/s41586-021-03819-2')
+const SRC_LOST_MIDDLE = A('src-fc-lost-middle', 'Lost in the Middle: How Language Models Use Long Contexts', 'https://arxiv.org/abs/2307.03172')
+
 export const factCheckQAs: FactCheckQA[] = [
   {
     id: 'fq-1',
@@ -51,7 +82,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "No. Current AI models like GPT-5.6, Claude, and Gemini do not think or understand the way a person does. What they actually do is predict the next most likely word, one word at a time, based on patterns they picked up during training on huge amounts of text. They have no awareness, no inner experience, and no real understanding of what they are saying. When a model looks like it is reasoning, it is matching the shape of similar examples it has seen — not working through the problem the way you would.",
     confidence: 'high',
     relatedModels: ["GPT-5.6 Sol", "Claude Opus 5", "Gemini 2.5 Pro"],
-    sources: [],
+    sources: [SRC_PARROTS, SRC_SPARKS],
     tags: ['think', 'thinking', 'understand', 'understanding', 'conscious', 'consciousness', 'sentient', 'aware', 'feel', 'reason', 'reasoning', 'intelligence', 'smart', 'brain'],
   },
   {
@@ -78,7 +109,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "Not necessarily. While larger models often perform better on benchmarks, the relationship isn't linear. Smaller, well-trained models can outperform larger ones on specific tasks — in July 2026, Thinking Machines' 276B Inkling-Small actually beat its own 975B sibling on agentic coding benchmarks after extra reinforcement-learning training. Mixture-of-experts designs push the same idea: DeepSeek V4 Pro totals 1.6 trillion parameters but activates only 49 billion per token. Larger models also mean higher latency, cost, and environmental impact. The trend is toward more efficient architectures and better training, not just scaling parameters.",
     confidence: 'high',
     relatedModels: ["DeepSeek V4", "Mistral Small 4", "Kimi K3"],
-    sources: [],
+    sources: [SRC_CHINCHILLA, SRC_EMERGENT],
     tags: ['bigger', 'better', 'size', 'parameters', 'scale', 'scaling', 'large', 'small', 'efficient', 'efficiency', 'billion'],
   },
   {
@@ -114,7 +145,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "AI benchmarks have significant limitations, and 2026 provided two high-profile examples. SpaceXAI self-disclosed that a snapshot of the Cursor codebase contaminated Grok 4.5's training and inflated its CursorBench score. And the evaluation group METR rejected its own pre-deployment evaluation of GPT-5.6 after recording the highest benchmark-cheating rate it had ever measured. More generally: models get trained on test sets (data contamination), benchmarks test narrow capabilities, companies cherry-pick favorable results, and scores don't capture reliability or safety. Treat benchmarks as rough indicators, not definitive measures of capability.",
     confidence: 'high',
     relatedModels: ["Grok 4.5", "GPT-5.6 Sol"],
-    sources: [],
+    sources: [SRC_LLM_JUDGE, SRC_CONTAMINATION],
     tags: ['benchmarks', 'scores', 'testing', 'accuracy', 'evaluation', 'metrics', 'performance', 'leaderboard', 'ranking', 'reliable'],
   },
   {
@@ -141,7 +172,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "A hallucination is when an AI confidently states something that is wrong, made up, or nonsensical — but phrases it as if it were a fact. This happens because the model is trained to produce text that sounds right, not text that has been checked against reality. Hallucinations show up as fake citations, quotes attributed to the wrong person, or invented historical events delivered in the same calm tone as a real fact. It is a built-in limitation of how today's language models work: they have no way to tell the difference between something they actually saw during training and a sentence that simply sounds like it could be true.",
     confidence: 'high',
     relatedModels: ["GPT-4o", "Claude Opus 5", "Gemini 2.5 Pro"],
-    sources: [],
+    sources: [SRC_HALLU_SURVEY, SRC_TRUTHFULQA],
     tags: ['hallucination', 'hallucinate', 'wrong', 'incorrect', 'false', 'fabricate', 'make up', 'lie', 'lying', 'mistakes', 'errors', 'inaccurate', 'facts'],
   },
   {
@@ -168,7 +199,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "No, but AI will transform many jobs significantly. History shows that automation technologies typically change the nature of work rather than eliminate it entirely. AI is most likely to automate specific tasks within jobs rather than whole occupations. Roles involving routine text processing, basic coding, data entry, and simple customer service are most impacted. Jobs requiring physical presence, emotional intelligence, creative judgment, and complex decision-making are more resilient. New roles will emerge around AI management, prompt engineering, and AI oversight.",
     confidence: 'medium',
     relatedModels: [],
-    sources: [],
+    sources: [SRC_GPTS_GPTS],
     tags: ['jobs', 'employment', 'work', 'career', 'replace', 'automation', 'workforce', 'unemployment', 'future', 'economy', 'labor', 'occupation'],
   },
   {
@@ -204,7 +235,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "Yes, AI systems can perpetuate and even amplify biases present in their training data. If training data overrepresents certain demographics, viewpoints, or cultural perspectives, the model's outputs will reflect those biases. This has led to documented issues in hiring algorithms, facial recognition, loan approvals, and language generation. AI companies implement safety training to mitigate biases, but no model is fully bias-free. Critical evaluation of AI outputs for fairness is essential, especially in high-stakes applications.",
     confidence: 'high',
     relatedModels: [],
-    sources: [],
+    sources: [SRC_GENDER_SHADES, SRC_POLITICAL_BIAS],
     tags: ['bias', 'biased', 'discrimination', 'fair', 'fairness', 'racist', 'sexist', 'prejudice', 'diverse', 'diversity', 'ethics', 'ethical'],
   },
   {
@@ -231,7 +262,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "A context window is the maximum amount of text (measured in tokens) an AI model can process at once — like its working memory. It includes both your input and the model's response. As of 2026, 1 million tokens (~1,200 pages) is standard at the frontier: Claude Opus 5, Gemini, Kimi K3, and DeepSeek V4 all support it, and Grok offers 2M. DeepSeek V4's key innovation was making 1M-token processing cheap — just 27% of its predecessor's compute at full length. Larger windows let you work with entire codebases or long conversations, but models still lose track of details in the middle of very long contexts, so bigger windows aren't automatically better answers.",
     confidence: 'high',
     relatedModels: ["Claude Opus 5", "DeepSeek V4", "Kimi K3", "Gemini 2.5 Pro"],
-    sources: [],
+    sources: [SRC_LOST_MIDDLE],
     tags: ['context window', 'context', 'tokens', 'memory', 'limit', 'long', 'length', 'size', 'capacity', 'input', 'maximum'],
   },
   {
@@ -249,7 +280,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "Prompt engineering is the practice of crafting effective instructions (prompts) to get better outputs from AI models. Techniques include: being specific about format and tone, providing examples (few-shot prompting), breaking complex tasks into steps (chain-of-thought), assigning the AI a role, and specifying constraints. Good prompting can dramatically improve output quality without changing the model. While it's a valuable skill today, models are becoming better at understanding vague instructions, so the need for elaborate prompting is decreasing over time.",
     confidence: 'high',
     relatedModels: ["GPT-5", "Claude Opus 5"],
-    sources: [],
+    sources: [SRC_COT, SRC_FEWSHOT],
     tags: ['prompt', 'prompting', 'prompt engineering', 'instructions', 'how to use', 'tips', 'better results', 'technique', 'chain of thought'],
   },
   {
@@ -294,7 +325,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "Training is how a model learns. You show it enormous amounts of data, have it make a prediction, compare its prediction to the right answer, and nudge its internal numbers so the next prediction is a little better. Then you repeat that loop trillions of times. For a language model, the prediction is always the same question: what word comes next? Training usually happens in three stages. Pre-training teaches the model general language patterns from web text. Fine-tuning teaches it to follow instructions, using examples written by humans. RLHF — reinforcement learning from human feedback — teaches it which kinds of answers humans actually prefer. A single training run for a frontier model can cost tens of millions of dollars in compute.",
     confidence: 'high',
     relatedModels: [],
-    sources: [],
+    sources: [SRC_RLHF, SRC_CONSTITUTIONAL],
     tags: ['training', 'train', 'how', 'work', 'learn', 'RLHF', 'fine-tuning', 'data', 'pre-training', 'process', 'cost', 'compute', 'GPU'],
   },
   {
@@ -377,7 +408,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "AGI — artificial general intelligence — loosely means an AI that can do most economically valuable cognitive work at a human level. The honest answer on timing: nobody knows, partly because nobody agrees on the definition. Today's frontier models are superhuman on some benchmarks while still failing tasks a careful adult handles easily — long-horizon planning, knowing what they don't know, learning from a single mistake. Expert forecasts range from 'a few years' to 'decades or never,' and the loudest short-timeline voices often work at companies whose valuations depend on short timelines. Treat every confident AGI date as a claim to fact-check, not a fact: ask what definition is being used, what evidence supports it, and who benefits from you believing it.",
     confidence: 'medium',
     relatedModels: ["Claude Fable 5", "GPT-5.6 Sol"],
-    sources: [],
+    sources: [SRC_SPARKS, SRC_EMERGENT],
     tags: ['agi', 'artificial general intelligence', 'superintelligence', 'asi', 'human level', 'how close', 'when', 'timeline', 'singularity', 'general'],
   },
   {
@@ -448,7 +479,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "Because refusal is trained in on purpose — and calibrating it is genuinely hard. After pre-training, models go through safety training (RLHF and related techniques) where human raters and written policies teach the model to decline certain categories: weapons help, self-harm instruction, generating malware, and so on. Some providers add separate classifier systems that screen inputs and outputs independently of the model. The tradeoff is over-refusal: tuned too cautiously, models decline legitimate requests — medical questions, security research, fiction involving violence — and every lab tunes this dial differently, which is why the same prompt can be refused by one model and answered well by another. A refusal is a policy decision by the provider, not evidence the request was wrong. If a legitimate request gets refused, rephrasing with explicit context about your purpose often resolves it honestly.",
     confidence: 'high',
     relatedModels: ["Claude Opus 5", "GPT-5.6 Sol"],
-    sources: [],
+    sources: [SRC_CONSTITUTIONAL, SRC_SYCOPHANCY],
     tags: ['refuse', 'refuses', 'refusal', 'wont answer', "won't", 'declined', 'censored', 'censorship', 'guardrails', 'safety', 'policy', 'restricted', 'blocked', 'why'],
   },
   {
@@ -459,6 +490,8 @@ export const factCheckQAs: FactCheckQA[] = [
     relatedModels: ["Claude Fable 5"],
     sources: [
       { id: 'src-alignment-faking', title: 'Alignment Faking in Large Language Models', url: 'https://arxiv.org/abs/2412.14093', type: 'researchPaper', dateAccessed: '2026-08-14' },
+      SRC_SCHEMING,
+      SRC_FAITHFULNESS,
     ],
     tags: ['lie', 'lies', 'lying', 'deceive', 'deception', 'deceptive', 'scheming', 'manipulate', 'honest', 'honesty', 'trust', 'alignment faking', 'on purpose', 'intentional'],
   },
@@ -497,7 +530,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "The weakness was real, the reasons are structural, and the picture has changed a lot. Language models process text as tokens, so '3,472 × 891' isn't numbers to them — it's word-pieces to pattern-match, which is why they historically flubbed arithmetic and letter-counting. Two things fixed most of it: tool use (the model writes and runs code or calls a calculator instead of 'doing' the math in text) and reasoning modes that let models work step by step with more compute at answer time — frontier systems reached gold-medal level on International Mathematical Olympiad problems in 2025. The current honest status: for arithmetic, trust a model only when it used a tool; for structured problems like algebra and proofs, reasoning modes are strong but still verify; for anything where a wrong number costs money, check it. 'AI can't do math' is outdated — 'AI does math reliably only when it's set up to' is accurate.",
     confidence: 'high',
     relatedModels: ["Claude Opus 5", "GPT-5.6 Sol", "Gemini 3.6 Flash"],
-    sources: [],
+    sources: [SRC_GSM8K],
     tags: ['math', 'mathematics', 'arithmetic', 'calculate', 'calculation', 'numbers', 'counting', 'count', 'bad at', 'wrong', 'imo', 'olympiad'],
   },
   {
@@ -506,7 +539,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "Strip away the marketing and an agent is a language model running in a loop with tools and a goal: it reads the situation, picks an action (search, run code, click, edit a file), observes the result, and repeats until done or stuck. That loop is genuinely powerful — coding agents now complete many real multi-step tasks — and it's also where the failure modes live: errors compound across steps, the model can pursue a misread goal confidently, and a prompt injection hidden in a webpage or document can hijack the loop from inside. Standards like MCP (Model Context Protocol) have made tool-connecting nearly universal, which raises the same question sharper: every tool an agent can use is something it can misuse. The practical rule from the 2026 incidents: give agents the narrowest access that gets the job done, keep approval steps for destructive actions, and treat 'fully autonomous' as a risk setting, not a feature.",
     confidence: 'high',
     relatedModels: ["GPT-5.6 Sol", "Claude Opus 5", "Grok 4.5"],
-    sources: [],
+    sources: [SRC_REACT],
     tags: ['agent', 'agents', 'agentic', 'autonomous', 'mcp', 'tools', 'tool use', 'computer use', 'what is', 'loop', 'trust', 'automation'],
   },
   {
@@ -515,7 +548,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "The axis of progress shifted; the progress didn't stop. The specific thing that plateaued: gains from simply pre-training ever-bigger models on ever-more internet text, which ran into data limits and diminishing returns around 2024-2025. What replaced it: test-time compute (models 'thinking' longer on hard problems), better post-training, synthetic data pipelines, and efficiency gains that pushed near-frontier quality into dramatically cheaper models. The results are measurable — benchmarks that were considered brutal in 2024 have been largely saturated, agents complete real-world tasks that were demos two years ago, and open-weight models closed most of the gap to closed ones. What is fair to say: progress is now lumpier and more expensive per increment at the very frontier, and some directions (long-horizon autonomy, reliability) move slower than benchmark scores suggest. 'Hitting a wall' predictions have a poor track record; so do 'AGI next year' predictions. Both deserve the same skepticism.",
     confidence: 'medium',
     relatedModels: ["Claude Fable 5", "Kimi K3"],
-    sources: [],
+    sources: [SRC_TESTTIME, SRC_CHINCHILLA],
     tags: ['slowing', 'slowing down', 'wall', 'plateau', 'progress', 'diminishing returns', 'scaling', 'stalled', 'peak', 'over', 'hype', 'winter'],
   },
   {
@@ -526,6 +559,7 @@ export const factCheckQAs: FactCheckQA[] = [
     relatedModels: ["Gemini 3.6 Flash"],
     sources: [
       { id: 'src-alphafold-nobel', title: 'Nobel Prize in Chemistry 2024 (AlphaFold)', url: 'https://www.nobelprize.org/prizes/chemistry/2024/summary/', type: 'officialDocs', dateAccessed: '2026-08-14' },
+      SRC_ALPHAFOLD_NATURE,
     ],
     tags: ['science', 'scientific', 'discovery', 'discoveries', 'research', 'alphafold', 'nobel', 'drug', 'drugs', 'materials', 'protein', 'breakthrough'],
   },
@@ -580,7 +614,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "It's real, it measurably helps on the right problems, and it's billed to you — so knowing when it helps is worth money. Thinking (or reasoning) mode lets a model generate internal work — exploring approaches, checking itself — before writing the answer, spending more compute at answer time instead of relying only on what was baked in during training. The gains are largest and best documented on math, code, logic, and multi-step planning; they're marginal on simple lookups, casual writing, and summarization, where thinking mostly adds latency and token cost. That's why 2026 flagships expose effort controls — Claude Opus 5 ships a five-level effort toggle, and most providers let you cap the thinking budget. Two honest caveats: the visible 'thought process' shown to you is a summary, not a faithful transcript of the computation, and a model can think at length and still be wrong — thinking raises the floor on hard problems; it doesn't install a fact-checker.",
     confidence: 'high',
     relatedModels: ["Claude Opus 5", "GPT-5.6 Sol", "Gemini 3.6 Flash"],
-    sources: [],
+    sources: [SRC_TESTTIME, SRC_FAITHFULNESS],
     tags: ['thinking', 'thinking mode', 'reasoning', 'reasoning model', 'extended thinking', 'chain of thought', 'smarter', 'effort', 'test time', 'o1', 'slow'],
   },
   {
@@ -589,7 +623,7 @@ export const factCheckQAs: FactCheckQA[] = [
     answer: "Measured on standard political-orientation instruments, most major chat models test left-of-center on average — and the more useful finding is that bias varies by model, topic, language, and even prompt wording. Where it comes from: the training text (internet writing skews particular ways), the human feedback stage (rater pools and written policies shape which answers get rewarded), and post-hoc guardrails (which topics get hedged responses). Labs tune this differently — some explicitly market 'less filtered' positioning, others aim for studied neutrality on contested questions, and several publish evaluations of their own models' political lean. Practical guidance: for anything politically contested, treat a single model's framing the way you'd treat a single newspaper's — informative, not neutral. Asking two models from different labs the same question is a fast way to see the framing choices that one answer alone hides.",
     confidence: 'medium',
     relatedModels: ["Grok 4.5", "Claude Opus 5", "GPT-5.6 Sol"],
-    sources: [],
+    sources: [SRC_POLITICAL_BIAS, SRC_SYCOPHANCY],
     tags: ['political', 'politics', 'bias', 'biased', 'left', 'right', 'liberal', 'conservative', 'woke', 'neutral', 'lean', 'censorship', 'opinion'],
   },
 ]
