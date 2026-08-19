@@ -46,6 +46,8 @@ import {
   sourceTypeLabel,
   sourceTypeColor,
   modalityIcon,
+  modelCategoryLabel,
+  modelCategoryColor,
 } from '@/data/types'
 import { ModelPopup, TermPopup, BenchmarkPopup, SourcePopup, TermHighlightedText, useTermPopup } from './TermHighlight'
 import type { Benchmark } from '@/data/benchmarks'
@@ -218,6 +220,17 @@ export default function ModelDetail({ model, accentColor, onBack }: ModelDetailP
               {model.name}
             </h1>
             <span className="font-mono text-sm text-[#8a8990]">{model.version}</span>
+            {model.category && model.category !== 'language' && (
+              <span
+                className="px-2 py-0.5 rounded-md text-xs font-medium"
+                style={{
+                  backgroundColor: `${modelCategoryColor[model.category]}26`,
+                  color: modelCategoryColor[model.category],
+                }}
+              >
+                {modelCategoryLabel[model.category]}
+              </span>
+            )}
             {model.isOpenSource && (
               <span
                 className="px-2 py-0.5 rounded-md text-xs font-medium"
@@ -337,7 +350,7 @@ function OverviewTab({
 
   const specRows = [
     { icon: Hash, label: 'Parameter Count', value: specs.parameterCount ?? '—' },
-    { icon: LayoutGrid, label: 'Context Window', value: formatContextWindow(specs.contextWindow) },
+    { icon: LayoutGrid, label: 'Context Window', value: specs.contextWindow > 0 ? formatContextWindow(specs.contextWindow) : '—' },
     { icon: Calendar, label: 'Training Data Cutoff', value: specs.trainingDataCutoff ?? '—' },
     { icon: Cpu, label: 'Architecture', value: specs.architecture },
     { icon: Gauge, label: 'Latency', value: specs.averageLatency ?? '—' },

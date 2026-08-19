@@ -14,6 +14,13 @@ import {
   X,
   ChevronRight,
   Building2,
+  Sailboat,
+  Trees,
+  Aperture,
+  Mic,
+  Music,
+  Clapperboard,
+  Globe,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { companies, getAllModels, getAllSources } from '@/data/companies'
@@ -28,6 +35,13 @@ const LOGO_ICON_MAP: Record<string, React.ComponentType<{ className?: string; si
   Wind,
   Link2,
   Moon,
+  Sailboat,
+  Trees,
+  Aperture,
+  Mic,
+  Music,
+  Clapperboard,
+  Globe,
 }
 
 function hexToRgba(hex: string, alpha: number): string {

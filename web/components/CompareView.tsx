@@ -351,16 +351,19 @@ export default function CompareView({ onNavigate, initialModelIds }: CompareView
     setSelectedModelIds((prev) => prev.filter((id) => id !== modelId))
   }, [])
 
+  // Only language models can be compared — token-based dimensions (context
+  // window, price per token) don't apply to image/video/audio/product systems.
   const filteredCompanies = useMemo(() => {
     const query = pickerSearch.trim().toLowerCase()
-    if (!query) return companies
     return companies
       .map((c) => ({
         ...c,
         models: c.models.filter(
           (m) =>
-            m.name.toLowerCase().includes(query) ||
-            c.name.toLowerCase().includes(query)
+            (!m.category || m.category === 'language') &&
+            (!query ||
+              m.name.toLowerCase().includes(query) ||
+              c.name.toLowerCase().includes(query))
         ),
       }))
       .filter((c) => c.models.length > 0)

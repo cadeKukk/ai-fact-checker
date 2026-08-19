@@ -27,7 +27,7 @@ After the course, **Knowledge Check** (`/learn/practice`) tests what stuck: a 10
 
 Behind it, four reference sections backed by a hand-curated, source-cited dataset:
 
-- **Companies** (`/companies`) — 9 AI companies and 36 models (including Moonshot AI's Kimi K3, GPT-5.6 Sol, Claude Opus 5, Grok 4.5, and DeepSeek V4), each with specs, pricing, capabilities, known limitations, and myth vs. fact breakdowns.
+- **Companies** (`/companies`) — 16 AI companies and 49 systems, each with specs, pricing, capabilities, known limitations, and myth vs. fact breakdowns. Beyond the frontier LLMs (GPT-5.6 Sol, Claude Opus 5, Grok 4.5, DeepSeek V4, Kimi K3), the catalog now covers the wider machine-learning ecosystem: image generation (Midjourney V8.2, FLUX.2, Stable Diffusion 3.5), video (Veo 3.1, Sora 2, Runway Gen-4.5), voice and music (ElevenLabs Eleven v3, Suno v5.5, Whisper), scientific AI (AlphaFold 3), computer vision (Segment Anything 3), and AI products built on top of foundation models (NotebookLM/Gemini Notebook, Perplexity Comet). Non-language systems carry a category badge, and token-based comparisons in Compare stay LLM-only.
 - **Fact Check** (`/fact-check`) — 60 verified answers to common AI questions — from "Can AI think?" to energy use, copyright law, deepfakes, AI companions, self-driving, and political bias — each tagged with a confidence level that reflects the strength of available evidence.
 - **Compare** (`/compare`) — side-by-side model comparison across quality, speed, context, value, and versatility, with transparent scoring.
 - **Sources** (`/sources`) — 90+ primary sources behind every claim: official documentation, peer-reviewed and arXiv research papers (from the Transformer paper to alignment-faking and test-time-compute research), GitHub repositories, and news coverage. Most Fact Check answers now cite the academic literature directly.
@@ -94,4 +94,4 @@ npx vercel --prod
 
 All model specs, pricing, benchmarks, and claims live in `web/data/` as typed TypeScript modules (`companies.ts`, `factcheck.ts`, `terms.ts`, `benchmarks.ts`, `lessons.ts`, `advancedLessons.ts`). Every claim traces back to a source listed in the Sources tab.
 
-The app version and data-freshness date live in one place — `web/lib/appMeta.ts` — and are shown in the sidebar footer and on the Learn home page. Model and company information is current as of **August 2026** (v0.5.2). AI moves fast; always verify against primary sources.
+The app version and data-freshness date live in one place — `web/lib/appMeta.ts` — and are shown in the sidebar footer and on the Learn home page. Model and company information is current as of **August 2026** (v0.6.0). AI moves fast; always verify against primary sources.

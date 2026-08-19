@@ -10,6 +10,12 @@ export type ConfidenceLevel = 'high' | 'medium' | 'low'
 
 export type TermCategory = 'fundamentals' | 'architecture' | 'training' | 'inference' | 'performance' | 'safety' | 'practical'
 
+/** What kind of AI system this is. 'language' (the default when omitted) covers
+ * chat/LLM models; the rest cover the wider ML ecosystem — image and video
+ * generators, speech/music systems, scientific models, perception models, and
+ * AI-powered products built on top of foundation models. */
+export type ModelCategory = 'language' | 'image' | 'video' | 'audio' | 'science' | 'perception' | 'product'
+
 export interface Source {
   id: string
   title: string
@@ -66,6 +72,9 @@ export interface AIModel {
   pricing?: Pricing
   sources: Source[]
   isOpenSource: boolean
+  /** Defaults to 'language' when omitted. Non-language systems are excluded
+   * from token-based comparisons in the Compare tab. */
+  category?: ModelCategory
 }
 
 export interface AICompany {
@@ -169,4 +178,13 @@ export const termCategoryColor: Record<TermCategory, string> = {
 
 export const modalityIcon: Record<Modality, string> = {
   Text: 'AlignLeft', Image: 'Image', Audio: 'AudioWaveform', Video: 'Video', Code: 'Code2',
+}
+
+export const modelCategoryLabel: Record<ModelCategory, string> = {
+  language: 'Language Model', image: 'Image Generation', video: 'Video Generation',
+  audio: 'Audio & Music', science: 'Scientific AI', perception: 'Computer Vision', product: 'AI Product',
+}
+export const modelCategoryColor: Record<ModelCategory, string> = {
+  language: '#3b82f6', image: '#22c55e', video: '#ec4899',
+  audio: '#f97316', science: '#2dd4bf', perception: '#a855f7', product: '#eab308',
 }

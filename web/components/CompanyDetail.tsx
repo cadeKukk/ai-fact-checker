@@ -12,6 +12,12 @@ import {
   Link2,
   Moon,
   Globe,
+  Sailboat,
+  Trees,
+  Aperture,
+  Mic,
+  Music,
+  Clapperboard,
   Cpu,
   LockOpen,
   AlignLeft,
@@ -22,7 +28,7 @@ import {
   FileText,
 } from 'lucide-react'
 import type { AICompany, AIModel, AITerm, Modality } from '@/data/types'
-import { sourceTypeLabel, sourceTypeColor } from '@/data/types'
+import { sourceTypeLabel, sourceTypeColor, modelCategoryLabel, modelCategoryColor } from '@/data/types'
 import { ModelPopup, TermPopup, BenchmarkPopup, SourcePopup, TermHighlightedText, useTermPopup } from './TermHighlight'
 
 const LOGO_ICON_MAP: Record<string, React.ComponentType<{ className?: string; size?: number }>> = {
@@ -34,6 +40,13 @@ const LOGO_ICON_MAP: Record<string, React.ComponentType<{ className?: string; si
   Wind,
   Link2,
   Moon,
+  Sailboat,
+  Trees,
+  Aperture,
+  Mic,
+  Music,
+  Clapperboard,
+  Globe,
 }
 
 const MODALITY_ICON_MAP: Record<Modality, React.ComponentType<{ className?: string; size?: number }>> = {
@@ -99,9 +112,20 @@ function ModelCard({
       className="w-full text-left p-4 rounded-[10px] transition-all hover:opacity-90"
       style={{ backgroundColor: '#161618', borderWidth: 1, borderColor: accentBorder15 }}
     >
-      <div className="flex items-center gap-2 mb-2">
+      <div className="flex items-center gap-2 flex-wrap mb-2">
         <span className="font-bold text-[#f5f5f5]">{model.name}</span>
         <span className="font-mono text-sm text-[#8a8990]">{model.version}</span>
+        {model.category && model.category !== 'language' && (
+          <span
+            className="px-2 py-0.5 rounded-md text-xs font-medium"
+            style={{
+              backgroundColor: `${modelCategoryColor[model.category]}20`,
+              color: modelCategoryColor[model.category],
+            }}
+          >
+            {modelCategoryLabel[model.category]}
+          </span>
+        )}
         {model.isOpenSource && (
           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-green-400/10 text-green-400">
             <LockOpen size={12} />
@@ -124,10 +148,12 @@ function ModelCard({
             {model.specs.parameterCount}
           </span>
         )}
-        <span className="inline-flex items-center gap-1.5">
-          <FileText size={14} />
-          {formatContextWindow(model.specs.contextWindow)} ctx
-        </span>
+        {model.specs.contextWindow > 0 && (
+          <span className="inline-flex items-center gap-1.5">
+            <FileText size={14} />
+            {formatContextWindow(model.specs.contextWindow)} ctx
+          </span>
+        )}
         {model.myths.length > 0 && (
           <span>{model.myths.length} myth{model.myths.length !== 1 ? 's' : ''}</span>
         )}
