@@ -47,6 +47,7 @@ function ActionButton({ onClick, color, children }: { onClick: () => void; color
 // MARK: - 1. Transformer layer stack (3D forward pass)
 
 const STACK_LAYERS = [
+  { label: 'Tokenize', short: 'text → tokens' },
   { label: 'Embedding', short: 'tokens → vectors' },
   { label: 'Layer 1', short: 'attention + FFN' },
   { label: 'Layer 2', short: 'attention + FFN' },
@@ -64,7 +65,7 @@ const OUTPUT_PROBS = [
 
 // Geometry for the isometric stack: plate i sits GAP px above the previous one.
 const STACK_BASE = 14 // px from container bottom to the first plate
-const STACK_GAP = 46 // px between plate centers
+const STACK_GAP = 42 // px between plate centers
 const stackY = (i: number) => STACK_BASE + i * STACK_GAP
 // Isometric tilt shared by every plate: tip back, then rotate in-plane so the
 // plates read as 3D diamonds. Labels and the orb stay OUTSIDE this transform.
