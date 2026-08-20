@@ -152,21 +152,6 @@ export function LayerStack3D({ color }: { color: string }) {
                       transition: `all 320ms ${SPRING}`,
                     }}
                   >
-                    {/* Neuron grid: dots light up in a stagger while this layer fires */}
-                    <div className="absolute inset-0 grid grid-cols-5 grid-rows-3 place-items-center px-4 py-3">
-                      {Array.from({ length: 15 }).map((_, d) => (
-                        <span
-                          key={isActive ? `f${d}` : `s${d}`}
-                          className="w-[7px] h-[7px] rounded-full"
-                          style={{
-                            backgroundColor: isActive ? color : isPast ? hexToRgba(color, 0.4) : 'rgba(255,255,255,0.12)',
-                            boxShadow: isActive ? `0 0 8px ${color}` : 'none',
-                            animation: isActive ? `advDotFire 500ms ${SPRING} ${(d % 5) * 55 + Math.floor(d / 5) * 35}ms both` : 'none',
-                            transition: 'background-color 350ms',
-                          }}
-                        />
-                      ))}
-                    </div>
                     {/* Expanding pulse ring on fire */}
                     {isActive && (
                       <div
@@ -258,7 +243,6 @@ export function LayerStack3D({ color }: { color: string }) {
       <style>{`
         @keyframes advIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
         @keyframes advRing { from { opacity: 0.9; transform: scale(0.85); } to { opacity: 0; transform: scale(1.18); } }
-        @keyframes advDotFire { 0% { transform: scale(0.6); opacity: 0.4; } 55% { transform: scale(1.55); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
         @keyframes advOrbPulse { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.35); } }
       `}</style>
     </div>
