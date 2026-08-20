@@ -62,23 +62,35 @@ const OUTPUT_PROBS = [
   { token: 'moon', p: 1 },
 ]
 
+// Geometry for the side-view stack: plate i sits GAP px above the previous one.
+const STACK_BASE = 14 // px from container bottom to the first plate
+const STACK_GAP = 42 // px between plate centers
+const stackY = (i: number) => STACK_BASE + i * STACK_GAP
+
 export function LayerStack3D({ color }: { color: string }) {
   const [active, setActive] = useState(-1) // -1 idle, 0..n-1 climbing, n done
   const [running, setRunning] = useState(false)
   const t = useTimers()
-  const done = active >= STACK_LAYERS.length
+  const n = STACK_LAYERS.length
+  const done = active >= n
+  const STEP = 650
 
   function run() {
     t.clear()
     setActive(-1)
     setRunning(true)
-    STACK_LAYERS.forEach((_, i) => t.schedule(() => setActive(i), 300 + i * 550))
-    t.schedule(() => { setActive(STACK_LAYERS.length); setRunning(false) }, 300 + STACK_LAYERS.length * 550)
+    STACK_LAYERS.forEach((_, i) => t.schedule(() => setActive(i), 350 + i * STEP))
+    t.schedule(() => { setActive(n); setRunning(false) }, 350 + n * STEP)
   }
+
+  // The glowing signal orb: waits under the stack, stops at each plate's visual
+  // center (stackY + ~40 after foreshortening), and exits above the top plate.
+  const orbBottom = active < 0 ? -2 : done ? stackY(n - 1) + 78 : stackY(active) + 40
+  const spineHeight = stackY(n - 1) + 52
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-1">
+      <div className="flex items-center justify-between gap-2 mb-2">
         <span className="text-[13px] font-medium" style={{ color: active < 0 ? '#8a8990' : color, transition: 'color 300ms' }}>
           {active < 0 ? '"The cat sat on the ___" — run a forward pass' : done ? 'One token predicted — this repeats for every word' : `${STACK_LAYERS[active]?.label}: ${STACK_LAYERS[active]?.short}`}
         </span>
@@ -89,37 +101,110 @@ export function LayerStack3D({ color }: { color: string }) {
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row items-center gap-2">
-        {/* 3D stack */}
-        <div className="relative h-[250px] w-[240px] flex-shrink-0" style={{ perspective: '900px' }}>
-          <div
-            className="absolute left-1/2 top-[58%]"
-            style={{ transform: 'translate(-50%, -50%) rotateX(62deg) rotateZ(-40deg)', transformStyle: 'preserve-3d' }}
-          >
+      <div className="flex flex-col sm:flex-row items-center gap-3">
+        {/* Side-view 3D stack with readable labels beside each plate */}
+        <div className="flex items-end flex-shrink-0 select-none">
+          <div className="relative w-[190px]" style={{ height: spineHeight + 62, perspective: '700px' }}>
+            {/* Signal spine behind the plates */}
+            <div
+              className="absolute left-1/2 -translate-x-1/2 w-[3px] rounded-full"
+              style={{ bottom: 6, height: spineHeight, backgroundColor: hexToRgba(color, 0.12) }}
+            />
+            {/* Progress fill: brightens the spine below the orb */}
+            <div
+              className="absolute left-1/2 -translate-x-1/2 w-[3px] rounded-full"
+              style={{
+                bottom: 6,
+                height: Math.max(0, orbBottom + 4),
+                background: `linear-gradient(to top, ${hexToRgba(color, 0.15)}, ${hexToRgba(color, 0.75)})`,
+                transition: `height ${STEP - 150}ms ${SPRING}`,
+              }}
+            />
+
+            {/* Plates, bottom (Embedding) to top (Output) */}
             {STACK_LAYERS.map((layer, i) => {
               const isActive = active === i
               const isPast = active > i
               return (
-                <div
-                  key={layer.label}
-                  className="absolute rounded-[12px] border flex items-center justify-center"
-                  style={{
-                    width: 150,
-                    height: 150,
-                    left: -75,
-                    top: -75,
-                    transform: `translateZ(${i * 30}px)${isActive ? ' scale(1.06)' : ''}`,
-                    backgroundColor: isActive ? hexToRgba(color, 0.32) : isPast ? hexToRgba(color, 0.14) : 'rgba(255,255,255,0.035)',
-                    borderColor: isActive ? color : isPast ? hexToRgba(color, 0.45) : 'rgba(255,255,255,0.13)',
-                    boxShadow: isActive ? `0 0 24px ${hexToRgba(color, 0.5)}` : 'none',
-                    transition: `all 350ms ${SPRING}`,
-                  }}
-                >
-                  <span
-                    className="text-[10px] font-bold tracking-wide select-none"
+                <div key={layer.label} className="absolute left-1/2" style={{ bottom: stackY(i), transform: 'translateX(-50%)' }}>
+                  <div
+                    className="relative rounded-[14px] border"
                     style={{
-                      transform: 'rotateZ(40deg) rotateX(-62deg)',
-                      color: isActive ? '#fff' : isPast ? hexToRgba(color, 0.9) : '#6f6e76',
+                      width: 168,
+                      height: 96,
+                      transform: `rotateX(64deg)${isActive ? ' translateZ(16px)' : ''}`,
+                      transformStyle: 'preserve-3d',
+                      backgroundColor: isActive ? hexToRgba(color, 0.30) : isPast ? hexToRgba(color, 0.12) : 'rgba(255,255,255,0.04)',
+                      borderColor: isActive ? color : isPast ? hexToRgba(color, 0.5) : 'rgba(255,255,255,0.14)',
+                      boxShadow: isActive
+                        ? `0 0 30px ${hexToRgba(color, 0.55)}, inset 0 0 24px ${hexToRgba(color, 0.25)}`
+                        : isPast
+                        ? `0 0 10px ${hexToRgba(color, 0.15)}`
+                        : 'none',
+                      transition: `all 320ms ${SPRING}`,
+                    }}
+                  >
+                    {/* Neuron grid: dots light up in a stagger while this layer fires */}
+                    <div className="absolute inset-0 grid grid-cols-5 grid-rows-3 place-items-center px-4 py-3">
+                      {Array.from({ length: 15 }).map((_, d) => (
+                        <span
+                          key={isActive ? `f${d}` : `s${d}`}
+                          className="w-[7px] h-[7px] rounded-full"
+                          style={{
+                            backgroundColor: isActive ? color : isPast ? hexToRgba(color, 0.4) : 'rgba(255,255,255,0.12)',
+                            boxShadow: isActive ? `0 0 8px ${color}` : 'none',
+                            animation: isActive ? `advDotFire 500ms ${SPRING} ${(d % 5) * 55 + Math.floor(d / 5) * 35}ms both` : 'none',
+                            transition: 'background-color 350ms',
+                          }}
+                        />
+                      ))}
+                    </div>
+                    {/* Expanding pulse ring on fire */}
+                    {isActive && (
+                      <div
+                        key={`ring-${i}-${active}`}
+                        className="absolute inset-[-8px] rounded-[18px] border-2 pointer-events-none"
+                        style={{ borderColor: color, animation: `advRing 650ms ease-out both` }}
+                      />
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+
+            {/* The signal orb climbing the stack */}
+            <div
+              className="absolute left-1/2 w-[15px] h-[15px] rounded-full pointer-events-none"
+              style={{
+                bottom: orbBottom,
+                transform: 'translateX(-50%)',
+                backgroundColor: active < 0 ? hexToRgba(color, 0.5) : '#fff',
+                boxShadow: active < 0 ? 'none' : `0 0 14px 3px ${hexToRgba(color, 0.9)}`,
+                opacity: active < 0 ? 0.65 : 1,
+                transition: `bottom ${STEP - 150}ms ${SPRING}, box-shadow 300ms, background-color 300ms`,
+                animation: done ? 'advOrbPulse 1.4s ease-in-out infinite' : 'none',
+              }}
+            />
+          </div>
+
+          {/* Horizontal labels beside each plate — never rotated, always readable */}
+          <div className="relative w-[112px]" style={{ height: spineHeight + 62 }}>
+            {STACK_LAYERS.map((layer, i) => {
+              const isActive = active === i
+              const isPast = active > i
+              // +41 centers the label on the plate's visual midline (plate center
+              // is stackY + 48 after rotateX foreshortening; text is ~14px tall).
+              return (
+                <div key={layer.label} className="absolute left-0 flex items-center gap-1.5" style={{ bottom: stackY(i) + 41 }}>
+                  <span
+                    className="w-3 h-px flex-shrink-0"
+                    style={{ backgroundColor: isActive ? color : 'rgba(255,255,255,0.18)', transition: 'background-color 300ms' }}
+                  />
+                  <span
+                    className="text-[11px] font-semibold whitespace-nowrap"
+                    style={{
+                      color: isActive ? '#fff' : isPast ? hexToRgba(color, 0.95) : '#7a7982',
+                      textShadow: isActive ? `0 0 10px ${hexToRgba(color, 0.8)}` : 'none',
                       transition: 'color 300ms',
                     }}
                   >
@@ -161,7 +246,12 @@ export function LayerStack3D({ color }: { color: string }) {
           )}
         </div>
       </div>
-      <style>{`@keyframes advIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }`}</style>
+      <style>{`
+        @keyframes advIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+        @keyframes advRing { from { opacity: 0.9; transform: scale(0.85); } to { opacity: 0; transform: scale(1.18); } }
+        @keyframes advDotFire { 0% { transform: scale(0.6); opacity: 0.4; } 55% { transform: scale(1.55); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes advOrbPulse { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.35); } }
+      `}</style>
     </div>
   )
 }
