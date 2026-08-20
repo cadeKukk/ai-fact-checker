@@ -122,6 +122,8 @@ export interface AILessonSection {
   content: string
   visual?: AILessonVisual
   bullets?: string[]
+  /** Tappable citations (papers, docs) shown at the bottom of the section card. */
+  sources?: Source[]
 }
 
 export interface AILesson {

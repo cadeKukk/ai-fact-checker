@@ -14,6 +14,15 @@ export const advancedLessons: AILesson[] = [
       {
         content:
           "In the fundamentals course you learned that models read tokens and predict the next one. This lesson opens the box: nearly every model in this app — GPT, Claude, Gemini, Kimi, DeepSeek — is a transformer, an architecture introduced in the 2017 paper 'Attention Is All You Need.' Understanding its three moving parts explains many model behaviors that otherwise seem mysterious.",
+        sources: [
+          {
+            id: 'src-lesson-attention',
+            title: 'Attention Is All You Need (Vaswani et al., 2017)',
+            url: 'https://arxiv.org/abs/1706.03762',
+            type: 'researchPaper',
+            dateAccessed: '2026-08-20',
+          },
+        ],
       },
       {
         heading: 'The Assembly Line',
