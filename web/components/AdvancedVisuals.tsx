@@ -62,10 +62,13 @@ const OUTPUT_PROBS = [
   { token: 'moon', p: 1 },
 ]
 
-// Geometry for the side-view stack: plate i sits GAP px above the previous one.
+// Geometry for the isometric stack: plate i sits GAP px above the previous one.
 const STACK_BASE = 14 // px from container bottom to the first plate
-const STACK_GAP = 42 // px between plate centers
+const STACK_GAP = 46 // px between plate centers
 const stackY = (i: number) => STACK_BASE + i * STACK_GAP
+// Isometric tilt shared by every plate: tip back, then rotate in-plane so the
+// plates read as 3D diamonds. Labels and the orb stay OUTSIDE this transform.
+const PLATE_TILT = 'rotateX(58deg) rotateZ(-30deg)'
 
 export function LayerStack3D({ color }: { color: string }) {
   const [active, setActive] = useState(-1) // -1 idle, 0..n-1 climbing, n done
@@ -84,9 +87,9 @@ export function LayerStack3D({ color }: { color: string }) {
   }
 
   // The glowing signal orb: waits under the stack, stops at each plate's visual
-  // center (stackY + ~40 after foreshortening), and exits above the top plate.
-  const orbBottom = active < 0 ? -2 : done ? stackY(n - 1) + 78 : stackY(active) + 40
-  const spineHeight = stackY(n - 1) + 52
+  // center (stackY + ~38 after foreshortening), and exits above the top plate.
+  const orbBottom = active < 0 ? -2 : done ? stackY(n - 1) + 88 : stackY(active) + 38
+  const spineHeight = stackY(n - 1) + 58
 
   return (
     <div>
@@ -104,7 +107,7 @@ export function LayerStack3D({ color }: { color: string }) {
       <div className="flex flex-col sm:flex-row items-center gap-3">
         {/* Side-view 3D stack with readable labels beside each plate */}
         <div className="flex items-end flex-shrink-0 select-none">
-          <div className="relative w-[190px]" style={{ height: spineHeight + 62, perspective: '700px' }}>
+          <div className="relative w-[200px]" style={{ height: spineHeight + 66, perspective: '800px' }}>
             {/* Signal spine behind the plates */}
             <div
               className="absolute left-1/2 -translate-x-1/2 w-[3px] rounded-full"
@@ -126,13 +129,17 @@ export function LayerStack3D({ color }: { color: string }) {
               const isActive = active === i
               const isPast = active > i
               return (
-                <div key={layer.label} className="absolute left-1/2" style={{ bottom: stackY(i), transform: 'translateX(-50%)' }}>
+                <div
+                  key={layer.label}
+                  className="absolute left-1/2"
+                  style={{ bottom: stackY(i), transform: 'translateX(-50%)', zIndex: isActive ? 10 : i }}
+                >
                   <div
                     className="relative rounded-[14px] border"
                     style={{
-                      width: 168,
-                      height: 96,
-                      transform: `rotateX(64deg)${isActive ? ' translateZ(16px)' : ''}`,
+                      width: 150,
+                      height: 92,
+                      transform: `${PLATE_TILT}${isActive ? ' translateZ(22px)' : ''}`,
                       transformStyle: 'preserve-3d',
                       backgroundColor: isActive ? hexToRgba(color, 0.30) : isPast ? hexToRgba(color, 0.12) : 'rgba(255,255,255,0.04)',
                       borderColor: isActive ? color : isPast ? hexToRgba(color, 0.5) : 'rgba(255,255,255,0.14)',
@@ -177,6 +184,7 @@ export function LayerStack3D({ color }: { color: string }) {
               className="absolute left-1/2 w-[15px] h-[15px] rounded-full pointer-events-none"
               style={{
                 bottom: orbBottom,
+                zIndex: 20,
                 transform: 'translateX(-50%)',
                 backgroundColor: active < 0 ? hexToRgba(color, 0.5) : '#fff',
                 boxShadow: active < 0 ? 'none' : `0 0 14px 3px ${hexToRgba(color, 0.9)}`,
@@ -188,14 +196,14 @@ export function LayerStack3D({ color }: { color: string }) {
           </div>
 
           {/* Horizontal labels beside each plate — never rotated, always readable */}
-          <div className="relative w-[112px]" style={{ height: spineHeight + 62 }}>
+          <div className="relative w-[112px]" style={{ height: spineHeight + 66 }}>
             {STACK_LAYERS.map((layer, i) => {
               const isActive = active === i
               const isPast = active > i
-              // +41 centers the label on the plate's visual midline (plate center
-              // is stackY + 48 after rotateX foreshortening; text is ~14px tall).
+              // +39 centers the label on the plate's visual midline (plate center
+              // is stackY + 46 after the tilt foreshortening; text is ~14px tall).
               return (
-                <div key={layer.label} className="absolute left-0 flex items-center gap-1.5" style={{ bottom: stackY(i) + 41 }}>
+                <div key={layer.label} className="absolute left-0 flex items-center gap-1.5" style={{ bottom: stackY(i) + 39 }}>
                   <span
                     className="w-3 h-px flex-shrink-0"
                     style={{ backgroundColor: isActive ? color : 'rgba(255,255,255,0.18)', transition: 'background-color 300ms' }}
