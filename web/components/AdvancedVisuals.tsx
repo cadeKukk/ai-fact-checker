@@ -47,13 +47,13 @@ function ActionButton({ onClick, color, children }: { onClick: () => void; color
 // MARK: - 1. Transformer layer stack (3D forward pass)
 
 const STACK_LAYERS = [
-  { label: 'Tokenize', short: 'text → tokens' },
-  { label: 'Embedding', short: 'tokens → vectors' },
-  { label: 'Layer 1', short: 'attention + FFN' },
-  { label: 'Layer 2', short: 'attention + FFN' },
-  { label: '⋮  × 40-100', short: 'more layers' },
-  { label: 'Final layer', short: 'attention + FFN' },
-  { label: 'Output', short: 'next-token probabilities' },
+  { label: 'Tokenize', short: 'split text into tokens' },
+  { label: 'Embedding', short: 'turn tokens into vectors' },
+  { label: 'Transformer layer 1', short: 'attention + FFN refine meaning' },
+  { label: 'Transformer layer 2', short: 'same block, runs again' },
+  { label: '⋮ ×40–100 more layers', short: 'identical blocks, stacked' },
+  { label: 'Final transformer layer', short: 'last refinement pass' },
+  { label: 'Output', short: 'score every possible next token' },
 ]
 
 const OUTPUT_PROBS = [
@@ -182,27 +182,38 @@ export function LayerStack3D({ color }: { color: string }) {
           </div>
 
           {/* Horizontal labels beside each plate — never rotated, always readable */}
-          <div className="relative w-[112px]" style={{ height: spineHeight + 66 }}>
+          <div className="relative w-[176px]" style={{ height: spineHeight + 66 }}>
             {STACK_LAYERS.map((layer, i) => {
               const isActive = active === i
               const isPast = active > i
-              // +39 centers the label on the plate's visual midline (plate center
-              // is stackY + 46 after the tilt foreshortening; text is ~14px tall).
+              // +33 centers the two-line label on the plate's visual midline
+              // (plate center is stackY + 46 after the tilt foreshortening).
               return (
-                <div key={layer.label} className="absolute left-0 flex items-center gap-1.5" style={{ bottom: stackY(i) + 39 }}>
+                <div key={layer.label} className="absolute left-0 flex items-center gap-1.5" style={{ bottom: stackY(i) + 33 }}>
                   <span
                     className="w-3 h-px flex-shrink-0"
                     style={{ backgroundColor: isActive ? color : 'rgba(255,255,255,0.18)', transition: 'background-color 300ms' }}
                   />
-                  <span
-                    className="text-[11px] font-semibold whitespace-nowrap"
-                    style={{
-                      color: isActive ? '#fff' : isPast ? hexToRgba(color, 0.95) : '#7a7982',
-                      textShadow: isActive ? `0 0 10px ${hexToRgba(color, 0.8)}` : 'none',
-                      transition: 'color 300ms',
-                    }}
-                  >
-                    {layer.label}
+                  <span className="flex flex-col leading-tight">
+                    <span
+                      className="text-[11px] font-semibold whitespace-nowrap"
+                      style={{
+                        color: isActive ? '#fff' : isPast ? hexToRgba(color, 0.95) : '#8d8c95',
+                        textShadow: isActive ? `0 0 10px ${hexToRgba(color, 0.8)}` : 'none',
+                        transition: 'color 300ms',
+                      }}
+                    >
+                      {layer.label}
+                    </span>
+                    <span
+                      className="text-[9.5px] whitespace-nowrap"
+                      style={{
+                        color: isActive ? hexToRgba(color, 0.95) : '#5f5e66',
+                        transition: 'color 300ms',
+                      }}
+                    >
+                      {layer.short}
+                    </span>
                   </span>
                 </div>
               )
