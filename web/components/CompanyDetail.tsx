@@ -19,6 +19,7 @@ import {
   Music,
   Clapperboard,
   Cpu,
+  History,
   LockOpen,
   AlignLeft,
   Image,
@@ -132,6 +133,12 @@ function ModelCard({
             Open Source
           </span>
         )}
+        {model.legacy && (
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-amber-400/10 text-amber-400">
+            <History size={12} />
+            {model.releaseDate.slice(0, 4)}
+          </span>
+        )}
       </div>
       <TermHighlightedText
         text={model.description}
@@ -203,6 +210,13 @@ export default function CompanyDetail({ company, onSelectModel, onBack }: Compan
     if (filter === 'proprietary') return company.models.filter((m) => !m.isOpenSource)
     return company.models
   }, [company.models, filter])
+
+  const currentModels = useMemo(() => filteredModels.filter((m) => !m.legacy), [filteredModels])
+  // Oldest first so the section reads as a timeline of how the lineup evolved.
+  const legacyModels = useMemo(
+    () => filteredModels.filter((m) => m.legacy).sort((a, b) => a.releaseDate.localeCompare(b.releaseDate)),
+    [filteredModels]
+  )
 
   const openCount = company.models.filter((m) => m.isOpenSource).length
   const proprietaryCount = company.models.length - openCount
@@ -296,7 +310,7 @@ export default function CompanyDetail({ company, onSelectModel, onBack }: Compan
             <h2 className="text-sm font-semibold uppercase tracking-wider text-[#8a8990]">Models</h2>
           </div>
           <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
-            {filteredModels.map((model) => (
+            {currentModels.map((model) => (
               <ModelCard
                 key={model.id}
                 model={model}
@@ -311,6 +325,31 @@ export default function CompanyDetail({ company, onSelectModel, onBack }: Compan
             <p className="text-center text-sm text-[#8a8990] py-8">No models match this filter.</p>
           )}
         </div>
+
+        {/* Earlier models: a timeline of how the lineup evolved */}
+        {legacyModels.length > 0 && (
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <History size={18} className="text-[#8a8990]" />
+              <h2 className="text-sm font-semibold uppercase tracking-wider text-[#8a8990]">Earlier Models</h2>
+            </div>
+            <p className="text-xs text-[#5f5e66] mb-4">
+              Retired or superseded — shown oldest first so you can trace how {company.shortName}&apos;s models evolved.
+            </p>
+            <div className="space-y-3 lg:grid lg:grid-cols-2 lg:gap-4 lg:space-y-0">
+              {legacyModels.map((model) => (
+                <ModelCard
+                  key={model.id}
+                  model={model}
+                  accentColor={company.accentColor}
+                  onClick={() => onSelectModel(model, company.accentColor)}
+                  onTermTap={showTerm}
+                  onModelTap={showModel}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Company Sources */}
         {company.sources.length > 0 && (

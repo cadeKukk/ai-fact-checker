@@ -239,6 +239,11 @@ export default function ModelDetail({ model, accentColor, onBack }: ModelDetailP
                 Open Source
               </span>
             )}
+            {model.legacy && (
+              <span className="px-2 py-0.5 rounded-md text-xs font-medium bg-amber-400/10 text-amber-400">
+                Legacy · {model.releaseDate.slice(0, 4)}
+              </span>
+            )}
           </div>
           <TermHighlightedText
             text={model.description}

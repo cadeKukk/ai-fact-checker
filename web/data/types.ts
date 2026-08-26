@@ -75,6 +75,9 @@ export interface AIModel {
   /** Defaults to 'language' when omitted. Non-language systems are excluded
    * from token-based comparisons in the Compare tab. */
   category?: ModelCategory
+  /** Historical models kept for context on how the lineup evolved. Shown in a
+   * separate "Earlier models" timeline on the company page. */
+  legacy?: boolean
 }
 
 export interface AICompany {
