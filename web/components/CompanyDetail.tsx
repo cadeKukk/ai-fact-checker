@@ -27,6 +27,13 @@ import {
   Video,
   Code2,
   FileText,
+  Laptop,
+  Terminal,
+  Cog,
+  SquareCode,
+  Blocks,
+  Hand,
+  GitBranch,
 } from 'lucide-react'
 import type { AICompany, AIModel, AITerm, Modality } from '@/data/types'
 import { sourceTypeLabel, sourceTypeColor, modelCategoryLabel, modelCategoryColor } from '@/data/types'
@@ -48,6 +55,13 @@ const LOGO_ICON_MAP: Record<string, React.ComponentType<{ className?: string; si
   Music,
   Clapperboard,
   Globe,
+  Laptop,
+  Terminal,
+  Cog,
+  SquareCode,
+  Blocks,
+  Hand,
+  GitBranch,
 }
 
 const MODALITY_ICON_MAP: Record<Modality, React.ComponentType<{ className?: string; size?: number }>> = {

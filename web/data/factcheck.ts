@@ -626,4 +626,41 @@ export const factCheckQAs: FactCheckQA[] = [
     sources: [SRC_POLITICAL_BIAS, SRC_SYCOPHANCY],
     tags: ['political', 'politics', 'bias', 'biased', 'left', 'right', 'liberal', 'conservative', 'woke', 'neutral', 'lean', 'censorship', 'opinion'],
   },
+  {
+    id: 'fq-61',
+    question: "What is an AI agent harness — and is it the same as the model?",
+    answer: "No. The model is the brain (Claude, GPT, Llama). The harness is the software around it that turns token prediction into action: a loop, tools (files, terminal, browser, MCP), memory files, and permissions. Claude Code, Cursor, Codex, Aider, Cline, and OpenHands are harnesses. That split explains a lot of confusion. 'Claude got better at coding' in 2025–2026 was often Claude Code (harness) plus a newer Claude (model). Cursor is not a secret Cursor LLM — it is an editor that can drive Claude, GPT, Gemini, or a local server. A chat window with no harness cannot edit your repo, no matter how smart the model is. Practical test: if you can swap the model and keep the same workflow, you were using a harness.",
+    confidence: 'high',
+    relatedModels: ["Claude Code", "Cursor Agent", "Codex", "Aider", "Cline"],
+    sources: [
+      { id: 'src-cc-docs', title: 'Claude Code documentation', url: 'https://code.claude.com/docs', type: 'officialDocs', dateAccessed: '2026-08-30' },
+      { id: 'src-cursor', title: 'Cursor — Official Site', url: 'https://cursor.com', type: 'officialDocs', dateAccessed: '2026-08-30' },
+    ],
+    tags: ['harness', 'agent harness', 'cursor', 'claude code', 'codex', 'aider', 'cline', 'openhands', 'agent', 'ide', 'tools'],
+  },
+  {
+    id: 'fq-62',
+    question: "What's the difference between LM Studio, Ollama, and llama.cpp?",
+    answer: "Layers, not rivals. llama.cpp is the engine: it loads a GGUF, runs the math on CPU/GPU/Metal, and invented the file format the others download. Ollama is a daemon plus a one-line CLI (`ollama run`) and an API on port 11434 — the Docker of local models, what most harnesses mean by 'supports local.' LM Studio is a desktop app: search Hugging Face, see if a quant fits in RAM, chat, and serve an API on port 1234; on Apple Silicon it can use MLX and is often the fastest easy option. None of them is a model. Quality is whichever weights you loaded. None of them is a harness either — chat in LM Studio cannot edit your repo until you point Cursor, Cline, or Aider at that local API. Rule of thumb: GUI → LM Studio; scripts and harnesses → Ollama; flags and benchmarks → llama.cpp.",
+    confidence: 'high',
+    relatedModels: ["LM Studio", "Ollama", "llama.cpp"],
+    sources: [
+      { id: 'src-lms', title: 'LM Studio', url: 'https://lmstudio.ai', type: 'officialDocs', dateAccessed: '2026-08-30' },
+      { id: 'src-ollama-fc', title: 'Ollama', url: 'https://ollama.com', type: 'officialDocs', dateAccessed: '2026-08-30' },
+      { id: 'src-lcpp', title: 'llama.cpp — GitHub', url: 'https://github.com/ggml-org/llama.cpp', type: 'github', dateAccessed: '2026-08-30' },
+    ],
+    tags: ['lm studio', 'ollama', 'llama.cpp', 'llamacpp', 'gguf', 'local', 'runtime', 'gui', 'difference', 'vs'],
+  },
+  {
+    id: 'fq-63',
+    question: "Can I use a local model inside Cursor or another coding agent?",
+    answer: "Often yes — if the harness is model-agnostic. Cline, Aider, and Cursor can point at an OpenAI-compatible URL, which is exactly what LM Studio (port 1234) and Ollama (port 11434) speak. Then the loop (read file, edit, run tests) runs on your machine and the weights never leave it. Two honest limits. First, Claude Code and OpenAI Codex are locked to their labs' models — local is not a toggle there. Second, a 7–8B local model in a harness is not Claude Opus: tool-calling and long-repo reasoning drop off, so keep approvals on and expect more steering. The stack is three boxes: weights (a GGUF) + runtime (LM Studio or Ollama) + harness (Cursor/Cline/Aider). Installing only the first two gives you private chat. Adding the third gives you a private coding agent.",
+    confidence: 'high',
+    relatedModels: ["Cursor Agent", "Cline", "Aider", "LM Studio", "Ollama"],
+    sources: [
+      { id: 'src-cursor-fc', title: 'Cursor — Official Site', url: 'https://cursor.com', type: 'officialDocs', dateAccessed: '2026-08-30' },
+      { id: 'src-aider', title: 'Aider', url: 'https://aider.chat', type: 'officialDocs', dateAccessed: '2026-08-30' },
+    ],
+    tags: ['local', 'cursor', 'cline', 'aider', 'lm studio', 'ollama', 'coding agent', 'offline', 'private', 'byok'],
+  },
 ]

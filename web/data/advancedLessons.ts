@@ -202,9 +202,14 @@ export const advancedLessons: AILesson[] = [
         content:
           "The working rules that came out of the 2026 incidents are simple: least privilege (give the agent only the access the task needs), approval gates on destructive actions, sandboxes on by default, and backups that the agent cannot touch. 'Fully autonomous' is a risk setting, not a feature tier.",
       },
+      {
+        heading: 'The Harness Is Not the Model',
+        content:
+          "People say 'I use Claude' or 'I use Cursor' as if those were the same kind of thing. They are not. The model is the brain (Claude, GPT, Llama). The harness is the body: Cursor, Claude Code, Codex, Aider, Cline, OpenHands. The harness decides which files get sent, which tools exist, whether you approve each step, and whether the loop can run while you sleep. That is why the Companies tab now lists harnesses as their own category — and why you can often swap brains inside one body (Cline + a local Ollama model) or use the same brain in different bodies (Claude in a chat window vs Claude Code in your repo).",
+      },
     ],
     keyTakeaway:
-      'Agents are models in an act-observe loop, standardized by MCP. Their power and their risk come from the same place — every tool they can use is a tool they can misuse, so scope access like it matters.',
+      'Agents are models in an act-observe loop, standardized by MCP. The harness is the loop and the tools; the model is only the brain. Their power and their risk come from the same place — every tool they can use is a tool they can misuse, so scope access like it matters.',
   },
   {
     category: 'Evaluation',
@@ -341,12 +346,22 @@ export const advancedLessons: AILesson[] = [
         },
       },
       {
+        heading: 'The Three-Layer Local Stack',
+        content:
+          "Once the weights are on disk you still need software to run them. These are not competing models — they are layers:",
+        bullets: [
+          'Engine: llama.cpp does the math and defined the GGUF file format. Use it when you want every flag.',
+          'Runtime: Ollama is the one-line CLI plus an API (port 11434). LM Studio is the desktop GUI plus an API (port 1234) and a RAM estimator. Both sit on llama.cpp (LM Studio can also use Apple MLX).',
+          'Harness (optional): point Cursor, Cline, or Aider at that local API and the model can edit files. Chat inside LM Studio alone cannot.',
+        ],
+      },
+      {
         heading: 'Why This Half Matters',
         content:
           "Open weights are the reason API prices keep falling (closed labs price against free alternatives), the reason researchers can study how models work internally, and the reason AI capability can't be fully centralized or fully recalled. They're also the reason watermarking and content-policy enforcement have limits — an open model runs wherever someone has the hardware. Every debate about AI control eventually runs through this fact.",
       },
     ],
     keyTakeaway:
-      "Open weights changed AI's power structure: frontier-adjacent capability now runs on hardware you can own, under licenses you should actually read. Quantization is what makes it fit.",
+      "Open weights changed AI's power structure: frontier-adjacent capability now runs on hardware you can own, under licenses you should actually read. Quantization is what makes it fit. The runtime (LM Studio, Ollama) loads the file; a harness is what lets that local model act.",
   },
 ]

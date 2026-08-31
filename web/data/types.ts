@@ -14,7 +14,7 @@ export type TermCategory = 'fundamentals' | 'architecture' | 'training' | 'infer
  * chat/LLM models; the rest cover the wider ML ecosystem — image and video
  * generators, speech/music systems, scientific models, perception models, and
  * AI-powered products built on top of foundation models. */
-export type ModelCategory = 'language' | 'image' | 'video' | 'audio' | 'science' | 'perception' | 'product'
+export type ModelCategory = 'language' | 'image' | 'video' | 'audio' | 'science' | 'perception' | 'product' | 'harness' | 'runtime'
 
 export interface Source {
   id: string
@@ -188,8 +188,10 @@ export const modalityIcon: Record<Modality, string> = {
 export const modelCategoryLabel: Record<ModelCategory, string> = {
   language: 'Language Model', image: 'Image Generation', video: 'Video Generation',
   audio: 'Audio & Music', science: 'Scientific AI', perception: 'Computer Vision', product: 'AI Product',
+  harness: 'Agent Harness', runtime: 'Local Runtime',
 }
 export const modelCategoryColor: Record<ModelCategory, string> = {
   language: '#3b82f6', image: '#22c55e', video: '#ec4899',
   audio: '#f97316', science: '#2dd4bf', perception: '#a855f7', product: '#eab308',
+  harness: '#22c55e', runtime: '#60a5fa',
 }

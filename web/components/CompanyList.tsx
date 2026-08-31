@@ -21,9 +21,18 @@ import {
   Music,
   Clapperboard,
   Globe,
+  Laptop,
+  Terminal,
+  Cog,
+  SquareCode,
+  Blocks,
+  Hand,
+  GitBranch,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { companies, getAllModels, getAllSources } from '@/data/companies'
+import type { ModelCategory } from '@/data/types'
+import { modelCategoryLabel } from '@/data/types'
 import { ModelPopup, TermPopup, BenchmarkPopup, TermHighlightedText, useTermPopup } from './TermHighlight'
 
 const LOGO_ICON_MAP: Record<string, React.ComponentType<{ className?: string; size?: number }>> = {
@@ -42,6 +51,13 @@ const LOGO_ICON_MAP: Record<string, React.ComponentType<{ className?: string; si
   Music,
   Clapperboard,
   Globe,
+  Laptop,
+  Terminal,
+  Cog,
+  SquareCode,
+  Blocks,
+  Hand,
+  GitBranch,
 }
 
 function hexToRgba(hex: string, alpha: number): string {
@@ -54,11 +70,17 @@ function hexToRgba(hex: string, alpha: number): string {
 }
 
 type SortMode = 'default' | 'companies' | 'models' | 'sources'
+type CategoryFilter = 'all' | ModelCategory
+
+const CATEGORY_FILTERS: CategoryFilter[] = [
+  'all', 'language', 'harness', 'runtime', 'image', 'video', 'audio', 'science', 'perception', 'product',
+]
 
 export default function CompanyList() {
   const router = useRouter()
   const [searchText, setSearchText] = useState('')
   const [sortMode, setSortMode] = useState<SortMode>('default')
+  const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all')
   const {
     activeTerm,
     activeModel,
@@ -99,6 +121,16 @@ export default function CompanyList() {
       })
     }
 
+    if (categoryFilter !== 'all') {
+      result = result.filter((company) =>
+        company.models.some((model) =>
+          categoryFilter === 'language'
+            ? !model.category || model.category === 'language'
+            : model.category === categoryFilter
+        )
+      )
+    }
+
     switch (sortMode) {
       case 'companies':
         result.sort((a, b) => a.name.localeCompare(b.name))
@@ -112,7 +144,7 @@ export default function CompanyList() {
     }
 
     return result
-  }, [searchText, sortMode, sourceCountByCompany])
+  }, [searchText, sortMode, sourceCountByCompany, categoryFilter])
 
   function toggleSort(mode: SortMode) {
     setSortMode((prev) => (prev === mode ? 'default' : mode))
@@ -127,7 +159,25 @@ export default function CompanyList() {
             Directory
           </p>
           <h1 className="text-4xl font-semibold tracking-tight text-[#f5f5f5] leading-tight">Companies</h1>
-          <p className="text-sm text-[#8a8990] mt-1.5">Who builds today&apos;s AI, and what they&apos;ve shipped</p>
+          <p className="text-sm text-[#8a8990] mt-1.5">Who builds today&apos;s AI — models, harnesses, and the tools that run them</p>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {CATEGORY_FILTERS.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setCategoryFilter(cat)}
+              className="px-3 py-1.5 rounded-[10px] border text-xs font-medium transition-all"
+              style={
+                categoryFilter === cat
+                  ? { backgroundColor: '#7065f0', color: '#fff', borderColor: '#7065f0' }
+                  : { backgroundColor: '#161618', color: '#b3b2b8', borderColor: 'rgba(255,255,255,0.14)' }
+              }
+            >
+              {cat === 'all' ? 'All' : modelCategoryLabel[cat].replace(' Model', '').replace(' Generation', '')}
+            </button>
+          ))}
         </div>
 
         {/* Sort pills */}
