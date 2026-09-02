@@ -30,6 +30,8 @@ export interface Capability {
   description: string
   rating: CapabilityRating
   isVerified: boolean
+  /** Evidence for the feature claim; the rating remains an editorial judgment. */
+  sources?: Source[]
 }
 
 export interface Myth {
@@ -64,6 +66,12 @@ export interface AIModel {
   name: string
   version: string
   releaseDate: string
+  /** False when the historical catalog date has not been established by sources. */
+  releaseDateVerified?: boolean
+  verification?: {
+    checkedAt: string
+    notes: string[]
+  }
   description: string
   specs: ModelSpecs
   capabilities: Capability[]
@@ -87,6 +95,8 @@ export interface AICompany {
   description: string
   foundedYear: number
   headquarters: string
+  /** Avoid presenting unverified founding/headquarters metadata as established. */
+  metadataVerified?: boolean
   website: string
   logoIcon: string
   accentColor: string

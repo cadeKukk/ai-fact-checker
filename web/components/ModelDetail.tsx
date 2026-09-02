@@ -1,5 +1,8 @@
 'use client'
 
+import SourceLinks from './SourceLinks'
+import CatalogEvidence from './CatalogEvidence'
+
 import { useState } from 'react'
 import {
   ArrowLeft,
@@ -255,8 +258,9 @@ export default function ModelDetail({ model, accentColor, onBack }: ModelDetailP
           />
           <div className="flex items-center gap-2 text-[#8a8990] text-sm">
             <Calendar size={16} />
-            <span>{formatDateAbbrev(model.releaseDate)}</span>
+            <span>{model.releaseDateVerified === false ? 'Release date unverified' : formatDateAbbrev(model.releaseDate)}</span>
           </div>
+          <CatalogEvidence model={model} />
         </header>
 
         {/* Tab content */}
@@ -567,7 +571,7 @@ function CapabilitiesTab({
                   {verifiedCount}
                 </div>
                 <div className="text-[10px] font-bold tracking-[1px] text-[#8a8990] uppercase mt-1.5">
-                  Independently Verified
+                  Source-backed Claims
                 </div>
               </div>
             )}
@@ -716,7 +720,7 @@ function CapabilitiesTab({
       <section className="pt-2">
         <p className="text-[11px] text-[#7a797f] leading-relaxed">
           <span className="font-semibold text-[#8a8990]">Rating scale</span> · Ratings reflect
-          relative strength compared to peers in the same model class. <span style={{ color: '#22c55e' }}>Verified</span> indicates the
+          editorial assessments of relative strength compared to peers in the same model class; they are not measured performance results. <span style={{ color: '#22c55e' }}>Verified</span> indicates the
           claim is backed by a published benchmark or first-party documentation.
         </p>
       </section>
@@ -778,6 +782,8 @@ function CapabilityCard({
         onBenchmarkTap={onBenchmarkTap}
         excludeModelId={modelId}
       />
+
+      <SourceLinks sources={capability.sources} />
 
       {benchmarks.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-3">

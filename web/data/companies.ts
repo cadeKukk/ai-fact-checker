@@ -1,5 +1,8 @@
+import { catalogSources as S } from './catalogSources'
 import { AICompany, AIModel, Source } from './types'
 import { factCheckQAs } from './factcheck'
+import { lessons } from './lessons'
+import { advancedLessons } from './advancedLessons'
 
 export const companies: AICompany[] = [
   {
@@ -521,45 +524,76 @@ export const companies: AICompany[] = [
       {
         id: 'codexcli',
         name: 'Codex',
-        version: 'Codex CLI / Cloud',
+        version: 'CLI / Cloud',
         releaseDate: '2025-04-16',
-        isOpenSource: false,
+        isOpenSource: true,
         category: 'harness',
-        description: "OpenAI's coding agent harness — the layer that wraps a GPT model and lets it actually do work in a repo: read files, run commands, edit code, and open pull requests. Codex is not a new architecture; it is a product around the model. The distinction matters: the same GPT-5.6 that chats in a browser becomes a software agent once the harness gives it a terminal, a sandbox, and a loop. Codex ships as a CLI, a ChatGPT cloud agent, and an IDE integration, and it is model-locked to OpenAI — unlike Cursor or Cline, you cannot point it at a local Ollama model.",
+        description:
+          'Codex is a coding agent product that can inspect a repository, edit files and run development tools. Its CLI supports interactive work and scripted runs; cloud tasks use a separate hosted environment. The CLI can also use local models through Ollama or LM Studio with --oss. Open-source status here refers to the CLI, not the hosted service or IDE extension.',
         specs: {
-          parameterCount: 'Uses GPT models (not a model itself)',
+          parameterCount: 'Depends on the selected model',
           contextWindow: 0,
-          architecture: 'Agent harness: think → tool call → observe loop over a git repo',
+          architecture: 'Coding agent with tools, permissions and an execution loop',
           inputModalities: ['Text', 'Code'],
           outputModalities: ['Text', 'Code'],
-          averageLatency: 'Minutes to hours per task, depending on autonomy',
-          resourceRequirements: 'Cloud or local CLI; needs an OpenAI account',
+          averageLatency: 'Not benchmarked; depends on model, hardware and task',
+          resourceRequirements: 'CLI on a supported OS, or hosted cloud; provider and sign-in depend on configuration',
         },
         capabilities: [
-          { id: 'codex-c1', name: 'Repo-Native Agency', description: 'Reads, edits, and tests a real codebase rather than pasting snippets into chat', rating: 'excellent', isVerified: true },
-          { id: 'codex-c2', name: 'Cloud Agents', description: 'Can run a task in the background and come back with a pull request', rating: 'excellent', isVerified: true },
-          { id: 'codex-c3', name: 'Pair-Programmer Mode', description: 'CLI stays close to the keyboard — you direct each step, it executes well', rating: 'good', isVerified: true },
+          {
+            id: 'codex-c1',
+            name: 'Repository Tools',
+            description: 'Inspects files, edits code and runs local development tools.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.codexCli],
+          },
+          {
+            id: 'codex-c2',
+            name: 'Cloud Tasks',
+            description: 'Delegates coding tasks to a hosted environment with changes available for review.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.codexCloud],
+          },
+          {
+            id: 'codex-c3',
+            name: 'Local Providers',
+            description: 'CLI --oss supports choosing Ollama or LM Studio as a local provider.',
+            rating: 'good',
+            isVerified: true,
+            sources: [S.codexLocal],
+          },
         ],
         limitations: [
-          'Locked to OpenAI models — no Claude, no local weights, no Ollama',
-          'A harness cannot fix a weak model: bad reasoning still produces confident wrong diffs',
-          'Cloud agents need repo access and spend tokens fast on long loops',
+          'Local-provider support in the CLI does not imply the cloud product accepts the same providers.',
+          'Tool access depends on permissions and environment; generated changes still need review.',
         ],
         myths: [
           {
             id: 'codex-m1',
-            claim: 'Codex is a different, smarter model than GPT',
-            verdict: 'busted',
-            explanation: 'The 2021 Codex was a fine-tuned GPT-3 for code. The 2025–2026 Codex product is a harness around current GPT models. Capability comes from the underlying model plus tools — swapping the harness does not invent a new brain.',
+            claim: 'Codex always refers to one specific AI model',
+            verdict: 'misleading',
+            explanation:
+              'Codex names a coding agent product, while names such as GPT-5-Codex identify underlying models. Distinguish the product and its tools from the model selected for a task.',
+            source: S.codexModel,
           },
         ],
         pricing: {
           freeTierAvailable: true,
-          notes: 'Bundled with ChatGPT/API usage. Cloud agent runs consume the same tokens as chat, often more per task',
+          notes:
+            'Plan-based access and usage limits apply; API-key use follows API pricing. Local inference has separate hardware costs.',
         },
-        sources: [
-          { id: 'codex-openai', title: 'OpenAI Codex', url: 'https://openai.com/codex/', type: 'officialDocs', dateAccessed: '2026-08-30' },
-        ],
+        sources: [S.codexCli, S.codexLocal, S.codexCloud, S.codexOpen, S.codexPricing, S.codexModel],
+        releaseDateVerified: false,
+        verification: {
+          checkedAt: '2026-09-02',
+          notes: [
+            'Capability scores are editorial assessments, not measured performance comparisons. Context limits and modalities depend on the selected model and configuration; the badges list common text/code use.',
+            'The original catalog release date has not been established by the cited sources; it is not shown as a verified launch date.',
+            'The CLI is open source. The IDE extension and Codex cloud are not open source.',
+          ],
+        },
       },
       {
         id: 'gpt2',
@@ -1117,42 +1151,89 @@ export const companies: AICompany[] = [
         releaseDate: '2025-02-24',
         isOpenSource: false,
         category: 'harness',
-        description: "Anthropic's terminal-first agent harness — the software that turns Claude into something that can live in your project for hours. Claude Code is not a model: Opus, Sonnet, and Fable are the models; Claude Code is the loop, the tool belt (files, shell, browser, MCP), the permission system, and the memory (CLAUDE.md). In 2026 it added subagents and experimental agent teams so one session can delegate work. It is the clearest example of why 'which model?' and 'which harness?' are different questions: the same Claude in claude.ai cannot edit your repo; the same Claude in Claude Code can.",
+        description:
+          'Claude Code is Anthropic’s coding agent for working with project files and development tools. It combines Claude models with a tool loop, configurable permissions, MCP integrations and project instructions in CLAUDE.md. Subagents can work in separate contexts; coordinated agent teams are documented as experimental.',
         specs: {
-          parameterCount: 'Uses Claude models (not a model itself)',
+          parameterCount: 'Depends on the selected model',
           contextWindow: 0,
-          architecture: 'Terminal agent harness with MCP, subagents, and project memory',
-          inputModalities: ['Text', 'Code', 'Image'],
+          architecture: 'Coding agent with MCP, subagents and project memory',
+          inputModalities: ['Text', 'Code'],
           outputModalities: ['Text', 'Code'],
-          averageLatency: 'Interactive to multi-hour unattended runs',
-          resourceRequirements: 'Local CLI; Anthropic API or Claude subscription',
+          averageLatency: 'Not benchmarked; depends on model, hardware and task',
+          resourceRequirements: 'CLI or desktop; supported Claude access through subscription or provider',
         },
         capabilities: [
-          { id: 'cc-c1', name: 'Autonomous Loops', description: 'Designed to keep going on a goal — plan, edit, test, recover — with less babysitting than a pair-programmer tool', rating: 'excellent', isVerified: true },
-          { id: 'cc-c2', name: 'MCP + Permissions', description: 'Standard tool protocol plus approval gates and sandboxes — the harness is where safety actually lives', rating: 'excellent', isVerified: true },
-          { id: 'cc-c3', name: 'Subagents & Teams', description: 'Can spawn specialist workers with their own context so one chat does not drown in search logs', rating: 'good', isVerified: true },
-          { id: 'cc-c4', name: 'Project Memory', description: 'CLAUDE.md and session memory carry conventions across runs — the harness remembers what the model cannot', rating: 'good', isVerified: true },
+          {
+            id: 'cc-c1',
+            name: 'Coding Tools',
+            description: 'Works with project files and commands through an agent workflow.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.claudeOverview],
+          },
+          {
+            id: 'cc-c2',
+            name: 'MCP and Permissions',
+            description: 'Connects MCP tools and applies configurable permission rules.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.claudeMcp, S.claudePermissions],
+          },
+          {
+            id: 'cc-c3',
+            name: 'Subagents and Teams',
+            description: 'Subagents use separate contexts; agent teams remain experimental.',
+            rating: 'good',
+            isVerified: true,
+            sources: [S.claudeAgents, S.claudeTeams],
+          },
+          {
+            id: 'cc-c4',
+            name: 'Project Memory',
+            description: 'CLAUDE.md instructions and automatic memory can carry project context between sessions.',
+            rating: 'good',
+            isVerified: true,
+            sources: [S.claudeMemory],
+          },
         ],
         limitations: [
-          'Locked to Anthropic models — you cannot drop in Llama or a local GGUF',
-          'Long sessions burn context and money; multi-hour runs can lose the plot',
-          'Permissions you disable (sandbox, approvals) are the difference between a helper and a $HOME-deletion incident',
+          'The supported model configuration documents Claude models and supported providers, not a general local GGUF runtime.',
+          'Agent teams have documented coordination and session-resumption limitations.',
+          'Permissions and sandbox settings affect tool access; no setting guarantees correct changes.',
         ],
         myths: [
           {
             id: 'cc-m1',
-            claim: 'Claude Code is just ChatGPT-style Claude in a terminal',
+            claim: 'Claude Code is only a chat window in a terminal',
             verdict: 'misleading',
-            explanation: 'The model is the same family, but the product is the harness: tools, a loop, MCP, and permissions. A chat window predicts tokens. Claude Code acts on your files. Most of what people call "Claude got better at coding" in 2025–2026 was harness work, not a new architecture.',
+            explanation:
+              'Claude Code adds project tools, permissions and an execution workflow around Claude models. The documentation does not establish how much coding improvement comes from the harness versus newer models.',
+            source: S.claudeOverview,
           },
         ],
         pricing: {
           freeTierAvailable: false,
-          notes: 'Usage billed through Claude / API subscriptions. Agent loops cost more than chat because they generate many hidden tool-call tokens',
+          notes: 'Subscription or provider billing applies. Costs depend on model, context and repeated tool interactions.',
         },
         sources: [
-          { id: 'cc-docs', title: 'Claude Code documentation', url: 'https://code.claude.com/docs', type: 'officialDocs', dateAccessed: '2026-08-30' },
+          S.claudeOverview,
+          S.claudeModels,
+          S.claudePermissions,
+          S.claudeMcp,
+          S.claudeAgents,
+          S.claudeTeams,
+          S.claudeMemory,
+          S.claudeCosts,
         ],
+        releaseDateVerified: false,
+        verification: {
+          checkedAt: '2026-09-02',
+          notes: [
+            'Capability scores are editorial assessments, not measured performance comparisons. Context limits and modalities depend on the selected model and configuration; the badges list common text/code use.',
+            'The original catalog release date has not been established by the cited sources; it is not shown as a verified launch date.',
+            'The cited feature docs do not establish a 2026 launch date for subagents. Claims that most coding gains came from harness work were removed.',
+          ],
+        },
       },
       {
         id: 'claude1',
@@ -3722,15 +3803,14 @@ export const companies: AICompany[] = [
     id: 'cursor',
     name: 'Cursor',
     shortName: 'Cursor',
-    description: 'Cursor (Anysphere) is an AI-native code editor built on VS Code. Its product is the harness: inline edits, a chat that can see your repo, and an agent that plans and applies multi-file changes. You pick the model — Claude, GPT, Gemini, or a custom/local endpoint — which is the point. Cursor is how a lot of people first meet the difference between "a model" and "a model that can touch my project."',
+    description:
+      'Cursor Agent combines a selected model with instructions and tools for searching a codebase, editing files and running commands. Cursor documents supported hosted providers and bring-your-own API keys, with requests routed through its backend. These docs do not establish general support for an arbitrary localhost model server in Agent.',
     foundedYear: 2022,
     headquarters: 'San Francisco, California',
     website: 'https://cursor.com',
     logoIcon: 'SquareCode',
     accentColor: '#f5f5f5',
-    sources: [
-      { id: 'cursor-site', title: 'Cursor — Official Site', url: 'https://cursor.com', type: 'officialDocs', dateAccessed: '2026-08-30' },
-    ],
+    sources: [S.cursorAgent, S.cursorKeys, S.cursorSearch, S.cursorPricing],
     models: [
       {
         id: 'cursoragent',
@@ -3739,57 +3819,88 @@ export const companies: AICompany[] = [
         releaseDate: '2023-03-14',
         isOpenSource: false,
         category: 'harness',
-        description: "The agent inside the Cursor editor. It indexes your codebase, proposes diffs you can accept or reject, and can run a longer agent loop for multi-file work. It is model-agnostic: the same harness can drive Claude, GPT, Gemini, or a local server that speaks the OpenAI API (including LM Studio and Ollama). That swap-the-brain design is why Cursor is the usual answer to 'I want a coding agent but I don't want to be locked to one lab.'",
+        description:
+          'Cursor Agent combines a selected model with instructions and tools for searching a codebase, editing files and running commands. Cursor documents supported hosted providers and bring-your-own API keys, with requests routed through its backend. These docs do not establish general support for an arbitrary localhost model server in Agent.',
         specs: {
-          parameterCount: 'Bring-your-own model',
+          parameterCount: 'Depends on the selected model',
           contextWindow: 0,
-          architecture: 'IDE harness: repo index + apply-diff + optional agent loop',
-          inputModalities: ['Text', 'Code', 'Image'],
+          architecture: 'IDE agent with codebase search, editing and terminal tools',
+          inputModalities: ['Text', 'Code'],
           outputModalities: ['Text', 'Code'],
-          averageLatency: 'Seconds for inline edits; minutes for agent tasks',
-          resourceRequirements: 'Desktop editor (macOS, Windows, Linux); cloud models or a local API',
+          averageLatency: 'Not benchmarked; depends on model, hardware and task',
+          resourceRequirements: 'Cursor editor and a supported model provider',
         },
         capabilities: [
-          { id: 'cur-c1', name: 'IDE-Native Flow', description: 'Lives where you already write code — tab-complete, inline edit, agent sidebar', rating: 'exceptional', isVerified: true },
-          { id: 'cur-c2', name: 'Model Choice', description: 'Swap frontier APIs or point at a local OpenAI-compatible server', rating: 'excellent', isVerified: true },
-          { id: 'cur-c3', name: 'Repo Awareness', description: 'Indexes the project so the model is not guessing from a pasted snippet', rating: 'excellent', isVerified: true },
+          {
+            id: 'cur-c1',
+            name: 'Agent Tools',
+            description: 'Searches files, edits code and executes terminal commands.',
+            rating: 'exceptional',
+            isVerified: true,
+            sources: [S.cursorAgent],
+          },
+          {
+            id: 'cur-c2',
+            name: 'Supported Providers',
+            description: 'Offers provider API-key configuration; feature support differs from Cursor’s built-in models.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.cursorKeys],
+          },
+          {
+            id: 'cur-c3',
+            name: 'Codebase Search',
+            description: 'Uses codebase search to retrieve relevant code.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.cursorSearch],
+          },
         ],
         limitations: [
-          'Closed source — you cannot audit the harness the way you can Aider or Cline',
-          'Agent quality still tracks whichever model you selected that day',
-          'Local models in the harness are only as useful as their tool-calling and context size',
+          'Bring-your-own API keys do not make requests local: Cursor documents backend routing.',
+          'Custom API keys have feature restrictions; they do not replace Tab’s built-in models.',
         ],
         myths: [
           {
             id: 'cur-m1',
-            claim: 'Cursor is its own AI model',
-            verdict: 'busted',
-            explanation: 'Cursor trains some ranking/apply models, but the "brain" you talk to is almost always Claude, GPT, or Gemini. Cursor is the editor and the harness. If it feels smarter than ChatGPT on your repo, that is usually context and tools, not a secret Cursor LLM.',
+            claim: 'Cursor Agent is itself a single AI model',
+            verdict: 'misleading',
+            explanation:
+              'Agent orchestrates a selected model, instructions and tools. Cursor also has built-in models, so calling it only a wrapper around other labs’ models would be too broad.',
+            source: S.cursorAgent,
           },
         ],
         pricing: {
           freeTierAvailable: true,
-          notes: 'Hobby tier is limited; Pro/Business add usage pools. You can also bring your own API keys',
+          notes:
+            'A limited Hobby plan and paid plans are available. Provider charges apply when using your own API keys.',
         },
-        sources: [
-          { id: 'cursor-site', title: 'Cursor — Official Site', url: 'https://cursor.com', type: 'officialDocs', dateAccessed: '2026-08-30' },
-        ],
+        sources: [S.cursorAgent, S.cursorKeys, S.cursorSearch, S.cursorPricing],
+        releaseDateVerified: false,
+        verification: {
+          checkedAt: '2026-09-02',
+          notes: [
+            'Capability scores are editorial assessments, not measured performance comparisons. Context limits and modalities depend on the selected model and configuration; the badges list common text/code use.',
+            'The original catalog release date has not been established by the cited sources; it is not shown as a verified launch date.',
+            'Uncertain: arbitrary local Ollama/LM Studio endpoints in Cursor Agent are not established by the cited API-key documentation. No offline or local-only guarantee is made.',
+          ],
+        },
       },
     ],
+    metadataVerified: false,
   },
   {
     id: 'aider',
     name: 'Aider',
     shortName: 'Aider',
-    description: 'Aider is an open-source, git-native coding harness you run in the terminal. It edits files, commits as it goes, and is aggressively model-agnostic — including local models via Ollama. It is the clearest "pair programmer" harness: you stay at the keyboard, it executes one well-scoped change at a time, and the git history is the audit trail.',
+    description:
+      'Aider is an open-source terminal coding assistant with repository maps and git integration. It edits files with a selected model and normally commits its changes; automatic commits can be disabled. Aider documents both hosted models and local Ollama connections. Its workflow also supports editor integration and testing.',
     foundedYear: 2023,
     headquarters: 'Open source (distributed)',
     website: 'https://aider.chat',
     logoIcon: 'GitBranch',
     accentColor: '#34d399',
-    sources: [
-      { id: 'aider-site', title: 'Aider — AI pair programming in your terminal', url: 'https://aider.chat', type: 'officialDocs', dateAccessed: '2026-08-30' },
-    ],
+    sources: [S.aiderRepo, S.aiderGit, S.aiderMap, S.aiderLocal],
     models: [
       {
         id: 'aidercli',
@@ -3798,51 +3909,79 @@ export const companies: AICompany[] = [
         releaseDate: '2023-05-01',
         isOpenSource: true,
         category: 'harness',
-        description: "A terminal pair-programmer that maps every change onto git. You point Aider at a repo and a model (Claude, GPT, DeepSeek, or a local Ollama tag); it proposes edits, runs tests if you ask, and commits. It is famous for token discipline — it sends the model only the files that matter — which is why people running local or budget APIs often prefer it to a full IDE agent. Aider is the opposite of 'leave it overnight': it assumes you are supervising.",
+        description:
+          'Aider is an open-source terminal coding assistant with repository maps and git integration. It edits files with a selected model and normally commits its changes; automatic commits can be disabled. Aider documents both hosted models and local Ollama connections. Its workflow also supports editor integration and testing.',
         specs: {
-          parameterCount: 'Bring-your-own model',
+          parameterCount: 'Depends on the selected model',
           contextWindow: 0,
-          architecture: 'Git-native terminal harness with repo maps and conventional commits',
+          architecture: 'Terminal coding assistant with repository maps and configurable git commits',
           inputModalities: ['Text', 'Code'],
           outputModalities: ['Text', 'Code'],
-          averageLatency: 'Seconds to a few minutes per edit cycle',
-          resourceRequirements: 'Python CLI; any OpenAI-compatible API or Ollama',
+          averageLatency: 'Not benchmarked; depends on model, hardware and task',
+          resourceRequirements: 'Python-based CLI with a supported model provider or Ollama',
         },
         capabilities: [
-          { id: 'aider-c1', name: 'Git as Memory', description: 'Every accepted change is a commit — easy to review, revert, or bisect', rating: 'exceptional', isVerified: true },
-          { id: 'aider-c2', name: 'Token Efficiency', description: 'Sends a map of the repo plus only the files in play, which keeps local and cheap models usable', rating: 'excellent', isVerified: true },
-          { id: 'aider-c3', name: 'Local Models', description: 'First-class Ollama support — a complete private coding loop on one machine', rating: 'excellent', isVerified: true },
+          {
+            id: 'aider-c1',
+            name: 'Git Integration',
+            description: 'Automatically commits its edits by default; auto-commits and git integration can be disabled.',
+            rating: 'exceptional',
+            isVerified: true,
+            sources: [S.aiderGit],
+          },
+          {
+            id: 'aider-c2',
+            name: 'Repository Map',
+            description: 'Builds a compact map of relevant repository symbols to supply code context.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.aiderMap],
+          },
+          {
+            id: 'aider-c3',
+            name: 'Local Models',
+            description: 'Documents an Ollama provider and context-window configuration.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.aiderLocal],
+          },
         ],
         limitations: [
-          'No GUI — if you want inline diffs in an editor, use Cursor or Cline',
-          'Not built for unattended multi-hour autonomy the way Claude Code is',
-          'Weak models still write weak diffs; the harness cannot invent competence',
+          'A local connection requires a running model server and enough context for the task.',
+          'Commit behavior is configurable; a commit is not evidence that a change is correct.',
         ],
         myths: [],
         pricing: {
           freeTierAvailable: true,
-          notes: 'Apache-licensed and free. You pay only the model API — or $0 with a local Ollama model',
+          notes:
+            'Apache-2.0 software. Hosted model usage is billed separately; local inference still uses hardware and electricity.',
         },
-        sources: [
-          { id: 'aider-site', title: 'Aider — AI pair programming in your terminal', url: 'https://aider.chat', type: 'officialDocs', dateAccessed: '2026-08-30' },
-          { id: 'aider-gh', title: 'Aider GitHub', url: 'https://github.com/Aider-AI/aider', type: 'github', dateAccessed: '2026-08-30' },
-        ],
+        sources: [S.aiderRepo, S.aiderGit, S.aiderMap, S.aiderLocal],
+        releaseDateVerified: false,
+        verification: {
+          checkedAt: '2026-09-02',
+          notes: [
+            'Capability scores are editorial assessments, not measured performance comparisons. Context limits and modalities depend on the selected model and configuration; the badges list common text/code use.',
+            'The original catalog release date has not been established by the cited sources; it is not shown as a verified launch date.',
+            'Claims of superior token efficiency or unsuitability for unattended work were removed; no controlled comparison was supplied.',
+          ],
+        },
       },
     ],
+    metadataVerified: false,
   },
   {
     id: 'cline',
     name: 'Cline',
     shortName: 'Cline',
-    description: 'Cline is an open-source coding agent that lives in VS Code and JetBrains. You bring your own keys (or Ollama). Each step can require approval, which makes it the "I want to watch the agent work" harness — useful for learning how tool loops actually behave, and for keeping a local model on a short leash.',
+    description:
+      'Cline is an Apache-2.0 coding agent with VS Code and JetBrains integrations and a CLI. It can edit files, run commands and use tools with human approval. Local-model documentation includes Ollama and LM Studio. Auto-approve settings change which actions require confirmation.',
     foundedYear: 2024,
     headquarters: 'Open source (distributed)',
     website: 'https://cline.bot',
     logoIcon: 'Blocks',
     accentColor: '#fb923c',
-    sources: [
-      { id: 'cline-site', title: 'Cline — Autonomous coding agent', url: 'https://cline.bot', type: 'officialDocs', dateAccessed: '2026-08-30' },
-    ],
+    sources: [S.clineRepo, S.clineLocal, S.clineApproval],
     models: [
       {
         id: 'clineagent',
@@ -3851,161 +3990,250 @@ export const companies: AICompany[] = [
         releaseDate: '2024-07-06',
         isOpenSource: true,
         category: 'harness',
-        description: "An Apache-licensed agent extension: plan a change, show the diff, wait for you to approve, then run the terminal. Cline popularized the 'bring your own key' IDE agent and talks to local runtimes (Ollama, LM Studio) as easily as to Claude. Forks and siblings (including Roo Code) share the same idea: the editor is yours, the model is interchangeable, the harness is open so you can see what it sends.",
+        description:
+          'Cline is an Apache-2.0 coding agent with VS Code and JetBrains integrations and a CLI. It can edit files, run commands and use tools with human approval. Local-model documentation includes Ollama and LM Studio. Auto-approve settings change which actions require confirmation.',
         specs: {
-          parameterCount: 'Bring-your-own model',
+          parameterCount: 'Depends on the selected model',
           contextWindow: 0,
-          architecture: 'IDE agent harness with per-step approval and MCP',
-          inputModalities: ['Text', 'Code', 'Image'],
+          architecture: 'IDE and CLI agent with configurable tool approvals',
+          inputModalities: ['Text', 'Code'],
           outputModalities: ['Text', 'Code'],
-          averageLatency: 'Interactive; you gate each tool call if you want',
-          resourceRequirements: 'VS Code or JetBrains; API key or local OpenAI-compatible server',
+          averageLatency: 'Not benchmarked; depends on model, hardware and task',
+          resourceRequirements: 'Supported IDE or CLI; hosted provider or compatible local runtime',
         },
         capabilities: [
-          { id: 'cline-c1', name: 'Stepwise Approval', description: 'You see every command and edit before it lands — the safest default for local or untrusted models', rating: 'excellent', isVerified: true },
-          { id: 'cline-c2', name: 'BYOK + Local', description: 'Any OpenAI-compatible endpoint, including LM Studio on port 1234 and Ollama on 11434', rating: 'excellent', isVerified: true },
-          { id: 'cline-c3', name: 'Open Harness', description: 'You can read the prompts and tool protocol — unlike closed IDE agents', rating: 'excellent', isVerified: true },
+          {
+            id: 'cline-c1',
+            name: 'Configurable Approval',
+            description: 'Approval prompts can be retained or relaxed through auto-approve settings.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.clineApproval],
+          },
+          {
+            id: 'cline-c2',
+            name: 'Local Providers',
+            description: 'Documents Ollama on port 11434 and LM Studio on port 1234 by default.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.clineLocal],
+          },
+          {
+            id: 'cline-c3',
+            name: 'Open Source',
+            description: 'The repository publishes the coding agent under Apache-2.0.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.clineRepo],
+          },
         ],
         limitations: [
-          'Approval-heavy by design — slower than an autonomous loop if you confirm everything',
-          'Quality still equals the model you wired up',
-          'The extension ecosystem forks quickly; pick a maintained build',
+          'Auto-approve and YOLO mode reduce confirmation requirements; approval is not guaranteed for every action.',
+          'Local hardware, context size and model tool-use reliability constrain results.',
         ],
         myths: [],
         pricing: {
           freeTierAvailable: true,
-          notes: 'Free and open source. You pay provider usage, or nothing if the model is local',
+          notes: 'Open-source software; hosted provider usage and local compute costs are separate.',
         },
-        sources: [
-          { id: 'cline-gh', title: 'Cline GitHub', url: 'https://github.com/cline/cline', type: 'github', dateAccessed: '2026-08-30' },
-        ],
+        sources: [S.clineRepo, S.clineLocal, S.clineApproval],
+        releaseDateVerified: false,
+        verification: {
+          checkedAt: '2026-09-02',
+          notes: [
+            'Capability scores are editorial assessments, not measured performance comparisons. Context limits and modalities depend on the selected model and configuration; the badges list common text/code use.',
+            'The original catalog release date has not been established by the cited sources; it is not shown as a verified launch date.',
+            'The earlier “safest default” comparison was not supported by a comparative safety evaluation.',
+          ],
+        },
       },
     ],
+    metadataVerified: false,
   },
   {
     id: 'openhands',
     name: 'OpenHands',
     shortName: 'OpenHands',
-    description: 'OpenHands (formerly OpenDevin) is an open-source platform for running coding agents — locally or as a team system. It sits a layer above a single chat: parallel agents, scheduled jobs, and a sandbox. You can point it at Claude, GPT, Gemini, or a local model. Think "harness as infrastructure," not "harness as a sidebar."',
+    description:
+      'OpenHands provides an open-source agent platform and Agent Canvas for running coding agents and automations. Canvas supports local, remote and cloud backends and can connect other compatible agents. Local-model setup is documented. Runtime isolation depends on the chosen backend; running locally is not automatically a sandbox.',
     foundedYear: 2024,
     headquarters: 'Open source (distributed)',
     website: 'https://www.openhands.dev',
     logoIcon: 'Hand',
     accentColor: '#818cf8',
-    sources: [
-      { id: 'oh-site', title: 'OpenHands', url: 'https://www.openhands.dev', type: 'officialDocs', dateAccessed: '2026-08-30' },
-    ],
+    sources: [S.handsRepo, S.handsLocal, S.handsAutomation],
     models: [
       {
         id: 'openhandsagent',
         name: 'OpenHands',
-        version: 'Software Agent SDK',
+        version: 'Agent platform / Canvas',
         releaseDate: '2024-03-13',
         isOpenSource: true,
         category: 'harness',
-        description: "A MIT-licensed agent runtime that can operate a whole development environment: editor, terminal, browser, in a sandbox. OpenHands is what you reach for when the job is 'run agents on a schedule across repos,' not 'help me rename this function.' It can also wrap other terminal agents. Local via Ollama is supported; most serious use still wants a strong hosted model because long autonomous loops punish weak reasoning.",
+        description:
+          'OpenHands provides an open-source agent platform and Agent Canvas for running coding agents and automations. Canvas supports local, remote and cloud backends and can connect other compatible agents. Local-model setup is documented. Runtime isolation depends on the chosen backend; running locally is not automatically a sandbox.',
         specs: {
-          parameterCount: 'Bring-your-own model',
+          parameterCount: 'Depends on the selected model',
           contextWindow: 0,
-          architecture: 'Sandboxed software-agent platform (parallel + scheduled loops)',
+          architecture: 'Agent platform with configurable execution backends and automations',
           inputModalities: ['Text', 'Code'],
           outputModalities: ['Text', 'Code'],
-          averageLatency: 'Task-length: minutes to hours',
-          resourceRequirements: 'Docker or cloud; API keys or Ollama',
+          averageLatency: 'Not benchmarked; depends on model, hardware and task',
+          resourceRequirements: 'Local backend, container or hosted service; model provider configured separately',
         },
         capabilities: [
-          { id: 'oh-c1', name: 'Outer-Loop Work', description: 'Parallel agents and scheduled automations — beyond one interactive session', rating: 'excellent', isVerified: true },
-          { id: 'oh-c2', name: 'Sandbox', description: 'The agent gets a computer, not your whole laptop, by default', rating: 'excellent', isVerified: true },
-          { id: 'oh-c3', name: 'Model Agnostic', description: 'Hosted APIs or local runtimes; MIT-licensed core can stay on-prem', rating: 'excellent', isVerified: true },
+          {
+            id: 'oh-c1',
+            name: 'Automations',
+            description: 'Agent Canvas documents pre-built automations for recurring engineering work.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.handsAutomation],
+          },
+          {
+            id: 'oh-c2',
+            name: 'Execution Backends',
+            description: 'Supports local execution and connections to container, remote or cloud backends.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.handsRepo],
+          },
+          {
+            id: 'oh-c3',
+            name: 'Local Models',
+            description: 'Documents local model-server setup and warns about unreliable tool use with some models.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.handsLocal],
+          },
         ],
         limitations: [
-          'Heavier setup than installing an editor extension',
-          'Autonomy without a strong model just automates mistakes',
-          'You still have to scope secrets, deploy keys, and production access',
+          'Isolation and access depend on backend configuration; the local backend can operate on your machine.',
+          'Some local models struggle with tool calls even with a large context window.',
         ],
         myths: [],
         pricing: {
           freeTierAvailable: true,
-          notes: 'MIT core is free to self-host. Cloud tier is usage-based',
+          notes:
+            'The cited repository is MIT-licensed. Self-hosting requires compute; hosted service terms are separate.',
         },
-        sources: [
-          { id: 'oh-gh', title: 'OpenHands GitHub', url: 'https://github.com/All-Hands-AI/OpenHands', type: 'github', dateAccessed: '2026-08-30' },
-        ],
+        sources: [S.handsRepo, S.handsLocal, S.handsAutomation],
+        releaseDateVerified: false,
+        verification: {
+          checkedAt: '2026-09-02',
+          notes: [
+            'Capability scores are editorial assessments, not measured performance comparisons. Context limits and modalities depend on the selected model and configuration; the badges list common text/code use.',
+            'The original catalog release date has not been established by the cited sources; it is not shown as a verified launch date.',
+            'The repository now describes Agent Canvas; its product scope differs from the original “Software Agent SDK” entry. No current cloud price is asserted.',
+          ],
+        },
       },
     ],
+    metadataVerified: false,
   },
   {
     id: 'lmstudio',
     name: 'LM Studio',
     shortName: 'LM Studio',
-    description: 'LM Studio is a desktop app for downloading and running local language models. Search Hugging Face, see whether a GGUF fits in your RAM, chat, and flip on a local OpenAI-compatible server (port 1234) so Cursor, Cline, or your own scripts can talk to a model that never leaves the machine. The app is free; the source is not.',
+    description:
+      'LM Studio loads supported local models through llama.cpp and, on Apple Silicon, MLX. It offers chat and OpenAI-compatible API endpoints, plus headless operation through llmster. LM Studio can also host MCP tools in chat, so calling it inference-only is inaccurate. Offline operation applies to downloaded models and local features, not every integration.',
     foundedYear: 2023,
     headquarters: 'Distributed (Element Labs)',
     website: 'https://lmstudio.ai',
     logoIcon: 'Laptop',
     accentColor: '#38bdf8',
-    sources: [
-      { id: 'lms-site', title: 'LM Studio', url: 'https://lmstudio.ai', type: 'officialDocs', dateAccessed: '2026-08-30' },
-    ],
+    sources: [S.lmOverview, S.lmApi, S.lmMcp, S.lmHeadless, S.lmOffline, S.lmTerms, S.lmPricing, S.lmCli],
     models: [
       {
         id: 'lmstudioapp',
         name: 'LM Studio',
-        version: 'Desktop + lms CLI',
+        version: 'Desktop / lms / llmster',
         releaseDate: '2023-09-01',
         isOpenSource: false,
         category: 'runtime',
-        description: "The GUI on-ramp to local AI. LM Studio wraps llama.cpp (and MLX on Apple Silicon): you pick a model and a quantization, it estimates RAM, you chat or serve an API. It does not train models and it is not a harness — it only runs inference. Pair it with a harness (Cursor, Cline, Aider) when you want the local model to edit files. On Macs, its MLX backend is often the fastest easy option.",
+        description:
+          'LM Studio loads supported local models through llama.cpp and, on Apple Silicon, MLX. It offers chat and OpenAI-compatible API endpoints, plus headless operation through llmster. LM Studio can also host MCP tools in chat, so calling it inference-only is inaccurate. Offline operation applies to downloaded models and local features, not every integration.',
         specs: {
-          parameterCount: 'Runs whatever GGUF / MLX model you load',
+          parameterCount: 'Depends on the loaded model',
           contextWindow: 0,
-          architecture: 'Desktop runtime over llama.cpp and Apple MLX',
-          inputModalities: ['Text'],
-          outputModalities: ['Text'],
-          averageLatency: 'Depends on model size and your GPU / unified memory',
-          resourceRequirements: 'macOS, Windows, Linux desktop; RAM must fit the quantized weights',
+          architecture: 'Local inference through llama.cpp or MLX, with desktop and headless interfaces',
+          inputModalities: ['Text', 'Code'],
+          outputModalities: ['Text', 'Code'],
+          averageLatency: 'Not benchmarked; depends on model, hardware and task',
+          resourceRequirements: 'Supported Mac, Windows or Linux system; memory for weights and context',
         },
         capabilities: [
-          { id: 'lms-c1', name: 'Visual Model Picker', description: 'Shows quantizations and a RAM estimate before you download — the feature newcomers actually need', rating: 'exceptional', isVerified: true },
-          { id: 'lms-c2', name: 'Local API', description: 'OpenAI-compatible server so any harness can treat your laptop like a provider', rating: 'excellent', isVerified: true },
-          { id: 'lms-c3', name: 'Apple Silicon', description: 'MLX backend is a common reason Mac users pick LM Studio over Ollama for raw speed', rating: 'excellent', isVerified: true },
+          {
+            id: 'lms-c1',
+            name: 'Model Management',
+            description: 'Downloads and runs supported local models through the desktop app.',
+            rating: 'exceptional',
+            isVerified: true,
+            sources: [S.lmOverview],
+          },
+          {
+            id: 'lms-c2',
+            name: 'Local API',
+            description: 'Exposes documented OpenAI-compatible endpoints for applications.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.lmApi],
+          },
+          {
+            id: 'lms-c3',
+            name: 'Apple Silicon',
+            description: 'Supports Apple’s MLX engine on Apple Silicon Macs.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.lmOverview],
+          },
         ],
         limitations: [
-          'Closed source — you cannot audit the app the way you can Ollama or llama.cpp',
-          'Desktop-first; awkward on a headless server',
-          'A runtime is not an agent: chat in LM Studio cannot edit your repo until a harness is attached',
+          'Model and API feature compatibility varies; not every model or OpenAI endpoint is supported.',
+          'MCP servers may access files, execute code or use the network.',
+          'The desktop app is proprietary; the lms CLI has a separate MIT license.',
         ],
         myths: [
           {
             id: 'lms-m1',
             claim: 'LM Studio is a model, like GPT or Llama',
             verdict: 'busted',
-            explanation: 'LM Studio is an app that loads other people\'s weights. The quality you get is the quality of the GGUF you picked. Installing LM Studio does not give you a frontier model unless you also download one that fits your machine.',
+            explanation:
+              'LM Studio is software for loading and using models. The loaded model and runtime configuration determine its inference behavior.',
+            source: S.lmOverview,
           },
         ],
         pricing: {
           freeTierAvailable: true,
-          notes: 'Free for personal and commercial use. Source is proprietary; the lms CLI repo is MIT',
+          notes:
+            'Local model use is available free. Paid features and plans have separate terms; the desktop app and model licenses are separate.',
         },
-        sources: [
-          { id: 'lms-site', title: 'LM Studio', url: 'https://lmstudio.ai', type: 'officialDocs', dateAccessed: '2026-08-30' },
-        ],
+        sources: [S.lmOverview, S.lmApi, S.lmMcp, S.lmHeadless, S.lmOffline, S.lmTerms, S.lmPricing, S.lmCli],
+        releaseDateVerified: false,
+        verification: {
+          checkedAt: '2026-09-02',
+          notes: [
+            'Capability scores are editorial assessments, not measured performance comparisons. Context limits and modalities depend on the selected model and configuration; the badges list common text/code use.',
+            'The original catalog release date has not been established by the cited sources; it is not shown as a verified launch date.',
+            'Unverified: MLX being faster than Ollama for a particular workload. No controlled same-model, same-hardware comparison is cited.',
+          ],
+        },
       },
     ],
+    metadataVerified: false,
   },
   {
     id: 'ollama',
     name: 'Ollama',
     shortName: 'Ollama',
-    description: 'Ollama is the default developer runtime for local LLMs: a background service, a one-line pull (`ollama run llama3.2`), and an API on port 11434. It is the Docker of local models — almost every harness that says "supports local" means "talks to Ollama." Under the hood it is llama.cpp with a library and a daemon.',
+    description:
+      'Ollama manages models and serves inference through a CLI and API. The local server binds to 127.0.0.1:11434 by default and implements parts of the OpenAI API. It supports local models and optional cloud features; local-only mode can disable the cloud features. Quantization depends on the selected model tag or import configuration.',
     foundedYear: 2023,
     headquarters: 'San Francisco Bay Area',
     website: 'https://ollama.com',
     logoIcon: 'Terminal',
     accentColor: '#d1d5db',
-    sources: [
-      { id: 'ollama-site', title: 'Ollama', url: 'https://ollama.com', type: 'officialDocs', dateAccessed: '2026-08-30' },
-    ],
+    sources: [S.ollamaRepo, S.ollamaApi, S.ollamaFaq, S.ollamaImport],
     models: [
       {
         id: 'ollamaruntime',
@@ -4014,57 +4242,88 @@ export const companies: AICompany[] = [
         releaseDate: '2023-07-01',
         isOpenSource: true,
         category: 'runtime',
-        description: "Install, `ollama run`, done. Ollama manages weights, defaults to a sensible 4-bit quantization, and keeps a local OpenAI-compatible API always on. Pair it with Open WebUI if you want a ChatGPT-style browser, or point Cursor / Aider / Cline at `http://localhost:11434`. It is the lowest-regret first local install for anyone comfortable with a terminal. It is not the fastest or most tunable — that is llama.cpp or LM Studio+MLX — and it is not a harness.",
+        description:
+          'Ollama manages models and serves inference through a CLI and API. The local server binds to 127.0.0.1:11434 by default and implements parts of the OpenAI API. It supports local models and optional cloud features; local-only mode can disable the cloud features. Quantization depends on the selected model tag or import configuration.',
         specs: {
-          parameterCount: 'Runs library or GGUF models you pull',
+          parameterCount: 'Depends on the loaded model',
           contextWindow: 0,
-          architecture: 'llama.cpp daemon with a model registry (Modelfiles)',
-          inputModalities: ['Text'],
-          outputModalities: ['Text'],
-          averageLatency: 'Single-user; not a high-concurrency server',
-          resourceRequirements: 'macOS, Windows, Linux; RAM must fit the pulled quant',
+          architecture: 'Model management, CLI and inference server',
+          inputModalities: ['Text', 'Code'],
+          outputModalities: ['Text', 'Code'],
+          averageLatency: 'Not benchmarked; depends on model, hardware and task',
+          resourceRequirements: 'Supported Mac, Windows or Linux system; memory for model and concurrent contexts',
         },
         capabilities: [
-          { id: 'ol-c1', name: 'One-Line Models', description: '`ollama run` plus a library tag is how most people first run Llama, Mistral, or DeepSeek locally', rating: 'exceptional', isVerified: true },
-          { id: 'ol-c2', name: 'App Glue', description: 'The de facto local endpoint for harnesses, scripts, and Open WebUI', rating: 'exceptional', isVerified: true },
-          { id: 'ol-c3', name: 'Sensible Defaults', description: 'Picks a 4-bit quant for you — the same sweet spot the advanced course slider explains', rating: 'excellent', isVerified: true },
+          {
+            id: 'ol-c1',
+            name: 'Model Commands',
+            description: 'Uses commands such as ollama run to start a selected model.',
+            rating: 'exceptional',
+            isVerified: true,
+            sources: [S.ollamaRepo],
+          },
+          {
+            id: 'ol-c2',
+            name: 'API Integration',
+            description: 'Supports documented OpenAI-compatible endpoints for clients.',
+            rating: 'exceptional',
+            isVerified: true,
+            sources: [S.ollamaApi],
+          },
+          {
+            id: 'ol-c3',
+            name: 'Model Import',
+            description: 'Imports supported model files and documents explicit quantization options.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.ollamaImport],
+          },
         ],
         limitations: [
-          'Abstractions hide flags you need for last-10% speed (layer offload, speculative decoding)',
-          'Built for one user, not a production multi-tenant API (that is vLLM)',
-          'Library tags can lag Hugging Face by days',
+          'OpenAI API compatibility is partial; check the required endpoint and feature.',
+          'Parallel requests and multiple loaded models require additional memory.',
+          'Cloud models and external tools do not inherit local-only privacy merely because the client is Ollama.',
         ],
         myths: [
           {
             id: 'ol-m1',
-            claim: 'Ollama, LM Studio, and llama.cpp are competing models',
+            claim: 'Ollama, LM Studio and llama.cpp are competing AI models',
             verdict: 'busted',
-            explanation: 'They are layers. llama.cpp is the engine. Ollama and LM Studio are products that run that engine (LM Studio can also use MLX). The model is the GGUF you loaded. Comparing "Ollama vs Llama 3" is a category error.',
+            explanation:
+              'They are software for running or serving models. Select the actual model separately; the software and model are different parts of the setup.',
+            source: S.ollamaRepo,
           },
         ],
         pricing: {
           freeTierAvailable: true,
-          notes: 'MIT-licensed and free. Optional Ollama cloud is a separate hosted product',
+          notes: 'Ollama’s repository is MIT-licensed. Local compute costs and optional hosted services are separate.',
         },
-        sources: [
-          { id: 'src-ollama', title: 'Ollama — GitHub', url: 'https://github.com/ollama/ollama', type: 'github', dateAccessed: '2026-08-30' },
-        ],
+        sources: [S.ollamaRepo, S.ollamaApi, S.ollamaFaq, S.ollamaImport],
+        releaseDateVerified: false,
+        verification: {
+          checkedAt: '2026-09-02',
+          notes: [
+            'Capability scores are editorial assessments, not measured performance comparisons. Context limits and modalities depend on the selected model and configuration; the badges list common text/code use.',
+            'The original catalog release date has not been established by the cited sources; it is not shown as a verified launch date.',
+            'The prior claims of universal 4-bit defaults, single-user-only serving and a runtime speed ranking were removed. These depend on configuration or were not established.',
+          ],
+        },
       },
     ],
+    metadataVerified: false,
   },
   {
     id: 'llamacpp',
     name: 'llama.cpp',
     shortName: 'llama.cpp',
-    description: 'llama.cpp is the inference engine that made local LLMs practical. Started days after the original LLaMA leak, it runs quantized GGUF models on CPU, NVIDIA, AMD, Apple Metal, even a Raspberry Pi. Ollama and LM Studio sit on top of it. If you need every flag, or you are measuring tokens per second for real, you drop to this layer.',
+    description:
+      'llama.cpp is a C/C++ inference project with GGUF model support and multiple hardware backends. It includes command-line tools and llama-server, which provides API serving and a web interface. Supported architectures and builds matter: a GGUF filename alone does not guarantee that a model can run.',
     foundedYear: 2023,
     headquarters: 'Open source (ggml)',
     website: 'https://github.com/ggml-org/llama.cpp',
     logoIcon: 'Cog',
     accentColor: '#a3e635',
-    sources: [
-      { id: 'lcpp-gh', title: 'llama.cpp — GitHub', url: 'https://github.com/ggml-org/llama.cpp', type: 'github', dateAccessed: '2026-08-30' },
-    ],
+    sources: [S.cppRepo, S.cppServer],
     models: [
       {
         id: 'llamacppruntime',
@@ -4073,36 +4332,65 @@ export const companies: AICompany[] = [
         releaseDate: '2023-03-10',
         isOpenSource: true,
         category: 'runtime',
-        description: "The engine, not the app. llama.cpp loads a GGUF, tokenizes, and runs the matrix math on whatever silicon you have. It invented the GGUF format that the rest of the local ecosystem downloads. There is no chat UI unless you run `llama-server` or put Open WebUI / LM Studio in front. Use it when Ollama's defaults get in the way, when you are on weird hardware, or when you want to know what '4-bit' actually means on disk.",
+        description:
+          'llama.cpp is a C/C++ inference project with GGUF model support and multiple hardware backends. It includes command-line tools and llama-server, which provides API serving and a web interface. Supported architectures and builds matter: a GGUF filename alone does not guarantee that a model can run.',
         specs: {
-          parameterCount: 'Any GGUF you point it at',
+          parameterCount: 'Depends on the loaded model',
           contextWindow: 0,
-          architecture: 'C/C++ inference engine (ggml) with Metal / CUDA / Vulkan / CPU backends',
-          inputModalities: ['Text'],
-          outputModalities: ['Text'],
-          averageLatency: 'Fastest of the three for a tuned single user; not vLLM-at-scale',
-          resourceRequirements: 'A compiled binary; from phones to servers',
+          architecture: 'C/C++ inference with CPU, Metal, CUDA, HIP and Vulkan backends',
+          inputModalities: ['Text', 'Code'],
+          outputModalities: ['Text', 'Code'],
+          averageLatency: 'Not benchmarked; depends on model, hardware and task',
+          resourceRequirements: 'A compatible build and supported model; memory for weights and context',
         },
         capabilities: [
-          { id: 'lcpp-c1', name: 'Runs Everywhere', description: 'CPU, CUDA, Metal, ROCm, Vulkan — the widest hardware reach in local AI', rating: 'exceptional', isVerified: true },
-          { id: 'lcpp-c2', name: 'GGUF Standard', description: 'Created the file format Hugging Face local models actually ship as', rating: 'exceptional', isVerified: true },
-          { id: 'lcpp-c3', name: 'Full Control', description: 'Context size, GPU layers, speculative decoding — what the GUIs hide', rating: 'excellent', isVerified: true },
+          {
+            id: 'lcpp-c1',
+            name: 'Hardware Backends',
+            description: 'Documents CPU, Metal, CUDA, HIP and Vulkan support, among other backends.',
+            rating: 'exceptional',
+            isVerified: true,
+            sources: [S.cppRepo],
+          },
+          {
+            id: 'lcpp-c2',
+            name: 'GGUF Models',
+            description: 'Runs supported models in GGUF format.',
+            rating: 'exceptional',
+            isVerified: true,
+            sources: [S.cppRepo],
+          },
+          {
+            id: 'lcpp-c3',
+            name: 'Server Controls',
+            description: 'Exposes context, GPU offload, speculative decoding and parallel-serving options.',
+            rating: 'excellent',
+            isVerified: true,
+            sources: [S.cppServer],
+          },
         ],
         limitations: [
-          'No model library or pretty installer — you bring the file and the flags',
-          'Easy to misconfigure (too much context, not enough offload) and blame the model',
-          'Still a single-node engine; many concurrent users want vLLM',
+          'Supported model architectures and hardware backends vary by build.',
+          'Context length, concurrent requests and GPU offload affect memory use and performance.',
         ],
         myths: [],
         pricing: {
           freeTierAvailable: true,
-          notes: 'MIT-licensed. Free forever',
+          notes: 'MIT-licensed software; hardware costs and model licenses remain separate.',
         },
-        sources: [
-          { id: 'lcpp-gh', title: 'llama.cpp — GitHub', url: 'https://github.com/ggml-org/llama.cpp', type: 'github', dateAccessed: '2026-08-30' },
-        ],
+        sources: [S.cppRepo, S.cppServer],
+        releaseDateVerified: false,
+        verification: {
+          checkedAt: '2026-09-02',
+          notes: [
+            'Capability scores are editorial assessments, not measured performance comparisons. Context limits and modalities depend on the selected model and configuration; the badges list common text/code use.',
+            'The original catalog release date has not been established by the cited sources; it is not shown as a verified launch date.',
+            'The prior “fastest of the three” and “widest hardware reach” rankings were not verified. No universal performance ranking is asserted.',
+          ],
+        },
       },
     ],
+    metadataVerified: false,
   },
 ]
 
@@ -4192,7 +4480,11 @@ export function getAllSources(): Source[] {
       }
     }
     for (const model of company.models) {
-      for (const source of model.sources) {
+      for (const source of [
+        ...model.sources,
+        ...model.capabilities.flatMap((capability) => capability.sources ?? []),
+        ...model.myths.flatMap((myth) => myth.source ? [myth.source] : []),
+      ]) {
         if (!seen.has(source.url)) {
           seen.add(source.url)
           sources.push(source)
@@ -4215,6 +4507,18 @@ export function getAllSources(): Source[] {
       if (!seen.has(source.url)) {
         seen.add(source.url)
         sources.push(source)
+      }
+    }
+  }
+
+  // Lesson citations use the same records and belong in the central index too.
+  for (const lesson of [...lessons, ...advancedLessons]) {
+    for (const section of lesson.sections) {
+      for (const source of section.sources ?? []) {
+        if (!seen.has(source.url)) {
+          seen.add(source.url)
+          sources.push(source)
+        }
       }
     }
   }

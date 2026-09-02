@@ -262,7 +262,7 @@ export default function CompanyDetail({ company, onSelectModel, onBack }: Compan
           <div>
             <h1 className="text-[28px] font-bold text-[#f5f5f5] mb-1">{company.name}</h1>
             <p className="text-[#8a8990] text-sm mb-3">
-              Founded {company.foundedYear} • {company.headquarters}
+              {company.metadataVerified === false ? 'Founding year and headquarters unverified' : `Founded ${company.foundedYear} • ${company.headquarters}`}
             </p>
             <TermHighlightedText text={company.description} className="block text-[#b3b2b8] text-sm leading-relaxed max-w-lg mx-auto mb-4" onTermTap={showTerm} onModelTap={showModel} />
             <a

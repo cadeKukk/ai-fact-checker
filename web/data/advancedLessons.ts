@@ -1,3 +1,4 @@
+import { catalogSources as S } from './catalogSources'
 import { AILesson } from './types'
 
 // "AI in Depth" — the advanced course, unlocked after completing AI Fundamentals.
@@ -205,7 +206,8 @@ export const advancedLessons: AILesson[] = [
       {
         heading: 'The Harness Is Not the Model',
         content:
-          "People say 'I use Claude' or 'I use Cursor' as if those were the same kind of thing. They are not. The model is the brain (Claude, GPT, Llama). The harness is the body: Cursor, Claude Code, Codex, Aider, Cline, OpenHands. The harness decides which files get sent, which tools exist, whether you approve each step, and whether the loop can run while you sleep. That is why the Companies tab now lists harnesses as their own category — and why you can often swap brains inside one body (Cline + a local Ollama model) or use the same brain in different bodies (Claude in a chat window vs Claude Code in your repo).",
+          'The model generates outputs; the harness supplies instructions, tools, context and permissions. Cursor Agent, Claude Code, Codex, Aider, Cline and OpenHands offer different workflows around models. Some explicitly support local providers, including Cline, Aider and Codex CLI. Check the provider documentation for your product: API compatibility alone does not guarantee that a local server will work.',
+        sources: [S.cursorAgent, S.claudeOverview, S.codexLocal, S.clineLocal, S.aiderLocal, S.handsRepo],
       },
     ],
     keyTakeaway:
@@ -350,10 +352,11 @@ export const advancedLessons: AILesson[] = [
         content:
           "Once the weights are on disk you still need software to run them. These are not competing models — they are layers:",
         bullets: [
-          'Engine: llama.cpp does the math and defined the GGUF file format. Use it when you want every flag.',
-          'Runtime: Ollama is the one-line CLI plus an API (port 11434). LM Studio is the desktop GUI plus an API (port 1234) and a RAM estimator. Both sit on llama.cpp (LM Studio can also use Apple MLX).',
-          'Harness (optional): point Cursor, Cline, or Aider at that local API and the model can edit files. Chat inside LM Studio alone cannot.',
+          'Engine: llama.cpp runs supported GGUF models on CPU and GPU backends and includes a configurable server.',
+          'Runtime: Ollama provides model management, a CLI and an API (default port 11434). LM Studio offers desktop and headless operation with an API (default port 1234), using llama.cpp or Apple MLX.',
+          'Tools: Cline, Aider and Codex CLI document local-model workflows. LM Studio can also use MCP tools in chat; tool access and network use depend on configuration.',
         ],
+        sources: [S.cppRepo, S.ollamaFaq, S.lmOverview, S.lmHeadless, S.clineLocal, S.aiderLocal, S.codexLocal, S.lmMcp],
       },
       {
         heading: 'Why This Half Matters',

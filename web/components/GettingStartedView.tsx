@@ -1,5 +1,6 @@
 'use client'
 
+import SourceLinks from './SourceLinks'
 import { useState, useCallback, useEffect, useRef } from 'react'
 import {
   X,
@@ -543,30 +544,7 @@ function SectionCard({ section, lessonColor, index, onTermTap, onModelTap, onBen
 
       {section.visual && <VisualContent visual={section.visual} lessonColor={lessonColor} pauseAnimations={pauseAnimations} />}
 
-      {section.sources && section.sources.length > 0 && (
-        <div className="mt-4 pt-3 border-t border-white/[0.06]">
-          <div className="flex items-center gap-1.5 mb-1.5">
-            <BookOpen size={12} className="text-[#8a8990]" />
-            <span className="text-[11px] uppercase tracking-wide text-[#8a8990] font-semibold">Sources</span>
-          </div>
-          <div className="flex flex-col gap-1">
-            {section.sources.map((source) => (
-              <a
-                key={source.id}
-                href={source.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-start gap-1.5 text-xs text-[#9a99a2] hover:text-[#e8e6ef] transition-colors"
-              >
-                <ExternalLink size={11} className="mt-0.5 shrink-0 opacity-50 group-hover:opacity-100" />
-                <span className="underline decoration-white/15 underline-offset-2 group-hover:decoration-white/40">
-                  {source.title}
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
+      <SourceLinks sources={section.sources} />
     </div>
   )
 }

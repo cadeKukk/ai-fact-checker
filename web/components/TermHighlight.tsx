@@ -1,5 +1,6 @@
 'use client'
 
+import CatalogEvidence from './CatalogEvidence'
 import { useState, useEffect, useMemo } from 'react'
 import {
   X,
@@ -410,13 +411,15 @@ export function ModelPopup({
             excludeModelId={model.id}
           />
 
+          <CatalogEvidence model={model} />
+
           <div className="flex flex-wrap gap-2 text-[11px] text-[#9d9ca3]">
             <span className="px-2 py-1 rounded-[10px] bg-[#151517]">
               Context:{' '}
-              {model.specs.contextWindow >= 1_000_000
+              {model.specs.contextWindow === 0 ? 'Depends on model / configuration' : model.specs.contextWindow >= 1_000_000
                 ? `${(model.specs.contextWindow / 1_000_000).toFixed(1)}M`
                 : model.specs.contextWindow.toLocaleString()}{' '}
-              tokens
+              {model.specs.contextWindow > 0 ? 'tokens' : ''}
             </span>
             {model.specs.trainingDataCutoff && (
               <span className="px-2 py-1 rounded-[10px] bg-[#151517]">Trained to {model.specs.trainingDataCutoff}</span>
