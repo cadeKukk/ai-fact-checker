@@ -1,275 +1,147 @@
-//
-//  Models.swift
-//  AI Fact Checker
-//
-//  Created by Cade Kukk on 2/5/26.
-//
-
 import Foundation
-import SwiftUI
 
-// MARK: - AI Company
-
-struct AICompany: Identifiable, Hashable {
-    let id = UUID()
-    let name: String
-    let shortName: String
-    let description: String
-    let foundedYear: Int
-    let headquarters: String
-    let website: String
-    let logoSystemImage: String
-    let accentColor: Color
-    let models: [AIModel]
-    let sources: [Source]
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+struct Catalog: Decodable {
+  let companies: [AICompany]
+  let sources: [Source]
+  let facts: [FactCheckQA]
+  let terms: [AITerm]
+  let lessons: [AILesson]
+  let advancedLessons: [AILesson]
+  let benchmarks: [Benchmark]
+  let playableTermIDs: [String]
+  let version: String
+  let lastUpdated: String
+  let dataSnapshot: String
+  var models: [AIModel] { companies.flatMap(\.models) }
+  func company(for model: AIModel) -> AICompany? {
+    companies.first { $0.models.contains { $0.id == model.id } }
+  }
+  static func load() throws -> Catalog {
+    guard let url = Bundle.main.url(forResource: "catalog", withExtension: "json") else {
+      throw CocoaError(.fileNoSuchFile)
     }
-    
-    static func == (lhs: AICompany, rhs: AICompany) -> Bool {
-        lhs.id == rhs.id
-    }
+    return try JSONDecoder().decode(Catalog.self, from: Data(contentsOf: url))
+  }
 }
-
-// MARK: - AI Model
-
-struct AIModel: Identifiable, Hashable {
-    let id = UUID()
-    let name: String
-    let version: String
-    let releaseDate: Date
-    let description: String
-    let specs: ModelSpecs
-    let capabilities: [Capability]
-    let limitations: [String]
-    let myths: [Myth]
-    let pricing: Pricing?
-    let sources: [Source]
-    let isOpenSource: Bool
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    static func == (lhs: AIModel, rhs: AIModel) -> Bool {
-        lhs.id == rhs.id
-    }
+struct AICompany: Decodable, Identifiable, Hashable {
+  let id, name, shortName, description: String
+  let foundedYear: Int
+  let headquarters: String
+  let metadataVerified: Bool?
+  let website, logoIcon, accentColor: String
+  let models: [AIModel]
+  let sources: [Source]
 }
-
-// MARK: - Model Specifications
-
-struct ModelSpecs: Hashable {
-    let parameterCount: String? // e.g., "175B", "70B", "Unknown"
-    let contextWindow: Int // in tokens
-    let trainingDataCutoff: Date?
-    let architecture: String
-    let inputModalities: [Modality]
-    let outputModalities: [Modality]
-    let averageLatency: String? // e.g., "~500ms"
-    let tokensPerSecond: String? // e.g., "~100 tokens/s"
-    let resourceRequirements: String? // For open source models
+struct AIModel: Decodable, Identifiable, Hashable {
+  let id, name, version, releaseDate: String
+  let releaseDateVerified: Bool?
+  let verification: Verification?
+  let description: String
+  let specs: ModelSpecs
+  let capabilities: [Capability]
+  let limitations: [String]
+  let myths: [Myth]
+  let pricing: Pricing?
+  let sources: [Source]
+  let isOpenSource: Bool
+  let category: String?
+  let legacy: Bool?
+  var isLanguage: Bool { category == nil || category == "language" }
+  var categoryName: String { Labels.categories[category ?? "language"] ?? "Language Model" }
 }
-
-enum Modality: String, CaseIterable, Hashable {
-    case text = "Text"
-    case image = "Image"
-    case audio = "Audio"
-    case video = "Video"
-    case code = "Code"
-    
-    var icon: String {
-        switch self {
-        case .text: return "text.alignleft"
-        case .image: return "photo"
-        case .audio: return "waveform"
-        case .video: return "video"
-        case .code: return "chevron.left.forwardslash.chevron.right"
-        }
-    }
+struct Verification: Decodable, Hashable {
+  let checkedAt: String
+  let notes: [String]
 }
-
-// MARK: - Capabilities
-
-struct Capability: Identifiable, Hashable {
-    let id = UUID()
-    let name: String
-    let description: String
-    let rating: CapabilityRating // 1-5
-    let isVerified: Bool
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    static func == (lhs: Capability, rhs: Capability) -> Bool {
-        lhs.id == rhs.id
-    }
+struct ModelSpecs: Decodable, Hashable {
+  let parameterCount: String?
+  let contextWindow: Int
+  let trainingDataCutoff: String?
+  let architecture: String
+  let inputModalities, outputModalities: [String]
+  let averageLatency, tokensPerSecond, resourceRequirements: String?
 }
-
-enum CapabilityRating: Int, CaseIterable {
-    case poor = 1
-    case fair = 2
-    case good = 3
-    case excellent = 4
-    case exceptional = 5
-    
-    var label: String {
-        switch self {
-        case .poor: return "Poor"
-        case .fair: return "Fair"
-        case .good: return "Good"
-        case .excellent: return "Excellent"
-        case .exceptional: return "Exceptional"
-        }
-    }
-    
-    var color: Color {
-        switch self {
-        case .poor: return .red
-        case .fair: return .orange
-        case .good: return .yellow
-        case .excellent: return .green
-        case .exceptional: return .mint
-        }
-    }
+struct Capability: Decodable, Identifiable, Hashable {
+  let id, name, description, rating: String
+  let isVerified: Bool
+  let sources: [Source]?
+  var ratingValue: Double {
+    ["poor": 1, "fair": 2, "good": 3, "excellent": 4, "exceptional": 5][rating] ?? 0
+  }
 }
-
-// MARK: - Myths
-
-struct Myth: Identifiable, Hashable {
-    let id = UUID()
-    let claim: String
-    let verdict: MythVerdict
-    let explanation: String
-    let source: Source?
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    static func == (lhs: Myth, rhs: Myth) -> Bool {
-        lhs.id == rhs.id
-    }
+struct Myth: Decodable, Identifiable, Hashable {
+  let id, claim, verdict, explanation: String
+  let source: Source?
 }
-
-enum MythVerdict: String, CaseIterable {
-    case confirmed = "Confirmed"
-    case busted = "Busted"
-    case plausible = "Plausible"
-    case misleading = "Misleading"
-    case exaggerated = "Exaggerated"
-    
-    var color: Color {
-        switch self {
-        case .confirmed: return .green
-        case .busted: return .red
-        case .plausible: return .yellow
-        case .misleading: return .orange
-        case .exaggerated: return .purple
-        }
-    }
-    
-    var icon: String {
-        switch self {
-        case .confirmed: return "checkmark.circle.fill"
-        case .busted: return "xmark.circle.fill"
-        case .plausible: return "questionmark.circle.fill"
-        case .misleading: return "exclamationmark.triangle.fill"
-        case .exaggerated: return "arrow.up.circle.fill"
-        }
-    }
+struct Pricing: Decodable, Hashable {
+  let inputPricePerMillionTokens, outputPricePerMillionTokens: Double?
+  let freeTierAvailable: Bool
+  let notes: String?
 }
-
-// MARK: - Pricing
-
-struct Pricing: Hashable {
-    let inputPricePerMillionTokens: Double?
-    let outputPricePerMillionTokens: Double?
-    let freeTierAvailable: Bool
-    let notes: String?
+struct Source: Decodable, Identifiable, Hashable {
+  // The web catalog reuses some source IDs for different URLs. URL is the identity.
+  var id: String { url }
+  let title, url, type, dateAccessed: String
+  var typeName: String { Labels.sources[type] ?? type }
 }
-
-// MARK: - Sources
-
-struct Source: Identifiable, Hashable {
-    let id = UUID()
-    let title: String
-    let url: String
-    let type: SourceType
-    let dateAccessed: Date
-    
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+struct FactCheckQA: Decodable, Identifiable, Hashable {
+  let id, question, answer, confidence: String
+  let relatedModels: [String]
+  let sources: [Source]
+  let tags: [String]
+  func match(_ query: String) -> Int {
+    let words = query.lowercased().components(separatedBy: CharacterSet.alphanumerics.inverted)
+      .filter { !$0.isEmpty }
+    return words.reduce(0) { score, word in
+      score + (question.lowercased().contains(word) ? 3 : 0)
+        + (tags.contains { $0.lowercased().contains(word) || word.contains($0.lowercased()) }
+          ? 2 : 0) + (answer.lowercased().contains(word) ? 1 : 0)
+        + (relatedModels.contains { $0.lowercased().contains(word) } ? 1 : 0)
     }
-    
-    static func == (lhs: Source, rhs: Source) -> Bool {
-        lhs.id == rhs.id
-    }
+  }
 }
-
-enum SourceType: String, CaseIterable {
-    case officialDocs = "Official Documentation"
-    case github = "GitHub"
-    case researchPaper = "Research Paper"
-    case blogPost = "Blog Post"
-    case newsArticle = "News Article"
-    case apiReference = "API Reference"
-    
-    var icon: String {
-        switch self {
-        case .officialDocs: return "doc.text"
-        case .github: return "chevron.left.forwardslash.chevron.right"
-        case .researchPaper: return "doc.richtext"
-        case .blogPost: return "newspaper"
-        case .newsArticle: return "globe"
-        case .apiReference: return "curlybraces"
-        }
-    }
+struct AITerm: Decodable, Identifiable, Hashable {
+  let id, term, shortDefinition, fullExplanation, category: String
+  let relatedTerms: [String]
+  let example: String?
 }
-
-// MARK: - Fact Check Question/Answer
-
-struct FactCheckQA: Identifiable {
-    let id = UUID()
-    let question: String
-    let answer: String
-    let confidence: ConfidenceLevel
-    let relatedModels: [String]
-    let sources: [Source]
+struct AILesson: Decodable, Hashable {
+  let category, title, subtitle, icon, color: String
+  let sections: [LessonSection]
+  let keyTakeaway: String?
 }
-
-enum ConfidenceLevel: String, CaseIterable {
-    case high = "High Confidence"
-    case medium = "Medium Confidence"
-    case low = "Low Confidence"
-    
-    var color: Color {
-        switch self {
-        case .high: return .green
-        case .medium: return .yellow
-        case .low: return .orange
-        }
-    }
-    
-    var icon: String {
-        switch self {
-        case .high: return "checkmark.shield.fill"
-        case .medium: return "shield.fill"
-        case .low: return "exclamationmark.shield.fill"
-        }
-    }
+struct LessonSection: Decodable, Hashable {
+  let heading: String?
+  let content: String
+  let visual: LessonVisual?
+  let bullets: [String]?
+  let sources: [Source]?
 }
-
-// MARK: - Comparison
-
-struct ModelComparison {
-    let models: [AIModel]
-    let comparisonPoints: [ComparisonPoint]
+struct LessonVisual: Decodable, Hashable {
+  let type: String
+  let elements: [String]
+  let caption: String?
 }
-
-struct ComparisonPoint: Identifiable {
-    let id = UUID()
-    let category: String
-    let values: [String] // One value per model being compared
+struct Benchmark: Decodable, Identifiable, Hashable {
+  let id, name, category, shortDescription, details: String
+  let aliases: [String]?
+  let metric, source, url: String?
+  let releaseYear: Int?
+  let excludeFromInlineHighlight: Bool?
+}
+enum Labels {
+  static let categories = [
+    "language": "Language Model", "image": "Image Generation", "video": "Video Generation",
+    "audio": "Audio & Music", "science": "Scientific AI", "perception": "Computer Vision",
+    "product": "AI Product", "harness": "Agent Harness", "runtime": "Local Runtime",
+  ]
+  static let sources = [
+    "officialDocs": "Official Documentation", "github": "GitHub", "researchPaper": "Research Paper",
+    "blogPost": "Blog Post", "newsArticle": "News Article", "apiReference": "API Reference",
+  ]
+  static let termCategories = [
+    "fundamentals": "Fundamentals", "architecture": "Architecture", "training": "Training",
+    "inference": "Inference", "performance": "Performance", "safety": "Safety & Ethics",
+    "practical": "Practical Usage",
+  ]
 }

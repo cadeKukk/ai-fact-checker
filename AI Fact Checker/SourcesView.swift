@@ -1,325 +1,198 @@
-//
-//  SourcesView.swift
-//  AI Fact Checker
-//
-//  Created by Cade Kukk on 2/5/26.
-//
-
 import SwiftUI
 
 struct SourcesView: View {
-    let allSources = AIDataProvider.shared.allSources
-    @State private var selectedType: SourceType? = nil
-    @State private var searchText = ""
-    @Environment(\.openURL) private var openURL
-    
-    var filteredSources: [Source] {
-        var sources = allSources
-        
-        if let type = selectedType {
-            sources = sources.filter { $0.type == type }
-        }
-        
-        if !searchText.isEmpty {
-            sources = sources.filter { source in
-                source.title.localizedCaseInsensitiveContains(searchText) ||
-                source.url.localizedCaseInsensitiveContains(searchText)
-            }
-        }
-        
-        return sources
+  @Environment(AppStore.self) private var store
+  @State private var query = ""
+  @State private var type = "all"
+  @State private var selected: Source?
+  @State private var feedback = false
+  private var sources: [Source] {
+    store.catalog.sources.filter {
+      (type == "all" || $0.type == type)
+        && (query.isEmpty || $0.title.localizedCaseInsensitiveContains(query)
+          || $0.url.localizedCaseInsensitiveContains(query))
     }
-    
-    var sourceTypeCounts: [SourceType: Int] {
-        var counts: [SourceType: Int] = [:]
-        for type in SourceType.allCases {
-            counts[type] = allSources.filter { $0.type == type }.count
+  }
+  var body: some View {
+    Page {
+      PageHeader(
+        kicker: "The evidence", title: "Sources",
+        subtitle: "Every claim should lead somewhere. Explore the sources behind the facts.")
+      Card(color: AppTheme.accent.opacity(0.06), border: AppTheme.accent.opacity(0.2)) {
+        HStack(alignment: .top, spacing: 12) {
+          Image(systemName: "checkmark.shield").foregroundStyle(AppTheme.light)
+          Text(
+            "Official documentation, research papers, repositories, and reporting. Check the original source and its date when evaluating a claim."
+          ).font(AppTheme.font(14)).foregroundStyle(AppTheme.soft)
         }
-        return counts
-    }
-    
-    var body: some View {
-        NavigationStack {
-            ZStack {
-                AnimatedBackground()
-                
-                ScrollView {
-                    VStack(spacing: 20) {
-                        // Header
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Sources")
-                                        .font(.system(size: 28, weight: .black, design: .rounded))
-                                        .foregroundColor(AppTheme.textPrimary)
-                                    
-                                    Text("\(allSources.count) verified sources")
-                                        .font(.system(size: 14, weight: .medium))
-                                        .foregroundColor(AppTheme.textSecondary)
-                                }
-                                
-                                Spacer()
-                                
-                                Image(systemName: "link.badge.plus")
-                                    .font(.system(size: 32))
-                                    .foregroundStyle(
-                                        LinearGradient(
-                                            colors: [AppTheme.accent, .cyan],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        )
-                                    )
-                            }
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.top, 10)
-                        
-                        // Search
-                        HStack(spacing: 12) {
-                            Image(systemName: "magnifyingglass")
-                                .font(.system(size: 16))
-                                .foregroundColor(AppTheme.textTertiary)
-                            
-                            TextField("Search sources...", text: $searchText)
-                                .font(.system(size: 15))
-                                .foregroundColor(AppTheme.textPrimary)
-                        }
-                        .padding(14)
-                        .background(AppTheme.cardBackground)
-                        .cornerRadius(12)
-                        .padding(.horizontal, 20)
-                        
-                        // Type filters
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 8) {
-                                FilterChip(
-                                    title: "All",
-                                    count: allSources.count,
-                                    isSelected: selectedType == nil,
-                                    color: AppTheme.accent
-                                ) {
-                                    selectedType = nil
-                                }
-                                
-                                ForEach(SourceType.allCases, id: \.self) { type in
-                                    FilterChip(
-                                        title: type.rawValue,
-                                        icon: type.icon,
-                                        count: sourceTypeCounts[type] ?? 0,
-                                        isSelected: selectedType == type,
-                                        color: colorForSourceType(type)
-                                    ) {
-                                        selectedType = type
-                                    }
-                                }
-                            }
-                            .padding(.horizontal, 20)
-                        }
-                        
-                        // Sources list
-                        LazyVStack(spacing: 10) {
-                            ForEach(filteredSources) { source in
-                                Button {
-                                    if let url = URL(string: source.url) {
-                                        openURL(url)
-                                    }
-                                } label: {
-                                    SourceListRow(source: source)
-                                }
-                                .buttonStyle(ScaleButtonStyle())
-                            }
-                        }
-                        .padding(.horizontal, 20)
-                        
-                        // Info card
-                        VStack(alignment: .leading, spacing: 12) {
-                            HStack(spacing: 8) {
-                                Image(systemName: "checkmark.seal.fill")
-                                    .font(.system(size: 16))
-                                    .foregroundColor(.green)
-                                
-                                Text("Verified Sources")
-                                    .font(.system(size: 15, weight: .bold))
-                                    .foregroundColor(AppTheme.textPrimary)
-                            }
-                            
-                            Text("All information in this app is sourced from official documentation, research papers, and verified reports. We prioritize primary sources and clearly mark when information is uncertain or contested.")
-                                .font(.system(size: 13))
-                                .foregroundColor(AppTheme.textSecondary)
-                            
-                            Divider().background(AppTheme.divider)
-                            
-                            VStack(alignment: .leading, spacing: 8) {
-                                SourceTypeInfo(type: .officialDocs, description: "Direct from company websites and documentation")
-                                SourceTypeInfo(type: .github, description: "Open source repositories and technical specs")
-                                SourceTypeInfo(type: .researchPaper, description: "Peer-reviewed or official research publications")
-                                SourceTypeInfo(type: .apiReference, description: "API documentation and technical references")
-                            }
-                        }
-                        .padding(16)
-                        .background(AppTheme.cardBackground)
-                        .cornerRadius(14)
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 100)
-                    }
+      }
+      SearchField(text: $query, placeholder: "Search sources…")
+      FilterChips(
+        values: [
+          "all", "officialDocs", "github", "researchPaper", "blogPost", "newsArticle",
+          "apiReference",
+        ], selected: $type, labels: Labels.sources)
+      HStack {
+        Text("\(sources.count) sources").font(AppTheme.font(12)).foregroundStyle(AppTheme.muted)
+        Spacer()
+        Button("Send feedback") { feedback = true }.font(AppTheme.font(12, .medium))
+      }
+      if sources.isEmpty { EmptyResults() }
+      LazyVStack(spacing: 10) {
+        ForEach(sources) { source in
+          Button {
+            selected = source
+          } label: {
+            Card {
+              HStack(alignment: .top, spacing: 12) {
+                IconTile(
+                  icon: source.type == "github"
+                    ? "chevron.left.forwardslash.chevron.right"
+                    : source.type == "researchPaper" ? "book" : "doc.text")
+                VStack(alignment: .leading, spacing: 7) {
+                  Text(source.title).font(AppTheme.font(15, .semibold))
+                  Text(source.typeName).font(AppTheme.font(11)).foregroundStyle(AppTheme.light)
+                  Text(URL(string: source.url)?.host ?? source.url).font(AppTheme.font(11))
+                    .foregroundStyle(AppTheme.muted).lineLimit(1)
                 }
+                Spacer(minLength: 0)
+                Image(systemName: "chevron.right").font(.system(size: 12)).foregroundStyle(
+                  AppTheme.muted)
+              }
             }
+          }.buttonStyle(.plain)
         }
-    }
-    
-    private func colorForSourceType(_ type: SourceType) -> Color {
-        switch type {
-        case .officialDocs: return .blue
-        case .github: return .purple
-        case .researchPaper: return .orange
-        case .blogPost: return .green
-        case .newsArticle: return .cyan
-        case .apiReference: return .pink
+      }
+      NavigationLink(value: AppRoute.about) {
+        Label("About, privacy & app information", systemImage: "info.circle").font(
+          AppTheme.font(14))
+      }
+    }.sheet(item: $selected) { source in
+      NavigationStack {
+        Page {
+          PageHeader(
+            kicker: source.typeName, title: source.title,
+            subtitle: URL(string: source.url)?.host ?? "Source")
+          Text("Accessed \(source.dateAccessed)").foregroundStyle(AppTheme.muted)
+          if let url = URL(string: source.url) {
+            Link(destination: url) {
+              Label("Read original source", systemImage: "arrow.up.right.square").font(
+                AppTheme.font(18, .semibold))
+            }
+            ShareLink(item: url) { Label("Share source", systemImage: "square.and.arrow.up") }
+          }
+        }.navigationBarTitleDisplayMode(.inline).toolbar {
+          ToolbarItem(placement: .topBarTrailing) { Button("Done") { selected = nil } }
         }
-    }
+      }.preferredColorScheme(.dark)
+    }.sheet(isPresented: $feedback) { FeedbackView().preferredColorScheme(.dark) }
+  }
 }
-
-// MARK: - Filter Chip
-
-struct FilterChip: View {
-    let title: String
-    var icon: String? = nil
-    let count: Int
-    let isSelected: Bool
-    let color: Color
-    let action: () -> Void
-    
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 6) {
-                if let icon = icon {
-                    Image(systemName: icon)
-                        .font(.system(size: 10))
-                }
-                
-                Text(title)
-                    .font(.system(size: 12, weight: .semibold))
-                    .lineLimit(1)
-                
-                Text("\(count)")
-                    .font(.system(size: 10, weight: .bold))
-                    .padding(.horizontal, 5)
-                    .padding(.vertical, 2)
-                    .background(isSelected ? Color.white.opacity(0.2) : AppTheme.cardBackgroundLight)
-                    .cornerRadius(4)
-            }
-            .foregroundColor(isSelected ? .white : AppTheme.textSecondary)
-            .padding(.horizontal, 12)
-            .padding(.vertical, 8)
-            .background(isSelected ? color : AppTheme.cardBackground)
-            .cornerRadius(16)
+struct FeedbackView: View {
+  @Environment(\.dismiss) private var dismiss
+  @State private var message = ""
+  @State private var sending = false
+  @State private var status: String?
+  @State private var sent = false
+  var body: some View {
+    NavigationStack {
+      Page {
+        PageHeader(
+          kicker: "Help improve the facts", title: "Send feedback",
+          subtitle: "Found an error or a missing source? Let us know.")
+        TextEditor(text: $message).frame(minHeight: 220).scrollContentBackground(.hidden).padding(
+          12
+        ).background(AppTheme.surface, in: RoundedRectangle(cornerRadius: 10)).accessibilityLabel(
+          "Feedback message")
+        Text(
+          "Your message is sent to the app’s developer through the AI Fact Checker website. Include a source link if you’re suggesting a correction."
+        ).font(AppTheme.font(12)).foregroundStyle(AppTheme.muted)
+        if let status {
+          Text(status).foregroundStyle(sent ? .green : .orange).font(AppTheme.font(14))
+            .accessibilityLabel(status)
         }
+        PrimaryButton(
+          title: sending ? "Sending…" : sent ? "Feedback sent" : "Send feedback",
+          icon: sent ? "checkmark" : "paperplane"
+        ) { Task { await send() } }.disabled(
+          sending || sent || message.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            || message.count > 12_000)
+        Text("\(message.count) / 12,000 characters").font(AppTheme.font(11)).foregroundStyle(
+          AppTheme.muted)
+      }.navigationBarTitleDisplayMode(.inline).toolbar {
+        ToolbarItem(placement: .topBarTrailing) { Button("Done") { dismiss() } }
+      }
     }
+  }
+  private func send() async {
+    sending = true
+    status = nil
+    defer { sending = false }
+    do {
+      var request = URLRequest(
+        url: URL(string: "https://web-tau-peach-63.vercel.app/api/feedback")!)
+      request.httpMethod = "POST"
+      request.timeoutInterval = 30
+      request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+      request.httpBody = try JSONEncoder().encode([
+        "message": message.trimmingCharacters(in: .whitespacesAndNewlines)
+      ])
+      let (data, response) = try await URLSession.shared.data(for: request)
+      guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+        let error =
+          (try? JSONSerialization.jsonObject(with: data) as? [String: Any])?["error"] as? String
+        status = error ?? "Could not send feedback. Please try again."
+        return
+      }
+      sent = true
+      status = "Thank you — your feedback was sent."
+    } catch {
+      status =
+        "You may be offline. Your message is still here; try sending it again when connected."
+    }
+  }
 }
-
-// MARK: - Source List Row
-
-struct SourceListRow: View {
-    let source: Source
-    
-    var body: some View {
-        HStack(spacing: 14) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(colorForType.opacity(0.15))
-                    .frame(width: 44, height: 44)
-                
-                Image(systemName: source.type.icon)
-                    .font(.system(size: 18))
-                    .foregroundColor(colorForType)
-            }
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(source.title)
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundColor(AppTheme.textPrimary)
-                    .lineLimit(1)
-                
-                Text(source.url)
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(AppTheme.textTertiary)
-                    .lineLimit(1)
-                
-                HStack(spacing: 8) {
-                    Text(source.type.rawValue)
-                        .font(.system(size: 10, weight: .semibold))
-                        .foregroundColor(colorForType)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(colorForType.opacity(0.12))
-                        .cornerRadius(4)
-                    
-                    Text("Accessed \(source.dateAccessed.formatted(date: .abbreviated, time: .omitted))")
-                        .font(.system(size: 10))
-                        .foregroundColor(AppTheme.textTertiary)
-                }
-            }
-            
-            Spacer()
-            
-            Image(systemName: "arrow.up.right")
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(AppTheme.textTertiary)
+struct AboutView: View {
+  @Environment(AppStore.self) private var store
+  @State private var reset = false
+  var body: some View {
+    Page {
+      PageHeader(
+        kicker: "About", title: "AI Fact Checker",
+        subtitle: "Verified information. Better understanding.")
+      ReferenceText(
+        text:
+          "Built by Cade Kukk in collaboration with Dr. Blackwood and Professor Dolence at Longwood University."
+      )
+      Card {
+        VStack(spacing: 12) {
+          SpecRow(label: "Content version", value: store.catalog.version)
+          SpecRow(label: "Updated", value: store.catalog.lastUpdated)
+          SpecRow(label: "Data snapshot", value: store.catalog.dataSnapshot)
         }
-        .padding(12)
-        .background(AppTheme.cardBackground)
-        .cornerRadius(12)
+      }
+      SectionTitle(text: "Privacy")
+      Text(
+        "Your course progress, quiz totals, and model selections are stored on this device. This app does not require an account and contains no advertising or analytics SDKs. Lessons and the reference catalog work offline. If you send feedback, the message you choose to submit is sent to the developer through the website’s feedback service. Opening an external source uses your browser and is subject to that website’s privacy practices."
+      ).font(AppTheme.font(14)).foregroundStyle(AppTheme.soft)
+      SectionTitle(text: "Content & sources")
+      Text(
+        "The iOS catalog mirrors the web app’s dated content snapshot. AI information changes quickly. Follow the cited sources to confirm current details. Educational illustrations simplify the underlying systems; comparison ratings are editorial assessments."
+      ).font(AppTheme.font(14)).foregroundStyle(AppTheme.soft)
+      Link("Visit the web app", destination: URL(string: "https://web-tau-peach-63.vercel.app")!)
+      DisclosureGroup("Open-source acknowledgments") {
+        Text(
+          "Outfit by Rodrigo Fuenzalida — SIL Open Font License 1.1. Educational illustrations use React and Lucide under the MIT license, and Tailwind CSS under the MIT license. License texts are bundled with the app."
+        ).font(AppTheme.font(12)).foregroundStyle(AppTheme.muted).padding(.top, 8)
+      }
+      Button("Reset course progress and quiz statistics", role: .destructive) { reset = true }.font(
+        AppTheme.font(14))
+    }.navigationTitle("About & privacy").confirmationDialog(
+      "Reset your learning progress?", isPresented: $reset, titleVisibility: .visible
+    ) {
+      Button("Reset progress", role: .destructive) { store.resetProgress() }
+    } message: {
+      Text("This clears course completion and lifetime quiz statistics on this device.")
     }
-    
-    var colorForType: Color {
-        switch source.type {
-        case .officialDocs: return .blue
-        case .github: return .purple
-        case .researchPaper: return .orange
-        case .blogPost: return .green
-        case .newsArticle: return .cyan
-        case .apiReference: return .pink
-        }
-    }
-}
-
-// MARK: - Source Type Info
-
-struct SourceTypeInfo: View {
-    let type: SourceType
-    let description: String
-    
-    var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            Image(systemName: type.icon)
-                .font(.system(size: 12))
-                .foregroundColor(colorForType)
-                .frame(width: 20)
-            
-            VStack(alignment: .leading, spacing: 2) {
-                Text(type.rawValue)
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundColor(AppTheme.textPrimary)
-                
-                Text(description)
-                    .font(.system(size: 11))
-                    .foregroundColor(AppTheme.textTertiary)
-            }
-        }
-    }
-    
-    var colorForType: Color {
-        switch type {
-        case .officialDocs: return .blue
-        case .github: return .purple
-        case .researchPaper: return .orange
-        case .blogPost: return .green
-        case .newsArticle: return .cyan
-        case .apiReference: return .pink
-        }
-    }
-}
-
-#Preview {
-    SourcesView()
+  }
 }
