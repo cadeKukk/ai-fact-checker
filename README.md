@@ -13,7 +13,7 @@ Built by [Cade Kukk](https://cadekukk.vercel.app/) in collaboration with Dr. Bla
 | Path | Description |
 |------|-------------|
 | `web/` | The web application — Next.js (App Router), deployed to Vercel. This is the live, actively developed version. |
-| `AI Fact Checker/` | The original SwiftUI iOS app the web version grew out of. |
+| `AI Fact Checker/` | Rebuilt native SwiftUI iPhone/iPad app matching the web experience, with offline content and illustrations. See [iOS setup and release notes](docs/ios/README.md). |
 
 ## The web app
 
